@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="line">#FF000000</color>
+    <color name="line_temp">#7F000000</color>
+    <color name="boxPlayer1">#FFFFE3A1</color>
+    <color name="boxPlayer2">#FFA1BDFF</color>
+</resources>
