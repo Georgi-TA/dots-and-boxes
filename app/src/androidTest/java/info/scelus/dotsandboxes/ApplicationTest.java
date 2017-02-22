@@ -1,4 +1,4 @@
-package info.blackbear.scelus.dotsandboxes;
+package info.scelus.dotsandboxes;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

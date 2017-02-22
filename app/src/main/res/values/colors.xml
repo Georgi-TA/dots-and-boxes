@@ -4,4 +4,13 @@
     <color name="line_temp">#7F000000</color>
     <color name="boxPlayer1">#FFFFE3A1</color>
     <color name="boxPlayer2">#FFA1BDFF</color>
+
+    <color name="scorePlayer1">#DFFFE3A1</color>
+    <color name="scorePlayer2">#DFA1BDFF</color>
+
+    <color name="background">#EFEFEF</color>
+    <color name="textColorPrimary">#FF222222</color>
+    <color name="colorAccent">#a31720</color>
+    <color name="primaryDark">#464d5c</color>
+    <color name="primary">#b3c0db</color>
 </resources>

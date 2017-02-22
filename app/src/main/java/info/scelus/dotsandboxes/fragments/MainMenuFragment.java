@@ -1,6 +1,6 @@
 package info.scelus.dotsandboxes.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +17,6 @@ public class MainMenuFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private TextView mainTitle;
-    private Button localPlayButton;
-    private Button networkPlayButton;
 
     public static MainMenuFragment newInstance(Bundle args) {
         MainMenuFragment fragment = new MainMenuFragment();
@@ -45,8 +43,8 @@ public class MainMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
         mainTitle = (TextView) root.findViewById(R.id.mainTitleText);
-        localPlayButton = (Button) root.findViewById(R.id.buttonPlayLocal);
-        networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
+        Button localPlayButton = (Button) root.findViewById(R.id.buttonPlayLocal);
+        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
 
         localPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,15 +72,16 @@ public class MainMenuFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
+
 
     @Override
     public void onDetach() {
@@ -91,6 +90,6 @@ public class MainMenuFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        public void onMainMenuFragmentInteraction(int fragmentId, Bundle args);
+        void onMainMenuFragmentInteraction(int fragmentId, Bundle args);
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/box_unselected"
+        android:gravity="center"
+        android:top="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:bottom="1dp"/>
+
+    <item android:drawable="@drawable/dot"
+        android:gravity="bottom|left"/>
+
+    <item android:drawable="@drawable/dot"
+        android:gravity="bottom|right"/>
+
+    <item android:drawable="@drawable/dot"
+        android:gravity="top|left"/>
+
+    <item android:drawable="@drawable/dot"
+        android:gravity="top|right"/>
+
+</layer-list>

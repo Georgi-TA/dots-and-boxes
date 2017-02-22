@@ -2,24 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.blackbear.scelus.dotsandboxes.bg.scelus.dotsandboxes.fragments.GameLocalFragment">
+    tools:context="info.scelus.dotsandboxes.fragments.GameLocalFragment">
 
     <info.scelus.dotsandboxes.views.BoardView
         android:id="@+id/boardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerInParent="true"
+        android:padding="8dp"
+        android:background="@drawable/box_unselected"/>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="64dp"
+    <include
+        layout="@layout/score_layout"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
         android:id="@+id/scoreLayout"
         android:layout_toEndOf="@+id/boardView"
-        android:layout_toRightOf="@+id/boardView"
-        android:layout_alignTop="@+id/boardView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
-
+        android:layout_toRightOf="@+id/boardView"/>
 </RelativeLayout>

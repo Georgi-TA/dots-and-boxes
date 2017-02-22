@@ -14,13 +14,13 @@ import info.scelus.dotsandboxes.external.Game;
 /**
  * Created by SceLus on 11/10/2014.
  */
-public class BoardView extends View implements View.OnTouchListener {
+public class BoardView extends View {
     private Board board;
     private int horizontalOffset;
     private int verticalOffset;
     private int boxSide = 80;
     private int snapLength = 16;
-    private int dotRadius = 4;
+    private int dotRadius = 4; // the radius of the dots
 
     private Paint linePaint;
     private Paint lineTempPaint;
@@ -64,8 +64,6 @@ public class BoardView extends View implements View.OnTouchListener {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
-
-        this.setOnTouchListener(this);
     }
 
     @Override
@@ -165,24 +163,37 @@ public class BoardView extends View implements View.OnTouchListener {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
+        int size;
         if (width < height) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
             height = width;
+            size = width - getPaddingLeft() - getPaddingRight();
+
         }
         else {
             super.onMeasure(heightMeasureSpec, heightMeasureSpec);
             width = height;
+            size = width - getPaddingTop() - getPaddingBottom();
         }
 
         if (board == null)
             return;
 
-        horizontalOffset = (width - board.getColumns() * boxSide) / 2;
-        verticalOffset = (height - board.getRows() * boxSide) / 2;
+        if (width < height) {
+            boxSide = size / board.getRows();
+        }
+        else {
+            boxSide = size / board.getColumns();
+        }
+
+        horizontalOffset = (width - size) / 2;
+        verticalOffset = (height - size) / 2;
+
+        setBoard(board);
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouchEvent(MotionEvent motionEvent) {
         if (board == null)
             return false;
 
@@ -259,8 +270,8 @@ public class BoardView extends View implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: {
                 board.setLine((int) x1temp,(int) y1temp,(int) x2temp,(int) y2temp);
+            case MotionEvent.ACTION_CANCEL: {
                 drawTemp = false;
                 x1temp = 0;
                 x2temp = 0;

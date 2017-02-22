@@ -1,7 +1,7 @@
 package info.scelus.dotsandboxes.external;
 
 /**
- * Created by SceLus on 11/10/2014.
+ * Created by SceLus on 11/10/2014
  */
 public class Board {
     private int rows;
@@ -15,14 +15,7 @@ public class Board {
         public boolean left;
         public Game.Player player;
 
-        public Box() {
-            top = false;
-            right = false;
-            bottom = false;
-            left = false;
-        }
-
-        public Box(byte b) {
+        Box(byte b) {
             top = ((b & 1) == 1);
             right = ((b & 2) == 2);
             bottom = ((b & 4) == 4);
@@ -36,23 +29,12 @@ public class Board {
     }
 
     private enum Line {
-        LEFT, RIGHT, TOP, BOTTOM;
+        LEFT, RIGHT, TOP, BOTTOM
     }
 
     private byte[][] boxes;
 
-    public Board() {
-        rows = 0;
-        columns = 0;
-
-        boxes = new byte[rows][];
-        for (int i = 0; i < rows; i++)
-            boxes[i] = new byte[columns];
-
-        game = new Game();
-    }
-
-    public Board(int rows, int columns) {
+    public Board(Game game, int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
 
@@ -60,7 +42,7 @@ public class Board {
         for (int i = 0; i < rows; i++)
             boxes[i] = new byte[columns];
 
-        game = new Game();
+        this.game = game;
     }
 
     public Box getBoxAt(int row, int column) {
@@ -75,11 +57,7 @@ public class Board {
         return columns;
     }
 
-    public void setGameListener(Game.GameListener listener) {
-        game.registerListener(listener);
-    }
-
-    public void setLineAtBox(int row, int column, Line line) {
+     private void setLineAtBox(int row, int column, Line line, boolean setPlayer) {
         switch (line){
             case LEFT:
                 boxes[row][column] |= 8;
@@ -95,23 +73,24 @@ public class Board {
                 break;
         }
 
-        // the box is complete
-        if ((boxes[row][column] & 15) == 15) {
-            // set the player who made id
-            if (game.getNext() == Game.Player.PLAYER1) {
-                boxes[row][column] |= 16;
-            }
-            else {
-                boxes[row][column] |= 32;
+        if (setPlayer) {
+            // the box is complete
+            if ((boxes[row][column] & 15) == 15) {
+                // set the player who made it
+                if (game.getNext() == Game.Player.PLAYER1) {
+                    boxes[row][column] |= 16;
+                } else {
+                    boxes[row][column] |= 32;
+                }
             }
         }
     }
 
     public void setLine(int x1, int y1, int x2, int y2) {
-        if (x1 < 0 && x1 > columns ||
-            x2 < 0 && x2 > columns ||
-            y1 < 0 && y1 > rows ||
-            y2 < 0 && y2 > rows)
+        if (x1 < 0 || x1 > columns ||
+            x2 < 0 || x2 > columns ||
+            y1 < 0 || y1 > rows ||
+            y2 < 0 || y2 > rows)
         return;
 
         int row = y1 > y2 ? y2 : y1;
@@ -121,24 +100,24 @@ public class Board {
         // horizontal
         if (y1 == y2) {
             if (row > 0 && (boxes[row-1][column] & 4) != 4) {
-                setLineAtBox(row - 1, column, Line.BOTTOM);
+                setLineAtBox(row - 1, column, Line.BOTTOM, true);
                 linePlaced = true;
             }
 
             if (row < rows && (boxes[row][column] & 1) != 1) {
-                setLineAtBox(row, column, Line.TOP);
+                setLineAtBox(row, column, Line.TOP, true);
                 linePlaced = true;
             }
         }
         // vertical
         else if (x1 == x2) {
-            if (column > 0 && (boxes[row][column-1] & 2) != 2) {
-                setLineAtBox(row, column-1, Line.RIGHT);
+            if (column > 0 &&(boxes[row][column-1] & 2) != 2) {
+                setLineAtBox(row, column-1, Line.RIGHT, true);
                 linePlaced = true;
             }
 
             if (column < columns && (boxes[row][column] & 8) != 8) {
-                setLineAtBox(row, column, Line.LEFT);
+                setLineAtBox(row, column, Line.LEFT, true);
                 linePlaced = true;
             }
         }
@@ -157,5 +136,29 @@ public class Board {
                     score++;
 
         return score;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < getRows(); i++) {
+            for (int j = 0; j < getColumns(); j++) {
+                s.append(Integer.toString(boxes[i][j]));
+                s.append(",");
+            }
+        }
+        return s.toString();
+    }
+
+    public void loadBoard(String boardValues) {
+
+        String[] values = boardValues.split(",");
+        int countValues = 0;
+        for (int i = 0; i < getRows(); i++) {
+            for (int j = 0; j < getColumns(); j++) {
+                boxes[i][j] = Byte.valueOf(values[countValues]);
+                countValues++;
+            }
+        }
     }
 }

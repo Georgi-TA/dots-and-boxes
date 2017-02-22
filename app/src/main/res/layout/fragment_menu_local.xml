@@ -2,43 +2,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.blackbear.scelus.dotsandboxes.bg.scelus.dotsandboxes.fragments.MainMenuFragment">
+    tools:context="info.scelus.dotsandboxes.fragments.MainMenuFragment">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/mainLocalTitleText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="50sp"
-        android:text="@string/menu_title" />
+        android:text="@string/menu_title"
+        style="@style/MenuTitle" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/mainLocalTitleText"
         android:dividerPadding="16dp"
         android:layout_marginTop="32dp">
 
         <Button
-            android:layout_width="@dimen/menu_button_width"
-            android:layout_height="wrap_content"
             android:text="@string/menu_option_play_local_cpu"
-            android:background="@drawable/bg_menu_button"
             android:id="@+id/buttonPlayLocalComputer"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            style="@style/MenuButton" />
 
         <Button
-            android:layout_width="@dimen/menu_button_width"
-            android:layout_height="wrap_content"
             android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayLocalPlayer"
-            android:background="@drawable/bg_menu_button"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            style="@style/MenuButton" />
 
     </LinearLayout>
 

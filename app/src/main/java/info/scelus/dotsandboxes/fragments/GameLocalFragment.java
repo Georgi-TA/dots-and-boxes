@@ -1,13 +1,12 @@
 package info.scelus.dotsandboxes.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.external.Board;
@@ -16,14 +15,22 @@ import info.scelus.dotsandboxes.views.BoardView;
 import info.scelus.dotsandboxes.views.ScoreView;
 
 public class GameLocalFragment extends Fragment {
-    public static final String ARG_MODE = "bg.blackbear.scelus.args.mode";
     public static final int FRAGMENT_ID = 6164;
+    public static final String ARG_MODE = "info.scelus.args.mode";
+    private static final String ARG_BOARD = "info.scelus.args.board";
+    private static final String ARG_P1_SCORE = "info.scelus.args.score.p1";
+    private static final String ARG_P2_SCORE = "info.scelus.args.score.p2";
+    private static final String ARG_P1_NEXT = "info.scelus.args.score.p1_next";
 
     private Game.Mode mode;
     private Board board;
-    private BoardView view;
+    private BoardView boardView;
     private ScoreView score;
     private OnFragmentInteractionListener mListener;
+    private Game game;
+
+    private int rows = 6;
+    private int columns = 6;
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -52,23 +59,34 @@ public class GameLocalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
-        view = (BoardView) root.findViewById(R.id.boardView);
-        RelativeLayout scoreLayout = (RelativeLayout) root.findViewById(R.id.scoreLayout);
-        board = new Board(6, 6);
-        view.setBoard(board);
-        score = (ScoreView) LayoutInflater.from(getActivity()).inflate(R.layout.score_layout, scoreLayout, false);
-        board.setGameListener(score);
-        scoreLayout.addView(score);
+        boardView = (BoardView) root.findViewById(R.id.boardView);
+        score = (ScoreView) root.findViewById(R.id.scoreLayout);
+
+        game = new Game(rows * columns);
+        board = new Board(game, rows, columns);
+        boardView.setBoard(board);
+        game.registerListener(score);
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(ARG_BOARD))
+                board.loadBoard(savedInstanceState.getString(ARG_BOARD));
+
+            if (savedInstanceState.containsKey(ARG_P1_SCORE) && savedInstanceState.containsKey(ARG_P2_SCORE) && savedInstanceState.containsKey(ARG_P1_NEXT)) {
+                Game.Player nextPlayer = savedInstanceState.getBoolean(ARG_P1_NEXT) ? Game.Player.PLAYER1 : Game.Player.PLAYER2;
+                game.setInitScoreAndTurn(savedInstanceState.getInt(ARG_P1_SCORE), savedInstanceState.getInt(ARG_P2_SCORE), nextPlayer);
+            }
+        }
+
         return root;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -80,7 +98,15 @@ public class GameLocalFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        public void onGameLocalFragmentInteraction(Uri uri);
+        void onGameLocalFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(ARG_BOARD, board.toString());
+        outState.putInt(ARG_P1_SCORE, board.getScore(Game.Player.PLAYER1));
+        outState.putInt(ARG_P2_SCORE, board.getScore(Game.Player.PLAYER2));
+        outState.putBoolean(ARG_P1_NEXT, game.getNext() == Game.Player.PLAYER1);
+        super.onSaveInstanceState(outState);
+    }
 }

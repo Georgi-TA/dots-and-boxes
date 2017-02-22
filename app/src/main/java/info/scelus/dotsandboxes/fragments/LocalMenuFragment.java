@@ -1,6 +1,6 @@
 package info.scelus.dotsandboxes.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,8 +18,6 @@ public class LocalMenuFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private TextView mainTitle;
-    private Button player2PlayButton;
-    private Button cpuPlayButton;
 
     public static LocalMenuFragment newInstance(Bundle args) {
         LocalMenuFragment fragment = new LocalMenuFragment();
@@ -47,8 +45,8 @@ public class LocalMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_menu_local, container, false);
         mainTitle = (TextView) root.findViewById(R.id.mainLocalTitleText);
-        player2PlayButton = (Button) root.findViewById(R.id.buttonPlayLocalPlayer);
-        cpuPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
+        Button player2PlayButton = (Button) root.findViewById(R.id.buttonPlayLocalPlayer);
+        Button cpuPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
 
         player2PlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +78,12 @@ public class LocalMenuFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -97,6 +95,6 @@ public class LocalMenuFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        public void onLocalMenuFragmentInteraction(int fragmentId, Bundle args);
+        void onLocalMenuFragmentInteraction(int fragmentId, Bundle args);
     }
 }

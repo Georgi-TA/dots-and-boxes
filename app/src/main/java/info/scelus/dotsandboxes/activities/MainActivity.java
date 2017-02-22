@@ -1,12 +1,18 @@
 package info.scelus.dotsandboxes.activities;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.external.Board;
@@ -14,23 +20,60 @@ import info.scelus.dotsandboxes.fragments.ComingSoonFragment;
 import info.scelus.dotsandboxes.fragments.GameLocalFragment;
 import info.scelus.dotsandboxes.fragments.LocalMenuFragment;
 import info.scelus.dotsandboxes.fragments.MainMenuFragment;
+import info.scelus.dotsandboxes.utils.Globals;
 import info.scelus.dotsandboxes.views.BoardView;
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends AppCompatActivity
                           implements MainMenuFragment.OnFragmentInteractionListener,
         LocalMenuFragment.OnFragmentInteractionListener,
         GameLocalFragment.OnFragmentInteractionListener {
 
+    private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
+    private Toolbar toolbar;
     private Board board;
     private BoardView view;
+    private GameLocalFragment gameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadFragment(MainMenuFragment.FRAGMENT_ID, null);
+
+        // Load the toolbar as a support appbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Setup action bar appearance
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
+
+        if (savedInstanceState != null) {
+            // clear the backstack if the game is not in progress
+            if (savedInstanceState.containsKey(ARG_GAME_IN_PROGRESS) && !savedInstanceState.getBoolean(ARG_GAME_IN_PROGRESS)) {
+                while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                    getSupportFragmentManager().popBackStackImmediate();
+            }
+        }
+        else {
+            loadFragment(MainMenuFragment.FRAGMENT_ID, null);
+        }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+
+        if (backStackCount < 1)
+            finish();
+        else
+            fragmentManager.popBackStack();
+
+        return super.onSupportNavigateUp();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,9 +84,6 @@ public class MainActivity extends FragmentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -74,7 +114,7 @@ public class MainActivity extends FragmentActivity
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment);
-        transaction.addToBackStack(fragment.toString());
+        transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();
     }
 
@@ -91,5 +131,15 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onGameLocalFragmentInteraction(Uri uri) {
 
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // check if game is in progress
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName().equals(GameLocalFragment.class.getName()))
+            outState.putBoolean(ARG_GAME_IN_PROGRESS, true);
+        super.onSaveInstanceState(outState);
     }
 }

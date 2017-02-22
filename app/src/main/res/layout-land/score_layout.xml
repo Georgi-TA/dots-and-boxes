@@ -6,32 +6,14 @@
     android:orientation="vertical"
     android:weightSum="2">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+    <TextView
+        android:id="@+id/scorePlayer1"
+        style="@style/ScoreViewVertical"
+        android:background="@drawable/score_p1" />
 
-        <TextView
-            android:id="@+id/scorePlayer1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:layout_margin="16dp"
-            android:gravity="center" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/scorePlayer2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:layout_margin="16dp"
-            android:gravity="center" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/scorePlayer2"
+        style="@style/ScoreViewVertical"
+        android:background="@drawable/score_p2" />
 
 </info.scelus.dotsandboxes.views.ScoreView>

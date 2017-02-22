@@ -5,11 +5,13 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.external.Game;
 
 /**
- * Created by SceLus on 15/10/2014.
+ * Created by SceLus on 15/10/2014
  */
 public class ScoreView extends LinearLayout implements Game.GameListener {
     private TextView player1;
@@ -38,26 +40,27 @@ public class ScoreView extends LinearLayout implements Game.GameListener {
         super.onFinishInflate();
         player1 = (TextView) findViewById(R.id.scorePlayer1);
         player2 = (TextView) findViewById(R.id.scorePlayer2);
-
-        onScoreChange(0, 0);
-        onTurnChange(Game.Player.PLAYER1);
     }
 
     @Override
     public void onScoreChange(int p1Score, int p2Score) {
-        player1.setText(Integer.toString(p1Score));
-        player2.setText(Integer.toString(p2Score));
+        player1.setText(String.format(Locale.getDefault(), "%d", p1Score));
+        player2.setText(String.format(Locale.getDefault(), "%d", p2Score));
     }
 
     @Override
     public void onTurnChange(Game.Player nextToMove) {
-        if (nextToMove == Game.Player.PLAYER1) {
-            player1.setBackgroundResource(R.color.boxPlayer1);
-            player2.setBackgroundResource(android.R.color.transparent);
+        player1.setSelected(nextToMove == Game.Player.PLAYER1);
+        player2.setSelected(nextToMove == Game.Player.PLAYER2);
+     }
+
+    @Override
+    public void onGameEnd(Game.Player winner) {
+        if (winner == Game.Player.PLAYER1) {
+            player1.setBackgroundResource(R.drawable.bg_score_winner);
         }
         else {
-            player1.setBackgroundResource(android.R.color.transparent);
-            player2.setBackgroundResource(R.color.boxPlayer2);
+            player2.setBackgroundResource(R.drawable.bg_score_winner);
         }
-     }
+    }
 }

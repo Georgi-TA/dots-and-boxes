@@ -2,14 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.blackbear.scelus.dotsandboxes.bg.scelus.dotsandboxes.fragments.MainMenuFragment">
+    tools:context="info.scelus.dotsandboxes.fragments.MainMenuFragment">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/mainTitleText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        style="@style/MenuTitle"
         android:textSize="50sp"
         android:text="@string/menu_title" />
 
@@ -23,22 +20,15 @@
         android:layout_marginTop="32dp">
 
         <Button
-            android:layout_width="@dimen/menu_button_width"
-            android:layout_height="wrap_content"
             android:text="@string/menu_option_play_local"
             android:id="@+id/buttonPlayLocal"
-            android:background="@drawable/bg_menu_button"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            style="@style/MenuButton"/>
 
         <Button
-            android:layout_width="@dimen/menu_button_width"
-            android:layout_height="wrap_content"
             android:text="@string/menu_option_play_network"
-            android:background="@drawable/bg_menu_button"
             android:id="@+id/buttonPlayNetwork"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            style="@style/MenuButton"/>
+
     </LinearLayout>
 
 </RelativeLayout>
