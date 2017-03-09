@@ -1,10 +1,8 @@
 package info.scelus.dotsandboxes.activities;
 
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -12,15 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Board;
+import info.scelus.dotsandboxes.game.models.Board;
 import info.scelus.dotsandboxes.fragments.ComingSoonFragment;
 import info.scelus.dotsandboxes.fragments.GameLocalFragment;
 import info.scelus.dotsandboxes.fragments.LocalMenuFragment;
 import info.scelus.dotsandboxes.fragments.MainMenuFragment;
-import info.scelus.dotsandboxes.utils.Globals;
 import info.scelus.dotsandboxes.views.BoardView;
 
 public class MainActivity extends AppCompatActivity

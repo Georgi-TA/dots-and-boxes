@@ -8,7 +8,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Game;
+import info.scelus.dotsandboxes.game.controllers.Game;
 
 /**
  * Created by SceLus on 15/10/2014

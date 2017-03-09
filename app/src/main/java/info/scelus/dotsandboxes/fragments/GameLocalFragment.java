@@ -9,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Board;
-import info.scelus.dotsandboxes.external.Game;
+import info.scelus.dotsandboxes.game.controllers.Game;
 import info.scelus.dotsandboxes.views.BoardView;
 import info.scelus.dotsandboxes.views.ScoreView;
 
@@ -18,14 +17,11 @@ public class GameLocalFragment extends Fragment {
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "info.scelus.args.mode";
     private static final String ARG_BOARD = "info.scelus.args.board";
-    private static final String ARG_P1_SCORE = "info.scelus.args.score.p1";
-    private static final String ARG_P2_SCORE = "info.scelus.args.score.p2";
-    private static final String ARG_P1_NEXT = "info.scelus.args.score.p1_next";
+    private static final String ARG_P1_NEXT = "info.scelus.args.scoreView.p1_next";
 
     private Game.Mode mode;
-    private Board board;
     private BoardView boardView;
-    private ScoreView score;
+    private ScoreView scoreView;
     private OnFragmentInteractionListener mListener;
     private Game game;
 
@@ -60,20 +56,19 @@ public class GameLocalFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
         boardView = (BoardView) root.findViewById(R.id.boardView);
-        score = (ScoreView) root.findViewById(R.id.scoreLayout);
+        scoreView = (ScoreView) root.findViewById(R.id.scoreLayout);
 
-        game = new Game(rows * columns);
-        board = new Board(game, rows, columns);
-        boardView.setBoard(board);
-        game.registerListener(score);
+        game = new Game(rows, columns);
+        game.registerListener(scoreView);
+        boardView.setGame(game);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(ARG_BOARD))
-                board.loadBoard(savedInstanceState.getString(ARG_BOARD));
+                game.getBoard().loadBoard(savedInstanceState.getString(ARG_BOARD));
 
-            if (savedInstanceState.containsKey(ARG_P1_SCORE) && savedInstanceState.containsKey(ARG_P2_SCORE) && savedInstanceState.containsKey(ARG_P1_NEXT)) {
+            if (savedInstanceState.containsKey(ARG_P1_NEXT)) {
                 Game.Player nextPlayer = savedInstanceState.getBoolean(ARG_P1_NEXT) ? Game.Player.PLAYER1 : Game.Player.PLAYER2;
-                game.setInitScoreAndTurn(savedInstanceState.getInt(ARG_P1_SCORE), savedInstanceState.getInt(ARG_P2_SCORE), nextPlayer);
+                game.setInitialTurn(nextPlayer);
             }
         }
 
@@ -103,9 +98,7 @@ public class GameLocalFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(ARG_BOARD, board.toString());
-        outState.putInt(ARG_P1_SCORE, board.getScore(Game.Player.PLAYER1));
-        outState.putInt(ARG_P2_SCORE, board.getScore(Game.Player.PLAYER2));
+        outState.putString(ARG_BOARD, game.getBoard().toString());
         outState.putBoolean(ARG_P1_NEXT, game.getNext() == Game.Player.PLAYER1);
         super.onSaveInstanceState(outState);
     }

@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Game;
+import info.scelus.dotsandboxes.game.controllers.Game;
 import info.scelus.dotsandboxes.utils.Globals;
 
 public class LocalMenuFragment extends Fragment {
