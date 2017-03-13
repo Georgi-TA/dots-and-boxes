@@ -5,12 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.game.models.Board;
 import info.scelus.dotsandboxes.game.controllers.Game;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Class responsible for displaying and interacting with the board
@@ -20,6 +23,7 @@ public class BoardView extends View {
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
     private int verticalOffset;     // Offset at the top and bottom to display the dots grid
+    private int[][] boxesAlpha;     // array containing the alpha value of each box
 
     // TODO: load them from XML resource
     private int boxSide = 80;       // default size for the box
@@ -101,6 +105,7 @@ public class BoardView extends View {
 
         Board board = game.getBoard();
 
+        boolean reinvalidate = false;
         int x1, y1, x2, y2;
         for (int i = 0; i < board.getRows(); i++)
             for (int j = 0; j < board.getColumns(); j++) {
@@ -113,6 +118,15 @@ public class BoardView extends View {
                     boxPaint.setColor(colorPlayer2);
 
                 if (box.left && box.right && box.bottom && box.top) {
+
+                    // update the box alpha
+                    if (boxesAlpha[i][j] < 255) {
+                        reinvalidate = true;
+                        boxesAlpha[i][j]+=5;
+                    }
+
+                    boxPaint.setAlpha(boxesAlpha[i][j]);
+
                     x1 = horizontalOffset + j * boxSide;
                     y1 = verticalOffset + i * boxSide;
                     x2 = horizontalOffset + (j + 1) * boxSide;
@@ -177,6 +191,9 @@ public class BoardView extends View {
                 y1 = verticalOffset + i * boxSide;
                 canvas.drawCircle(x1, y1, dotRadius, dotPaint);
             }
+
+        if (reinvalidate)
+            this.postInvalidate();
     }
 
     /**
@@ -185,6 +202,7 @@ public class BoardView extends View {
      */
     public void setGame(Game game) {
         this.game = game;
+        this.boxesAlpha = new int[game.getBoard().getRows()][game.getBoard().getColumns()];
         requestLayout();
     }
 
@@ -258,16 +276,24 @@ public class BoardView extends View {
                 float rowY = Math.abs(touchY) / boxSide;
                 float columnX = Math.abs(touchX) / boxSide;
 
+                double boxRow = Math.floor(Math.abs(touchY) / boxSide);
+                double boxColumn = Math.floor(Math.abs(touchX) / boxSide);
+
+                // Log.d(TAG, "onTouchEvent: rowY" + boxRow + "  columnX" + boxColumn);
+
                 double deltaXLeft, deltaYDown, deltaXRight, deltaYUp, deltaX, deltaY;
 
+                // get the part after the decimal point
                 deltaXLeft = columnX - Math.floor(columnX);
                 deltaXRight = Math.ceil(columnX) - columnX;
                 deltaYDown = rowY - Math.floor(rowY);
                 deltaYUp = Math.ceil(rowY) - rowY;
 
+                // determine whether the touch event is closer to a vertical or a horizontal line
                 deltaX = deltaXLeft > deltaXRight ? deltaXRight : deltaXLeft;
                 deltaY = deltaYDown > deltaYUp ? deltaYUp : deltaYDown;
 
+                // horizontal line
                 if (deltaX < deltaY) {
                     if (deltaX < snapLength) {
                         x1temp = (float) Math.floor(columnX);
@@ -280,6 +306,7 @@ public class BoardView extends View {
                             x2temp += 1;
                         }
                         drawTemp = true;
+                        Log.d(TAG, "onTouchEvent: (" + x1temp + ", " + y1temp + "), (" + x2temp + ", " + y2temp + ")");
                     }
                     else {
                         x1temp = 0;
@@ -289,7 +316,8 @@ public class BoardView extends View {
                         drawTemp = false;
                     }
                 }
-                else if (deltaX > deltaY){
+                // vertical line
+                else if (deltaX >= deltaY){
                     if (deltaY < snapLength) {
                         x1temp = (float) Math.floor(columnX);
                         x2temp = x1temp + 1;
