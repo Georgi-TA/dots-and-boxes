@@ -110,6 +110,8 @@ public class Board {
      * @param dotStart the dot that is with a number less than the one for dotEnd
      * @param dotEnd the dot that is with a number greater than the one for dotStart
      * @param player the player that is placing the line
+     *
+     * @return if the move completed a square
      */
     public boolean setLineForDots(int dotStart, int dotEnd, Game.Player player) {
         int rowStart = dotStart / (rows + 1);
@@ -118,12 +120,9 @@ public class Board {
         int columnEnd = dotEnd % (columns + 1);
 
         // sanity check
-        if (rowStart <= rowEnd && columnStart <= columnEnd) {
-            toggleLine(true, rowStart, columnStart, rowEnd, columnEnd, player);
-            return true;
-        }
-
-        return false;
+        return  rowStart <= rowEnd
+                && columnStart <= columnEnd
+                && toggleLine(true, rowStart, columnStart, rowEnd, columnEnd, player);
     }
 
     /**
@@ -152,8 +151,10 @@ public class Board {
      * @param column the column of the box
      * @param line the type of line being placed
      * @param player the player that is placing the line
+     *
+     * @return if the line completed a box
      */
-    private void setLineAtBox(int row, int column, Line line, Game.Player player) {
+    private boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
         switch (line){
             case TOP:
                 boxes[row][column] |= 1;
@@ -184,7 +185,11 @@ public class Board {
                 boxes[row][column] &= ~16;
                 boxes[row][column] &= ~32;
             }
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -221,12 +226,12 @@ public class Board {
      * @param rowEnd row of ending dot
      * @param player the player placing the line
      */
-    private void toggleLine(boolean set, int rowStart, int columnStart, int rowEnd, int columnEnd, Game.Player player) {
+    private boolean toggleLine(boolean set, int rowStart, int columnStart, int rowEnd, int columnEnd, Game.Player player) {
         if (columnStart < 0 || columnStart > columns ||
             columnEnd < 0 || columnEnd > columns ||
             rowStart < 0 || rowStart > rows ||
             rowEnd < 0 || rowEnd > rows)
-        return;
+        return false;
 
         // get the starting coordinates (row, column)
         int row = rowStart < rowEnd ? rowStart : rowEnd;
@@ -237,22 +242,22 @@ public class Board {
             // top row
             if (row == 0) {
                 if (set)
-                    setLineAtBox(row, column, Line.TOP, player);
+                    return setLineAtBox(row, column, Line.TOP, player);
                 else
                     unsetLineAtBox(row, column, Line.TOP);
             }
             // bottom row
             else if (row == rows) {
                 if (set)
-                    setLineAtBox(row - 1, column, Line.BOTTOM, player);
+                    return setLineAtBox(row - 1, column, Line.BOTTOM, player);
                 else
                     unsetLineAtBox(row - 1, column, Line.BOTTOM);
             }
             // middle rows
             else {
                 if (set) {
-                    setLineAtBox(row, column, Line.TOP, player);
-                    setLineAtBox(row - 1, column, Line.BOTTOM, player);
+                    return setLineAtBox(row, column, Line.TOP, player) |
+                           setLineAtBox(row - 1, column, Line.BOTTOM, player);
                 }
                 else {
                     unsetLineAtBox(row, column, Line.TOP);
@@ -265,22 +270,22 @@ public class Board {
             // leftmost column
             if (column == 0) {
                 if (set)
-                    setLineAtBox(row, column, Line.LEFT, player);
+                    return setLineAtBox(row, column, Line.LEFT, player);
                 else
                     unsetLineAtBox(row, column, Line.LEFT);
             }
             // rightmost column
             else if (column == columns) {
                 if (set)
-                    setLineAtBox(row, column - 1, Line.RIGHT, player);
+                    return setLineAtBox(row, column - 1, Line.RIGHT, player);
                 else
                     unsetLineAtBox(row, column - 1, Line.RIGHT);
             }
             // middle columns
             else {
                 if (set) {
-                    setLineAtBox(row, column - 1, Line.RIGHT, player);
-                    setLineAtBox(row, column, Line.LEFT, player);
+                    return setLineAtBox(row, column - 1, Line.RIGHT, player) |
+                           setLineAtBox(row, column, Line.LEFT, player);
                 }
                 else {
                     unsetLineAtBox(row, column - 1, Line.RIGHT);
@@ -288,6 +293,8 @@ public class Board {
                 }
             }
         }
+
+        return false;
     }
 
     /**

@@ -68,7 +68,7 @@ public class GameLocalFragment extends Fragment {
 
             if (savedInstanceState.containsKey(ARG_P1_NEXT)) {
                 Game.Player nextPlayer = savedInstanceState.getBoolean(ARG_P1_NEXT) ? Game.Player.PLAYER1 : Game.Player.PLAYER2;
-                game.setInitialTurn(nextPlayer);
+                game.setNextPlayer(nextPlayer);
             }
         }
 

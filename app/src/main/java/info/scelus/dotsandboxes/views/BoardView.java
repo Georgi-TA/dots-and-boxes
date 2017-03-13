@@ -209,8 +209,8 @@ public class BoardView extends View {
     /**
      * Overriden in order to maintain a square aspect ratio of the view.
      * Also used to calculate board specific measures
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
+     * @param widthMeasureSpec dimension specifying the width
+     * @param heightMeasureSpec dimension specifying the height
      */
     @SuppressWarnings("SuspiciousNameCombination")
     @Override

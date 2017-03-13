@@ -43,9 +43,16 @@ public class ScoreView extends LinearLayout implements Game.GameListener {
     }
 
     @Override
-    public void onScoreChange(int p1Score, int p2Score) {
-        player1.setText(String.format(Locale.getDefault(), "%d", p1Score));
-        player2.setText(String.format(Locale.getDefault(), "%d", p2Score));
+    public void onScoreChange(Game.Player player, int score) {
+        switch (player) {
+            case PLAYER1:
+                player1.setText(String.format(Locale.getDefault(), "%d", score));
+                break;
+
+            case PLAYER2:
+                player2.setText(String.format(Locale.getDefault(), "%d", score));
+                break;
+        }
     }
 
     @Override

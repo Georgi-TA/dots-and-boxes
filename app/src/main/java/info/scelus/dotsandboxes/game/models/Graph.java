@@ -54,7 +54,6 @@ public class Graph {
         return null;
     }
 
-
     /**
      * Entry point for the alpha beta algorithm
      * @param board the board which is the current game board
@@ -202,5 +201,9 @@ public class Graph {
             }
         }
         return availableMoves;
+    }
+
+    public boolean hasEdge(int dotStart, int dotEnd) {
+        return edges.containsKey(Edge.generateKey(dotStart, dotEnd));
     }
 }

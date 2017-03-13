@@ -16,11 +16,46 @@ public class Game {
     private Graph gameTree;    // graph object representing the game tree
     private Board board;       // the board on which the two players will play
 
+    public void setNextPlayer(Player nextPlayer) {
+        switch (nextPlayer) {
+            case PLAYER1:
+                gameState = State.PLAYER1_TURN;
+                break;
+            case PLAYER2:
+                gameState = State.PLAYER2_TURN;
+                break;
+        }
+    }
+
+    /**
+     * Enumeration for the game state. Could be any one of the described below.
+     */
+    enum State {
+        START, PLAYER1_TURN, PLAYER2_TURN, END
+    }
+    private State gameState = State.START;
+
+    /**
+     * Enumeration of the players, who own a square. Also used for turn based decisions.
+     */
+    public enum Player {
+        PLAYER1, NONE, PLAYER2;
+    }
+    private Player nextToMove;  // the player that is next to move
+
+    /**
+     * Enumeration of the Mode which the user has selected to play as.
+     */
+    public enum Mode {
+        PLAYER, CPU, NETWORK;
+    }
+    private Mode gameMode = Mode.PLAYER;
+
     /**
      * Listener interface for the {@link Game} class
      */
     public interface GameListener {
-        void onScoreChange(int p1Score, int p2Score);
+        void onScoreChange(Player player, int score);
         void onTurnChange(Player nextToMove);
         void onGameEnd(Player winner);
     }
@@ -28,25 +63,6 @@ public class Game {
     private HashSet<GameListener> listeners; // all listeners registered to monitor the game progress
 
     private int maxScore;       // pre-calculated field for keeping track of the current MAX Score
-    private int player1Score;   // player one's score
-    private int player2Score;   // player two's score
-
-
-    private Player nextToMove;  // the player that is next to move
-    /**
-     * Enumeration of the players, who own a square. Also used for turn based decisions.
-     */
-    public enum Player {
-        PLAYER1, NONE, PLAYER2;
-
-
-    }
-    /**
-     * Enumeration of the Mode which the user has selected to play as.
-     */
-    public enum Mode {
-        PLAYER, CPU, NETWORK;
-    }
 
     /**
      * Basic default constructor setting initial values to zero
@@ -61,8 +77,6 @@ public class Game {
         this.gameTree = new Graph(rows, columns);
         this.listeners = new HashSet<>();
 
-        this.player1Score = 0;
-        this.player2Score = 0;
         this.nextToMove = Player.PLAYER1;
     }
 
@@ -75,58 +89,32 @@ public class Game {
     }
 
     /**
-     * Connects two dots on the board, which counts as a move
+     * Connects two dots on the board, which counts as a move.
+     * This method keeps track of the current state of the game.
      * @param dotStart starting point
      * @param dotEnd ending point
      */
     public void makeAMove(int dotStart, int dotEnd) {
+        // you cannot make a move on an existing line
+        if (gameTree.hasEdge(dotStart, dotEnd))
+            return;
 
-        // register the move on the board
-        board.setLineForDots(dotStart, dotEnd, this.nextToMove);
-
-        // add the current move to the Graph object
+        // continue with making a move and add the current move to the Graph object
         gameTree.addEdge(dotStart, dotEnd);
 
-        int player1Score = board.getScore(Player.PLAYER1);
-        int player2Score = board.getScore(Player.PLAYER2);
-        // the case where player 1 reached the minimum points required to win
-        if (player1Score > maxScore / 2 + maxScore % 2) {
-            notifyGameEnd(Player.PLAYER1);
-        }
-        // the case where player 2 reached the minimum points required to win
-        else if (player2Score > maxScore / 2 + maxScore % 2) {
-            notifyGameEnd(Player.PLAYER2);
-        }
-        // the case where player one and player two have equal points
-        if (this.player1Score == player1Score && this.player2Score == player2Score) {
-            // switch the next player to move
-            if (nextToMove == Player.PLAYER1) {
-                nextToMove = Player.PLAYER2;
+        switch (gameState) {
+            case START:
+                movePlayer1(dotStart, dotEnd);
+                break;
+            case PLAYER1_TURN:
+                movePlayer1(dotStart, dotEnd);
+                break;
+            case PLAYER2_TURN:
+                movePlayer2(dotStart, dotEnd);
+                break;
+            case END:
 
-                Log.d(TAG, "makeAMove: " + gameTree.getNextMove(Player.PLAYER2));
-                notifyTurnChange();
-            }
-            else {
-                nextToMove = Player.PLAYER1;
-                notifyTurnChange();
-            }
-        }
-        // otherwise one of the players made a square and has an extra turn
-        else {
-            if (player1Score > this.player1Score && nextToMove == Player.PLAYER2) {
-                nextToMove = Player.PLAYER1;
-                notifyTurnChange();
-            }
-            else if (player2Score > this.player2Score && nextToMove == Player.PLAYER1) {
-                nextToMove = Player.PLAYER2;
-
-                Log.d(TAG, "makeAMove: " + gameTree.getNextMove(Player.PLAYER2));
-                notifyTurnChange();
-            }
-
-            this.player1Score = player1Score;
-            this.player2Score = player2Score;
-            notifyScoreChange();
+                return;
         }
     }
 
@@ -147,31 +135,73 @@ public class Game {
     }
 
     /**
-     * Sets the initial turn and recalculated the score of each player
-     * @param firstToMove the player to make the first move
+     * A move will be executed with Player1 being active
      */
-    public void setInitialTurn(Player firstToMove) {
-        this.nextToMove = firstToMove;
-        this.player1Score = getBoard().getScore(Player.PLAYER1);
-        this.player2Score = getBoard().getScore(Player.PLAYER2);
+    private void movePlayer1(int dotStart, int dotEnd) {
+        // register the move on the board for the first player
+        boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
+
+        // calculate the score
+        int player1Score = board.getScore(Player.PLAYER1);
+        if (boxCompleted) {
+            notifyScoreChange(Player.PLAYER1, player1Score);
+
+            // determine if p1 is a winner
+            if (player1Score > maxScore / 2 + maxScore % 2) {
+                notifyGameEnd(Player.PLAYER1);
+                gameState = State.END;
+            }
+        }
+        else {
+            gameState = State.PLAYER2_TURN;
+            notifyTurnChange(Player.PLAYER2);
+        }
+    }
+
+    /**
+     * A move will be executed with Player2 being active
+     */
+    private void movePlayer2(int dotStart, int dotEnd) {
+        // register the move on the board for the first player
+        boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER2);
+
+        if (boxCompleted) {
+            // calculate the score
+            int player2Score = board.getScore(Player.PLAYER2);
+            notifyScoreChange(Player.PLAYER2, player2Score);
+
+            // calculate the score and see if p2 is a winner
+            if (player2Score > maxScore / 2 + maxScore % 2) {
+                notifyGameEnd(Player.PLAYER2);
+                gameState = State.END;
+                return;
+            }
+        }
+        else {
+            gameState = State.PLAYER1_TURN;
+            notifyTurnChange(Player.PLAYER1);
+        }
     }
 
     /**
      * Notifies the listeners for a turn change
+     * @param nextPlayer the player who is going the take the next turn
      */
-    private void notifyTurnChange() {
+    private void notifyTurnChange(Player nextPlayer) {
         for (GameListener listener : listeners)
             if (listener != null)
-                listener.onTurnChange(nextToMove);
+                listener.onTurnChange(nextPlayer);
     }
 
     /**
      * Notifies the listeners for a score change
+     * @param player the player who's score is changing
+     * @param score the player's score
      */
-    private void notifyScoreChange() {
+    private void notifyScoreChange(Player player, int score) {
         for (GameListener listener : listeners)
             if (listener != null)
-                listener.onScoreChange(player1Score, player2Score);
+                listener.onScoreChange(player, score);
     }
 
     /**
