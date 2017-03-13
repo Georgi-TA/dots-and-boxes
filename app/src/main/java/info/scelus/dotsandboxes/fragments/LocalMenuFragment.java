@@ -17,7 +17,7 @@ public class LocalMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 5267;
     private OnFragmentInteractionListener mListener;
 
-    private TextView mainTitle;
+
 
     public static LocalMenuFragment newInstance(Bundle args) {
         LocalMenuFragment fragment = new LocalMenuFragment();
@@ -34,17 +34,12 @@ public class LocalMenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setFonts();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_menu_local, container, false);
-        mainTitle = (TextView) root.findViewById(R.id.mainLocalTitleText);
         Button player2PlayButton = (Button) root.findViewById(R.id.buttonPlayLocalPlayer);
         Button cpuPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
 
@@ -73,9 +68,6 @@ public class LocalMenuFragment extends Fragment {
         return root;
     }
 
-    private void setFonts () {
-        mainTitle.setTypeface(Globals.kgTrueColors);
-    }
 
     @Override
     public void onAttach(Context context) {

@@ -4,18 +4,11 @@
     android:layout_height="match_parent"
     tools:context="info.scelus.dotsandboxes.fragments.MainMenuFragment">
 
-    <TextView
-        android:id="@+id/mainTitleText"
-        style="@style/MenuTitle"
-        android:textSize="50sp"
-        android:text="@string/menu_title" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/mainTitleText"
         android:layout_marginTop="32dp">
 
         <Button

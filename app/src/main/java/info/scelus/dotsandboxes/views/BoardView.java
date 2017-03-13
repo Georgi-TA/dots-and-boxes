@@ -10,8 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.game.models.Board;
 import info.scelus.dotsandboxes.game.controllers.Game;
+import info.scelus.dotsandboxes.game.models.Board;
 
 import static android.content.ContentValues.TAG;
 
@@ -198,7 +198,8 @@ public class BoardView extends View {
 
     /**
      * Sets the game object and calculates the width and height of the touch area
-     * @param game
+     * @param game Game object representing the developing game. In its nature
+     *             it is a state machine.
      */
     public void setGame(Game game) {
         this.game = game;
@@ -275,11 +276,6 @@ public class BoardView extends View {
                 // calculate on which box did the touch happen
                 float rowY = Math.abs(touchY) / boxSide;
                 float columnX = Math.abs(touchX) / boxSide;
-
-                double boxRow = Math.floor(Math.abs(touchY) / boxSide);
-                double boxColumn = Math.floor(Math.abs(touchX) / boxSide);
-
-                // Log.d(TAG, "onTouchEvent: rowY" + boxRow + "  columnX" + boxColumn);
 
                 double deltaXLeft, deltaYDown, deltaXRight, deltaYUp, deltaX, deltaY;
 
