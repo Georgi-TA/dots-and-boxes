@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,7 +12,6 @@ import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.game.controllers.Game;
 import info.scelus.dotsandboxes.game.models.Board;
 
-import static android.content.ContentValues.TAG;
 
 /**
  * Class responsible for displaying and interacting with the board
@@ -302,7 +300,6 @@ public class BoardView extends View {
                             x2temp += 1;
                         }
                         drawTemp = true;
-                        Log.d(TAG, "onTouchEvent: (" + x1temp + ", " + y1temp + "), (" + x2temp + ", " + y2temp + ")");
                     }
                     else {
                         x1temp = 0;

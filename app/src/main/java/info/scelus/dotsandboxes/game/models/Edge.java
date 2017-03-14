@@ -28,4 +28,12 @@ public class Edge {
         this.dot_end = dot_end;
         setKey(dot_start, dot_end);
     }
+
+    public int getDotStart() {
+        return dot_start;
+    }
+
+    public int getDotEnd() {
+        return dot_end;
+    }
 }

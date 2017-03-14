@@ -1,9 +1,14 @@
 package info.scelus.dotsandboxes.game.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import info.scelus.dotsandboxes.game.controllers.Game;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A class representing the game tree in form of a graph
@@ -13,27 +18,25 @@ import info.scelus.dotsandboxes.game.controllers.Game;
  */
 
 public class Graph {
-
-    private static final int MAX_LEVEL_MINIMAX = 2;
-    private int MAX_SCORE;
     private HashMap<String, Edge> edges;
     private Board board;
 
     /**
      * Default constructor
-     * @param rows rows of the board
+     *
+     * @param rows    rows of the board
      * @param columns columns of the board
      */
     public Graph(int rows, int columns) {
         this.edges = new HashMap<>();
         this.board = new Board(rows, columns);
-        this.MAX_SCORE = rows * columns;
     }
 
     /**
      * Adds an edge to the edges' HashMap.
+     *
      * @param dotStart the first dotOf the line
-     * @param dotEnd the last dorOf the line
+     * @param dotEnd   the last dorOf the line
      */
     public void addEdge(int dotStart, int dotEnd) {
         Edge edge = new Edge(dotStart, dotEnd);
@@ -42,30 +45,68 @@ public class Graph {
 
     /**
      * Calculates the next move based on the minimax algorithm combined with alpha-beta pruning.
+     *
      * @param player the player to make the move
      */
     public Edge getNextMove(Game.Player player) {
-        // Validation if player 2 is on the move
-        // He will be either an AI in this case
-        if (player == Game.Player.PLAYER2) {
-            return alphaBeta(board);
-        }
+        Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
+        miniMaxBoard.loadBoard(board.toString());
 
-        return null;
+        MiniMaxNode result = minimax(0, miniMaxBoard, null, player, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        Log.d(TAG, "getNextMove: " + result.value);
+        return result.edge;
     }
 
-    /**
-     * Entry point for the alpha beta algorithm
-     * @param board the board which is the current game board
-     * @return the Edge that will represent the next move for the AI
-     */
-    private Edge alphaBeta(Board board) {
-        // create a copy of the current board
-        Board minimaxBoard = new Board(board.getRows(), board.getColumns());
-        minimaxBoard.loadBoard(board.toString());
+    private MiniMaxNode minimax(int level, Board board, Edge edge, Game.Player player, int alpha, int beta) {
+        ArrayList<Edge> availableMoves = getAvailableMoves(board);
+        if (level >= 30 || availableMoves.size() == 0) {
+            return new MiniMaxNode(edge, getValue(board));
+        }
 
-        // assume the next value to be from a maximizer
-        return maxValue(0, board, Integer.MIN_VALUE, Integer.MAX_VALUE).edge;
+        Edge move = getCompletionMove(board);
+        while (move != null) {
+            addEdge(move);
+            board.setLineForDots(move.dot_start, move.dot_end, player);
+            move = getCompletionMove(board);
+        }
+
+        for (Edge nextMove : availableMoves) {
+            Log.d(TAG, "minimax: nextmove: " + nextMove.getKey());
+            // make a move to continue with the depth first search
+            if (player == Game.Player.PLAYER1) { // minimizer
+
+                MiniMaxNode successor = minimax(level + 1, board, nextMove, Game.Player.PLAYER2, alpha, beta);
+                if (alpha > successor.value) {
+                    alpha = successor.value;
+                }
+
+                if (alpha <= beta)
+                    return successor;
+
+                // undo move
+                // revert the move to continue with the next one
+                board.removeLineForDots(nextMove.dot_start, nextMove.dot_end);
+                removeEdge(nextMove);
+
+            }
+            else if(player == Game.Player.PLAYER2) { // maximizer
+
+                MiniMaxNode successor = minimax(level + 1, board, nextMove, Game.Player.PLAYER1, alpha, beta);
+                if (beta < successor.value) {
+                    beta = successor.value;
+                }
+
+                if (alpha <= beta)
+                    return successor;
+
+                // undo move
+                // revert the move to continue with the next one
+                board.removeLineForDots(nextMove.dot_start, nextMove.dot_end);
+                removeEdge(nextMove);
+            }
+        }
+
+        return new MiniMaxNode(edge, getValue(board));
     }
 
     /**
@@ -74,80 +115,11 @@ public class Graph {
     private class MiniMaxNode {
         int value;
         Edge edge;
-    }
 
-    /**
-     * Servers as a maximizer function for the minimax algorithm
-     * @param board the board on which to make the next move with a minimizer
-     * @param alpha the alpha value
-     * @param beta  the beta value
-     * @return the best fitted move for <b>Player 2</b>
-     */
-    private MiniMaxNode maxValue(int level, Board board, int alpha, int beta) {
-        if (board.isFinished() || level >= MAX_LEVEL_MINIMAX) {
-            MiniMaxNode result = new MiniMaxNode();
-            result.value = getValue(board);
-            return result;
+        MiniMaxNode(Edge edge, int value) {
+            this.value = value;
+            this.edge = edge;
         }
-
-        MiniMaxNode result = new MiniMaxNode();
-        result.value = Integer.MIN_VALUE;
-
-        for (Edge edge : getAvailableMoves()) {
-            // make a move to continue with the depth first search
-            board.setLineForDots(edge.dot_start, edge.dot_end, Game.Player.PLAYER2);
-            addEdge(edge);
-
-            // evaluate the current board state
-            MiniMaxNode node = minValue(level + 1, board, alpha, beta);
-            node.edge = edge;
-            result.value = Math.max(result.value, node.value);
-            if (result.value > beta)
-                return node;
-
-            // revert the move to continue with the next one
-            board.setLineForDots(edge.dot_start, edge.dot_end, Game.Player.NONE);
-            removeEdge(edge);
-        }
-
-        return result;
-    }
-
-    /**
-     * Servers as a minimizer function for the minimax algorithm
-     * @param board the board on which to make the next move with a minimizer
-     * @param alpha the alpha value
-     * @param beta  the beta value
-     * @return the best fitted move for <b>Player 1</b>
-     */
-    private MiniMaxNode minValue(int level, Board board, int alpha, int beta) {
-        if (board.isFinished() || level >= MAX_LEVEL_MINIMAX) {
-            MiniMaxNode result = new MiniMaxNode();
-            result.value = getValue(board);
-            return result;
-        }
-
-        MiniMaxNode result = new MiniMaxNode();
-        result.value = Integer.MIN_VALUE;
-
-        for (Edge edge : getAvailableMoves()) {
-            // make a move to continue with the depth first search
-            board.setLineForDots(edge.dot_start, edge.dot_end, Game.Player.PLAYER1);
-            addEdge(edge);
-
-            // evaluate the current board state
-            MiniMaxNode node = maxValue(level + 1, board, alpha, beta);
-            node.edge = edge;
-            result.value = Math.min(result.value, node.value);
-            if (result.value > beta)
-                return node;
-
-            // revert the move to continue with the next one
-            board.removeLineForDots(edge.dot_start, edge.dot_end);
-            removeEdge(edge);
-        }
-
-        return result;
     }
 
     /**
@@ -172,18 +144,19 @@ public class Graph {
      * @return The integer value which is the maximum score that <b>Player 2</b> can make
      */
     private int getValue(Board board) {
-        return MAX_SCORE - board.getScore(Game.Player.PLAYER1);
+        return board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
     }
 
     /**
      * Gets all available moves for the minimizers and maximizers
      * @return available moves
      */
-    private ArrayList<Edge> getAvailableMoves() {
+    private ArrayList<Edge> getAvailableMoves(Board board) {
         ArrayList<Edge> availableMoves = new ArrayList<>();
-        int allDotsCount = board.getRows() * board.getColumns();
-        int rows = board.getRows();
-        int columns = board.getColumns();
+
+        int rows = board.getRows() + 1;
+        int columns = board.getColumns() + 1;
+        int allDotsCount = rows * columns;
 
         for (int i = 0; i < allDotsCount; i++) {
             // horizontal
@@ -194,13 +167,49 @@ public class Graph {
             }
 
             // vertical
-            if (i % rows != rows - 1) {
+            if (i / rows != rows - 1) {
                 Edge edge = new Edge(i, i + columns);
                 if (!edges.containsKey(edge.getKey()))
                     availableMoves.add(edge);
             }
         }
         return availableMoves;
+    }
+
+    private Edge getCompletionMove(Board board) {
+        Edge completionEdge = null;
+
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getColumns(); j++) {
+                Board.Box box = board.getBoxAt(i, j);
+
+                // left missing
+                if (box.bottom & box.top & box.right) {
+                    completionEdge = new Edge(i, i + board.getColumns() + 1);
+                    break;
+                }
+
+                // right missing
+                if (box.bottom & box.top & box.left) {
+                    completionEdge = new Edge(i + 1, i + board.getColumns() + 2);
+                    break;
+                }
+
+                // top missing
+                if (box.bottom & box.left & box.right) {
+                    completionEdge = new Edge(i, i + 1);
+                    break;
+                }
+
+                // bottom missing
+                if (box.left & box.top & box.right) {
+                    completionEdge = new Edge(i + board.getColumns() + 1, i + board.getColumns() + 2);
+                    break;
+                }
+            }
+        }
+
+        return completionEdge;
     }
 
     public boolean hasEdge(int dotStart, int dotEnd) {

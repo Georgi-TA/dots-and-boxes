@@ -114,9 +114,9 @@ public class Board {
      * @return if the move completed a square
      */
     public boolean setLineForDots(int dotStart, int dotEnd, Game.Player player) {
-        int rowStart = dotStart / (rows + 1);
+        int rowStart = dotStart / (columns + 1);
         int rowEnd = dotEnd / (columns + 1);
-        int columnStart = dotStart % (rows + 1);
+        int columnStart = dotStart % (columns + 1);
         int columnEnd = dotEnd % (columns + 1);
 
         // sanity check
@@ -131,9 +131,9 @@ public class Board {
      * @param dotEnd the dot that is with a number greater than the one for dotStart
      */
      boolean removeLineForDots(int dotStart, int dotEnd) {
-         int rowStart = dotStart / (rows + 1);
+         int rowStart = dotStart / (columns + 1);
          int rowEnd = dotEnd / (columns + 1);
-         int columnStart = dotStart % (rows + 1);
+         int columnStart = dotStart % (columns + 1);
          int columnEnd = dotEnd % (columns + 1);
 
         // sanity check
@@ -154,7 +154,7 @@ public class Board {
      *
      * @return if the line completed a box
      */
-    private boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
+    public boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
         switch (line){
             case TOP:
                 boxes[row][column] |= 1;
@@ -180,12 +180,6 @@ public class Board {
                 boxes[row][column] |= 32;
                 boxes[row][column] &= ~16;
             }
-            // the box belongs to no one
-            else {
-                boxes[row][column] &= ~16;
-                boxes[row][column] &= ~32;
-            }
-
             return true;
         }
 
@@ -200,22 +194,22 @@ public class Board {
      */
     private void unsetLineAtBox(int row, int column, Line line) {
         switch (line){
-            case LEFT:
-                boxes[row][column] &= ~8;
+            case TOP:
+                boxes[row][column] &= ~(1);
                 break;
             case RIGHT:
-                boxes[row][column] &= ~2;
-                break;
-            case TOP:
-                boxes[row][column] &= ~1;
+                boxes[row][column] &= ~(1 << 1);
                 break;
             case BOTTOM:
-                boxes[row][column] &= ~4;
+                boxes[row][column] &= ~(1 << 2);
+                break;
+            case LEFT:
+                boxes[row][column] &= ~(1 << 3);
                 break;
         }
 
-        boxes[row][column] &= ~16;
-        boxes[row][column] &= ~32;
+        boxes[row][column] &= ~(1 << 4);
+        boxes[row][column] &= ~(1 << 5);
     }
 
     /**

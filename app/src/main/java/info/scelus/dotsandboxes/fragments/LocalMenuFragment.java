@@ -60,7 +60,7 @@ public class LocalMenuFragment extends Fragment {
                 if (mListener != null) {
                     Bundle args = new Bundle();
                     args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
-                    mListener.onLocalMenuFragmentInteraction(ComingSoonFragment.FRAGMENT_ID, args);
+                    mListener.onLocalMenuFragmentInteraction(GameLocalFragment.FRAGMENT_ID, args);
                 }
             }
         });

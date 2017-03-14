@@ -1,11 +1,10 @@
 package info.scelus.dotsandboxes.game.controllers;
 
-import android.util.Log;
 import java.util.HashSet;
-import info.scelus.dotsandboxes.game.models.Board;
-import info.scelus.dotsandboxes.game.models.Graph;
 
-import static android.content.ContentValues.TAG;
+import info.scelus.dotsandboxes.game.models.Board;
+import info.scelus.dotsandboxes.game.models.Edge;
+import info.scelus.dotsandboxes.game.models.Graph;
 
 /**
  * Game class object responsible for handling the game as it develops.
@@ -30,7 +29,7 @@ public class Game {
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
-    enum State {
+    private enum State {
         START, PLAYER1_TURN, PLAYER2_TURN, END
     }
     private State gameState = State.START;
@@ -118,6 +117,10 @@ public class Game {
         }
     }
 
+    public Edge getNextMove(Player player) {
+        return gameTree.getNextMove(player);
+    }
+
     /**
      * The getter for the board object
      * @return the current board on which the game is played
@@ -141,9 +144,9 @@ public class Game {
         // register the move on the board for the first player
         boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
 
-        // calculate the score
-        int player1Score = board.getScore(Player.PLAYER1);
         if (boxCompleted) {
+            // calculate the score
+            int player1Score = board.getScore(Player.PLAYER1);
             notifyScoreChange(Player.PLAYER1, player1Score);
 
             // determine if p1 is a winner
@@ -174,8 +177,9 @@ public class Game {
             if (player2Score > maxScore / 2 + maxScore % 2) {
                 notifyGameEnd(Player.PLAYER2);
                 gameState = State.END;
-                return;
             }
+
+            notifyTurnChange(Player.PLAYER2);
         }
         else {
             gameState = State.PLAYER1_TURN;

@@ -4,16 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import info.blackbear.scelus.dotsandboxes.R;
 import info.scelus.dotsandboxes.game.controllers.Game;
+import info.scelus.dotsandboxes.game.models.Edge;
+import info.scelus.dotsandboxes.game.models.Graph;
 import info.scelus.dotsandboxes.views.BoardView;
 import info.scelus.dotsandboxes.views.ScoreView;
 
-public class GameLocalFragment extends Fragment {
+import static android.content.ContentValues.TAG;
+
+public class GameLocalFragment extends Fragment implements Game.GameListener {
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "info.scelus.args.mode";
     private static final String ARG_BOARD = "info.scelus.args.board";
@@ -25,8 +30,8 @@ public class GameLocalFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Game game;
 
-    private int rows = 6;
-    private int columns = 6;
+    private int rows = 3;
+    private int columns = 3;
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -60,6 +65,7 @@ public class GameLocalFragment extends Fragment {
 
         game = new Game(rows, columns);
         game.registerListener(scoreView);
+        game.registerListener(this);
         boardView.setGame(game);
 
         if(savedInstanceState != null) {
@@ -90,6 +96,27 @@ public class GameLocalFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onScoreChange(Game.Player player, int score) {
+
+    }
+
+    @Override
+    public void onTurnChange(Game.Player nextToMove) {
+        if (mode == Game.Mode.CPU) {
+            if (nextToMove == Game.Player.PLAYER2) {
+                Edge nextMove = game.getNextMove(Game.Player.PLAYER2);
+                Log.d(TAG, "onTurnChange: " + nextMove.getDotStart() + " - " + nextMove.getDotEnd());
+                game.makeAMove(nextMove.getDotStart(), nextMove.getDotEnd());
+            }
+        }
+    }
+
+    @Override
+    public void onGameEnd(Game.Player winner) {
+
     }
 
     public interface OnFragmentInteractionListener {
