@@ -1,18 +1,17 @@
-package info.scelus.dotsandboxes.game.models;
+package com.touchawesome.dotsandboxes.game.models;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import info.scelus.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 import static android.content.ContentValues.TAG;
 
 /**
  * A class representing the game tree in form of a graph
- * the {@link info.scelus.dotsandboxes.game.models.Board} board is presented
+ * the {@link com.touchawesome.dotsandboxes.game.models.Board} board is presented
  *
  * Created by scelus on 08.03.17
  */

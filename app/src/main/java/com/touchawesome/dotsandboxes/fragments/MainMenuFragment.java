@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.fragments;
+package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import info.blackbear.scelus.dotsandboxes.R;
+import com.blackbear.scelus.dotsandboxes.R;
 
 public class MainMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
@@ -67,7 +67,6 @@ public class MainMenuFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
 
     @Override
     public void onDetach() {

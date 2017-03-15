@@ -1,10 +1,10 @@
-package info.scelus.dotsandboxes.game.controllers;
+package com.touchawesome.dotsandboxes.game.controllers;
 
 import java.util.HashSet;
 
-import info.scelus.dotsandboxes.game.models.Board;
-import info.scelus.dotsandboxes.game.models.Edge;
-import info.scelus.dotsandboxes.game.models.Graph;
+import com.touchawesome.dotsandboxes.game.models.Board;
+import com.touchawesome.dotsandboxes.game.models.Edge;
+import com.touchawesome.dotsandboxes.game.models.Graph;
 
 /**
  * Game class object responsible for handling the game as it develops.

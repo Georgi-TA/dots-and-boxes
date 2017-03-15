@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.game.models;
+package com.touchawesome.dotsandboxes.game.models;
 
 import java.util.Locale;
 

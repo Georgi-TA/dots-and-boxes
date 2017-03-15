@@ -1,9 +1,9 @@
-package info.scelus.dotsandboxes;
+package com.touchawesome.dotsandboxes;
 
 import android.app.Application;
 import android.graphics.Typeface;
 
-import info.scelus.dotsandboxes.utils.Globals;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 /**
  * Created by SceLus on 15/10/2014.

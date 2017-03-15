@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<info.scelus.dotsandboxes.views.ScoreView
+<com.touchawesome.dotsandboxes.views.ScoreView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="64dp"
     android:layout_height="match_parent"
@@ -16,4 +16,4 @@
         style="@style/ScoreViewVertical"
         android:background="@drawable/score_p2" />
 
-</info.scelus.dotsandboxes.views.ScoreView>
+</com.touchawesome.dotsandboxes.views.ScoreView>

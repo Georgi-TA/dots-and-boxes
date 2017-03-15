@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.activities;
+package com.touchawesome.dotsandboxes.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,12 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.fragments.ComingSoonFragment;
-import info.scelus.dotsandboxes.fragments.GameLocalFragment;
-import info.scelus.dotsandboxes.fragments.LocalMenuFragment;
-import info.scelus.dotsandboxes.fragments.MainMenuFragment;
-import info.scelus.dotsandboxes.utils.Globals;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
+import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
+import com.touchawesome.dotsandboxes.fragments.LocalMenuFragment;
+import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class MainActivity extends AppCompatActivity
                           implements MainMenuFragment.OnFragmentInteractionListener,

@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.views;
+package com.touchawesome.dotsandboxes.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.game.controllers.Game;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 /**
  * Created by SceLus on 15/10/2014

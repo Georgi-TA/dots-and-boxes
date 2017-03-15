@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.utils;
+package com.touchawesome.dotsandboxes.utils;
 
 import android.graphics.Typeface;
 

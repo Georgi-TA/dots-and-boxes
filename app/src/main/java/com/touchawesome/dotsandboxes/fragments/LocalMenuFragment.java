@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.fragments;
+package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.game.controllers.Game;
-import info.scelus.dotsandboxes.utils.Globals;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 public class LocalMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 5267;

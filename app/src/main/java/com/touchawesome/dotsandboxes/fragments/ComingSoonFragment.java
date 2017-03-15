@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.fragments;
+package com.touchawesome.dotsandboxes.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.utils.Globals;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class ComingSoonFragment extends Fragment {
     public static final int FRAGMENT_ID = 2346;

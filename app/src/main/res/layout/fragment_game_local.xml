@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.scelus.dotsandboxes.fragments.GameLocalFragment">
+    tools:context="com.touchawesome.dotsandboxes.fragments.GameLocalFragment">
 
     <include
         layout="@layout/score_layout"
@@ -12,14 +12,13 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/scoreLayout"/>
 
-    <info.scelus.dotsandboxes.views.BoardView
+    <com.touchawesome.dotsandboxes.views.BoardView
         android:id="@+id/boardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/scoreLayout"
         android:layout_marginTop="64dp"
-        android:padding="8dp"
-        android:background="@drawable/box_unselected"/>
+        android:padding="8dp"/>
 
 </RelativeLayout>

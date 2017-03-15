@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.views;
+package com.touchawesome.dotsandboxes.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,9 +8,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.game.controllers.Game;
-import info.scelus.dotsandboxes.game.models.Board;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Board;
 
 
 /**

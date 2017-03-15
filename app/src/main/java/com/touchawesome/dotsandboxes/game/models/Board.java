@@ -1,6 +1,6 @@
-package info.scelus.dotsandboxes.game.models;
+package com.touchawesome.dotsandboxes.game.models;
 
-import info.scelus.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 /**
  * Class responsible for the presentation of the board in a given state.
