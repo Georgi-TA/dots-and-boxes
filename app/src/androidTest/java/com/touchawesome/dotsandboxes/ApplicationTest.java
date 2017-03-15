@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes;
+package com.touchawesome.dotsandboxes;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

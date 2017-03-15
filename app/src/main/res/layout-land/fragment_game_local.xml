@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.scelus.dotsandboxes.fragments.GameLocalFragment">
+    tools:context="com.touchawesome.dotsandboxes.fragments.GameLocalFragment">
 
-    <info.scelus.dotsandboxes.views.BoardView
+    <com.touchawesome.dotsandboxes.views.BoardView
         android:id="@+id/boardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.fragments;
+package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,16 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.utils.Globals;
+import com.blackbear.scelus.dotsandboxes.R;
 
 public class MainMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
     private OnFragmentInteractionListener mListener;
-
-    private TextView mainTitle;
 
     public static MainMenuFragment newInstance(Bundle args) {
         MainMenuFragment fragment = new MainMenuFragment();
@@ -32,17 +28,11 @@ public class MainMenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setFonts();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
-        mainTitle = (TextView) root.findViewById(R.id.mainTitleText);
         Button localPlayButton = (Button) root.findViewById(R.id.buttonPlayLocal);
         Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
 
@@ -67,10 +57,6 @@ public class MainMenuFragment extends Fragment {
         return root;
     }
 
-    private void setFonts () {
-        mainTitle.setTypeface(Globals.kgTrueColors);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -81,7 +67,6 @@ public class MainMenuFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
 
     @Override
     public void onDetach() {

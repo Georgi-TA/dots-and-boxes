@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="line">#FF000000</color>
+    <color name="line">#FF222222</color>
     <color name="line_temp">#7F000000</color>
-    <color name="boxPlayer1">#FFFFE3A1</color>
-    <color name="boxPlayer2">#FFA1BDFF</color>
+    <color name="boxPlayer1">#FF1251</color>
+    <color name="boxPlayer2">#66a4ef</color>
 
-    <color name="scorePlayer1">#DFFFE3A1</color>
-    <color name="scorePlayer2">#DFA1BDFF</color>
+    <color name="scorePlayer1">#FF1251</color>
+    <color name="scorePlayer2">#66a4ef</color>
 
     <color name="background">#EFEFEF</color>
-    <color name="textColorPrimary">#FF222222</color>
+    <color name="textColorPrimary">#EFEFEF</color>
     <color name="colorAccent">#a31720</color>
     <color name="primaryDark">#464d5c</color>
-    <color name="primary">#b3c0db</color>
+    <color name="primary">#495367</color>
 </resources>

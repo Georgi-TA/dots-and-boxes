@@ -1,35 +1,49 @@
-package info.scelus.dotsandboxes.views;
+package com.touchawesome.dotsandboxes.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Board;
-import info.scelus.dotsandboxes.external.Game;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Board;
+
 
 /**
- * Created by SceLus on 11/10/2014.
+ * Class responsible for displaying and interacting with the board
  */
 public class BoardView extends View {
-    private Board board;
-    private int horizontalOffset;
-    private int verticalOffset;
-    private int boxSide = 80;
-    private int snapLength = 16;
-    private int dotRadius = 4; // the radius of the dots
+
+    private Game game;              // The game which is being played
+    private int horizontalOffset;   // Offset at the left and right to display the dots grid
+    private int verticalOffset;     // Offset at the top and bottom to display the dots grid
+    private int[][] boxesAlpha;     // array containing the alpha value of each box
+
+    // TODO: load them from XML resource
+    private int boxSide = 80;       // default size for the box
+    private int snapLength = 16;    // default distance for a touch to "snap" to a line
+    private int dotRadius = 8;      // the radius of the dots
 
     private Paint linePaint;
     private Paint lineTempPaint;
     private Paint dotPaint;
     private Paint boxPaint;
 
+    // the bounds of the touch area that can beused for placing lines
+    // it is bound by -snapLength and touchWidth for the orizontal dimension
+    // and by -snapLength and touchHeight for the vertical dimension
     private float touchWidth;
     private float touchHeight;
 
+    // colors of the player boxes
+    private int colorPlayer1;
+    private int colorPlayer2;
+
+    // temp coordinates for calculations
     private float x1temp, y1temp, x2temp, y2temp;
     private boolean drawTemp = false;
 
@@ -48,16 +62,22 @@ public class BoardView extends View {
         init();
     }
 
+    /**
+     * Initialize all paints required to draw on a {@link Canvas}
+     */
     private void init () {
+        colorPlayer1 = ContextCompat.getColor(getContext(), R.color.boxPlayer1);
+        colorPlayer2 = ContextCompat.getColor(getContext(), R.color.boxPlayer2);
+
         linePaint = new Paint();
         linePaint.setAntiAlias(true);
         linePaint.setStrokeWidth(4f);
-        linePaint.setColor(getResources().getColor(R.color.line));
+        linePaint.setColor(ContextCompat.getColor(getContext(), R.color.line));
 
         lineTempPaint = new Paint();
         lineTempPaint.setAntiAlias(true);
         lineTempPaint.setStrokeWidth(4f);
-        lineTempPaint.setColor(getResources().getColor(R.color.line_temp));
+        lineTempPaint.setColor(ContextCompat.getColor(getContext(), R.color.line_temp));
 
         dotPaint = new Paint();
         dotPaint.setAntiAlias(true);
@@ -66,14 +86,24 @@ public class BoardView extends View {
         boxPaint.setAntiAlias(true);
     }
 
+    /**
+     * Draws everything in a specific order
+     * 1. boxes
+     * 2. lines
+     * 3. temp lines
+     * 4. dots
+     * @param canvas the canvas to draw on
+     */
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (board == null)
+        if (game == null)
             return;
 
-        // draw the lines
+        Board board = game.getBoard();
+
+        boolean reinvalidate = false;
         int x1, y1, x2, y2;
         for (int i = 0; i < board.getRows(); i++)
             for (int j = 0; j < board.getColumns(); j++) {
@@ -81,11 +111,20 @@ public class BoardView extends View {
 
                 // draw the box
                 if (box.player == Game.Player.PLAYER1)
-                    boxPaint.setColor(getResources().getColor(R.color.boxPlayer1));
+                    boxPaint.setColor(colorPlayer1);
                 else
-                    boxPaint.setColor(getResources().getColor(R.color.boxPlayer2));
+                    boxPaint.setColor(colorPlayer2);
 
                 if (box.left && box.right && box.bottom && box.top) {
+
+                    // update the box alpha
+                    if (boxesAlpha[i][j] < 255) {
+                        reinvalidate = true;
+                        boxesAlpha[i][j]+=5;
+                    }
+
+                    boxPaint.setAlpha(boxesAlpha[i][j]);
+
                     x1 = horizontalOffset + j * boxSide;
                     y1 = verticalOffset + i * boxSide;
                     x2 = horizontalOffset + (j + 1) * boxSide;
@@ -148,16 +187,31 @@ public class BoardView extends View {
             for (int j = 0; j <= board.getColumns(); j++) {
                 x1 = horizontalOffset + j * boxSide;
                 y1 = verticalOffset + i * boxSide;
-                canvas.drawCircle(x1, y1, dotRadius,linePaint);
+                canvas.drawCircle(x1, y1, dotRadius, dotPaint);
             }
+
+        if (reinvalidate)
+            this.postInvalidate();
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-        this.touchWidth = board.getColumns() * boxSide + snapLength;
-        this.touchHeight = board.getRows() * boxSide + snapLength;
+    /**
+     * Sets the game object and calculates the width and height of the touch area
+     * @param game Game object representing the developing game. In its nature
+     *             it is a state machine.
+     */
+    public void setGame(Game game) {
+        this.game = game;
+        this.boxesAlpha = new int[game.getBoard().getRows()][game.getBoard().getColumns()];
+        requestLayout();
     }
 
+    /**
+     * Overriden in order to maintain a square aspect ratio of the view.
+     * Also used to calculate board specific measures
+     * @param widthMeasureSpec dimension specifying the width
+     * @param heightMeasureSpec dimension specifying the height
+     */
+    @SuppressWarnings("SuspiciousNameCombination")
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
         int width = MeasureSpec.getSize(widthMeasureSpec);
@@ -168,60 +222,72 @@ public class BoardView extends View {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
             height = width;
             size = width - getPaddingLeft() - getPaddingRight();
-
         }
         else {
             super.onMeasure(heightMeasureSpec, heightMeasureSpec);
             width = height;
-            size = width - getPaddingTop() - getPaddingBottom();
+            size = height - getPaddingTop() - getPaddingBottom();
         }
 
-        if (board == null)
+        if (game == null)
             return;
 
-        if (width < height) {
-            boxSide = size / board.getRows();
+        if (game.getBoard().getColumns() < game.getBoard().getRows()) {
+            boxSide = size / game.getBoard().getRows();
         }
         else {
-            boxSide = size / board.getColumns();
+            boxSide = size / game.getBoard().getColumns();
         }
 
-        horizontalOffset = (width - size) / 2;
-        verticalOffset = (height - size) / 2;
+        this.horizontalOffset = (width - size) / 2;
+        this.verticalOffset = (height - size) / 2;
 
-        setBoard(board);
+        this.touchWidth = game.getBoard().getColumns() * boxSide + snapLength;
+        this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
+    /**
+     * Using the native {@link View} method to service the touch events
+     * @param motionEvent the motion event to be processed
+     * @return returns whether the MotionEvent was consumed
+     */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (board == null)
+        if (game == null)
             return false;
 
+        Board board = game.getBoard();
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE: {
+                // calculate where on the view did the motion event occur
                 float touchX = motionEvent.getX() - horizontalOffset;
                 float touchY = motionEvent.getY() - verticalOffset;
 
+                // check if the touch event was within the touch area
                 if (touchX < -snapLength ||
                     touchX > touchWidth ||
                     touchY < -snapLength ||
                     touchY > touchHeight)
                     return false;
 
+                // calculate on which box did the touch happen
                 float rowY = Math.abs(touchY) / boxSide;
                 float columnX = Math.abs(touchX) / boxSide;
 
                 double deltaXLeft, deltaYDown, deltaXRight, deltaYUp, deltaX, deltaY;
 
+                // get the part after the decimal point
                 deltaXLeft = columnX - Math.floor(columnX);
                 deltaXRight = Math.ceil(columnX) - columnX;
                 deltaYDown = rowY - Math.floor(rowY);
                 deltaYUp = Math.ceil(rowY) - rowY;
 
+                // determine whether the touch event is closer to a vertical or a horizontal line
                 deltaX = deltaXLeft > deltaXRight ? deltaXRight : deltaXLeft;
                 deltaY = deltaYDown > deltaYUp ? deltaYUp : deltaYDown;
 
+                // horizontal line
                 if (deltaX < deltaY) {
                     if (deltaX < snapLength) {
                         x1temp = (float) Math.floor(columnX);
@@ -243,7 +309,8 @@ public class BoardView extends View {
                         drawTemp = false;
                     }
                 }
-                else if (deltaX > deltaY){
+                // vertical line
+                else if (deltaX >= deltaY){
                     if (deltaY < snapLength) {
                         x1temp = (float) Math.floor(columnX);
                         x2temp = x1temp + 1;
@@ -270,7 +337,11 @@ public class BoardView extends View {
             }
 
             case MotionEvent.ACTION_UP:
-                board.setLine((int) x1temp,(int) y1temp,(int) x2temp,(int) y2temp);
+                int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
+                int numberDotEnd = ((int) y2temp) * (board.getRows() + 1) + (int) x2temp;
+                game.makeAMove(numberDotStart, numberDotEnd);
+                invalidate();
+
             case MotionEvent.ACTION_CANCEL: {
                 drawTemp = false;
                 x1temp = 0;

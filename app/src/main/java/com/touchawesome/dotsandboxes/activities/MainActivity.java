@@ -1,10 +1,8 @@
-package info.scelus.dotsandboxes.activities;
+package com.touchawesome.dotsandboxes.activities;
 
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -14,25 +12,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Board;
-import info.scelus.dotsandboxes.fragments.ComingSoonFragment;
-import info.scelus.dotsandboxes.fragments.GameLocalFragment;
-import info.scelus.dotsandboxes.fragments.LocalMenuFragment;
-import info.scelus.dotsandboxes.fragments.MainMenuFragment;
-import info.scelus.dotsandboxes.utils.Globals;
-import info.scelus.dotsandboxes.views.BoardView;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
+import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
+import com.touchawesome.dotsandboxes.fragments.LocalMenuFragment;
+import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class MainActivity extends AppCompatActivity
                           implements MainMenuFragment.OnFragmentInteractionListener,
-        LocalMenuFragment.OnFragmentInteractionListener,
-        GameLocalFragment.OnFragmentInteractionListener {
+                                     LocalMenuFragment.OnFragmentInteractionListener,
+                                     GameLocalFragment.OnFragmentInteractionListener {
 
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
-    private Toolbar toolbar;
-    private Board board;
-    private BoardView view;
-    private GameLocalFragment gameFragment;
+    private TextView mainTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +33,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // Load the toolbar as a support appbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mainTitle = (TextView) findViewById(R.id.mainLocalTitleText);
         setSupportActionBar(toolbar);
 
         // Setup action bar appearance
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
 
-        if (backStackCount < 1)
+        if (backStackCount <= 1)
             finish();
         else
             fragmentManager.popBackStack();
@@ -84,7 +78,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings: {
+                // TODO: link to settings screen
+                return true;
+            }
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setFonts();
+    }
+
+
+    private void setFonts () {
+        mainTitle.setTypeface(Globals.kgTrueColors);
     }
 
     private void loadFragment(int fragmentId, Bundle args) {
@@ -113,6 +124,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
+                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();

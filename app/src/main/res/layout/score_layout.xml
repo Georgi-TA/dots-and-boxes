@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<info.scelus.dotsandboxes.views.ScoreView
+<com.touchawesome.dotsandboxes.views.ScoreView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:orientation="horizontal"
+    android:background="@color/primary"
+    android:layout_weight="1"
     android:weightSum="2">
 
     <TextView
@@ -16,4 +18,4 @@
         style="@style/ScoreView"
         android:background="@drawable/score_p2"/>
 
-</info.scelus.dotsandboxes.views.ScoreView>
+</com.touchawesome.dotsandboxes.views.ScoreView>

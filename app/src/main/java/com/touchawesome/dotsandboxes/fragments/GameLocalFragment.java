@@ -1,4 +1,4 @@
-package info.scelus.dotsandboxes.fragments;
+package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,29 +8,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import info.blackbear.scelus.dotsandboxes.R;
-import info.scelus.dotsandboxes.external.Board;
-import info.scelus.dotsandboxes.external.Game;
-import info.scelus.dotsandboxes.views.BoardView;
-import info.scelus.dotsandboxes.views.ScoreView;
+import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Edge;
+import com.touchawesome.dotsandboxes.game.models.PlayerBot;
+import com.touchawesome.dotsandboxes.views.BoardView;
+import com.touchawesome.dotsandboxes.views.ScoreView;
 
-public class GameLocalFragment extends Fragment {
+public class GameLocalFragment extends Fragment implements Game.GameListener {
     public static final int FRAGMENT_ID = 6164;
-    public static final String ARG_MODE = "info.scelus.args.mode";
-    private static final String ARG_BOARD = "info.scelus.args.board";
-    private static final String ARG_P1_SCORE = "info.scelus.args.score.p1";
-    private static final String ARG_P2_SCORE = "info.scelus.args.score.p2";
-    private static final String ARG_P1_NEXT = "info.scelus.args.score.p1_next";
+    public static final String ARG_MODE = "com.touchawesome.args.mode";
+    private static final String ARG_BOARD = "com.touchawesome.args.board";
+    private static final String ARG_P1_NEXT = "com.touchawesome.args.scoreView.p1_next";
 
-    private Game.Mode mode;
-    private Board board;
-    private BoardView boardView;
-    private ScoreView score;
+    private Game.Mode mode;         // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
-    private Game game;
 
-    private int rows = 6;
-    private int columns = 6;
+    private Game game;         // game state object and controller
+    private PlayerBot bot;     // the bot to play in CPU mode
+
+    // TODO: 15.03.17 connect with difficulties screen
+    private int rows = 2;
+    private int columns = 2;
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -59,21 +58,22 @@ public class GameLocalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
-        boardView = (BoardView) root.findViewById(R.id.boardView);
-        score = (ScoreView) root.findViewById(R.id.scoreLayout);
+        BoardView boardView = (BoardView) root.findViewById(R.id.boardView);
+        ScoreView scoreView = (ScoreView) root.findViewById(R.id.scoreLayout);
 
-        game = new Game(rows * columns);
-        board = new Board(game, rows, columns);
-        boardView.setBoard(board);
-        game.registerListener(score);
+        bot = new PlayerBot();
+        game = new Game(rows, columns);
+        game.registerListener(scoreView);
+        game.registerListener(this);
+        boardView.setGame(game);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(ARG_BOARD))
-                board.loadBoard(savedInstanceState.getString(ARG_BOARD));
+                game.getBoard().loadBoard(savedInstanceState.getString(ARG_BOARD));
 
-            if (savedInstanceState.containsKey(ARG_P1_SCORE) && savedInstanceState.containsKey(ARG_P2_SCORE) && savedInstanceState.containsKey(ARG_P1_NEXT)) {
+            if (savedInstanceState.containsKey(ARG_P1_NEXT)) {
                 Game.Player nextPlayer = savedInstanceState.getBoolean(ARG_P1_NEXT) ? Game.Player.PLAYER1 : Game.Player.PLAYER2;
-                game.setInitScoreAndTurn(savedInstanceState.getInt(ARG_P1_SCORE), savedInstanceState.getInt(ARG_P2_SCORE), nextPlayer);
+                game.setNextPlayer(nextPlayer);
             }
         }
 
@@ -97,15 +97,33 @@ public class GameLocalFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onScoreChange(Game.Player player, int score) {
+
+    }
+
+    @Override
+    public void onTurnChange(Game.Player nextToMove) {
+        if (mode == Game.Mode.CPU) {
+            if (nextToMove == Game.Player.PLAYER2) {
+                Edge nextMove = bot.getNextMove(game);
+                game.makeAMove(nextMove.getDotStart(), nextMove.getDotEnd());
+            }
+        }
+    }
+
+    @Override
+    public void onGameEnd(Game.Player winner) {
+
+    }
+
     public interface OnFragmentInteractionListener {
         void onGameLocalFragmentInteraction(Uri uri);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(ARG_BOARD, board.toString());
-        outState.putInt(ARG_P1_SCORE, board.getScore(Game.Player.PLAYER1));
-        outState.putInt(ARG_P2_SCORE, board.getScore(Game.Player.PLAYER2));
+        outState.putString(ARG_BOARD, game.getBoard().toString());
         outState.putBoolean(ARG_P1_NEXT, game.getNext() == Game.Player.PLAYER1);
         super.onSaveInstanceState(outState);
     }

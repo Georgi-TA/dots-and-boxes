@@ -1,12 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
 
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:colorBackground">@color/background</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">
@@ -43,7 +44,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 </resources>
