@@ -26,7 +26,7 @@ public class BoardView extends View {
     // TODO: load them from XML resource
     private int boxSide = 80;       // default size for the box
     private int snapLength = 16;    // default distance for a touch to "snap" to a line
-    private int dotRadius = 4;      // the radius of the dots
+    private int dotRadius = 8;      // the radius of the dots
 
     private Paint linePaint;
     private Paint lineTempPaint;

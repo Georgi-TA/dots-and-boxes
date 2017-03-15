@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:colorBackground">@color/primary</item>
+        <item name="android:colorBackground">@color/background</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">

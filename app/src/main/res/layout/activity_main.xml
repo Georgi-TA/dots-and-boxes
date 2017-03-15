@@ -5,11 +5,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary">
 
         <TextView
             android:id="@+id/mainLocalTitleText"
             android:text="@string/menu_title"
+
             style="@style/MenuTitle" />
 
     </android.support.v7.widget.Toolbar>

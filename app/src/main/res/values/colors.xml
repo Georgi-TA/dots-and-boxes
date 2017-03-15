@@ -2,10 +2,10 @@
 <resources>
     <color name="line">#FF222222</color>
     <color name="line_temp">#7F000000</color>
-    <color name="boxPlayer1">#42bf51</color>
+    <color name="boxPlayer1">#FF1251</color>
     <color name="boxPlayer2">#66a4ef</color>
 
-    <color name="scorePlayer1">#42bf51</color>
+    <color name="scorePlayer1">#FF1251</color>
     <color name="scorePlayer2">#66a4ef</color>
 
     <color name="background">#EFEFEF</color>

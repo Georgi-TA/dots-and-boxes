@@ -26,6 +26,13 @@ public class Game {
         }
     }
 
+    public Graph getGameTree() {
+        Graph graph = new Graph();
+        for (Edge edge : gameTree.getEdges().values())
+            graph.addEdge(edge);
+        return graph;
+    }
+
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
@@ -73,7 +80,7 @@ public class Game {
         this.maxScore = rows * columns;
 
         this.board = new Board(rows, columns);
-        this.gameTree = new Graph(rows, columns);
+        this.gameTree = new Graph();
         this.listeners = new HashSet<>();
 
         this.nextToMove = Player.PLAYER1;
@@ -93,32 +100,27 @@ public class Game {
      * @param dotStart starting point
      * @param dotEnd ending point
      */
-    public void makeAMove(int dotStart, int dotEnd) {
+    public boolean makeAMove(int dotStart, int dotEnd) {
         // you cannot make a move on an existing line
         if (gameTree.hasEdge(dotStart, dotEnd))
-            return;
-
-        // continue with making a move and add the current move to the Graph object
-        gameTree.addEdge(dotStart, dotEnd);
+            return false;
 
         switch (gameState) {
             case START:
                 movePlayer1(dotStart, dotEnd);
-                break;
+                return true;
             case PLAYER1_TURN:
                 movePlayer1(dotStart, dotEnd);
-                break;
+                return true;
             case PLAYER2_TURN:
                 movePlayer2(dotStart, dotEnd);
                 break;
             case END:
 
-                return;
+                return false;
         }
-    }
 
-    public Edge getNextMove(Player player) {
-        return gameTree.getNextMove(player);
+        return false;
     }
 
     /**
