@@ -10,7 +10,9 @@
 
     <color name="background">#EFEFEF</color>
     <color name="textColorPrimary">#EFEFEF</color>
+    <color name="textColorPrimaryDark">#232323</color>
     <color name="colorAccent">#a31720</color>
     <color name="primaryDark">#464d5c</color>
+    <color name="primaryLight">#9ca9c1</color>
     <color name="primary">#495367</color>
 </resources>

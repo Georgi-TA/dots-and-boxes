@@ -17,12 +17,14 @@ import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.LocalMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
+import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class MainActivity extends AppCompatActivity
                           implements MainMenuFragment.OnFragmentInteractionListener,
                                      LocalMenuFragment.OnFragmentInteractionListener,
-                                     GameLocalFragment.OnFragmentInteractionListener {
+                                     GameLocalFragment.OnFragmentInteractionListener,
+                                     WinnerFragment.OnFragmentInteractionListener {
 
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
     private TextView mainTitle;
@@ -113,6 +115,11 @@ public class MainActivity extends AppCompatActivity
                 fragment = GameLocalFragment.newInstance(args);
                 break;
             }
+            case WinnerFragment.FRAGMENT_ID: {
+                fragment = WinnerFragment.newInstance(args);
+
+                break;
+            }
             case ComingSoonFragment.FRAGMENT_ID: {
                 fragment = ComingSoonFragment.newInstance(args);
                 break;
@@ -142,10 +149,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onGameLocalFragmentInteraction(Uri uri) {
-
+    public void onGameLocalFragmentInteraction(int fragmentId, Bundle args) {
+        if (fragmentId == WinnerFragment.FRAGMENT_ID) {
+            WinnerFragment dialog = WinnerFragment.newInstance(args);
+            dialog.show(getSupportFragmentManager(), "dialog_fragment");
+            dialog.setCancelable(false);
+        }
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -154,5 +164,26 @@ public class MainActivity extends AppCompatActivity
         if (manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName().equals(GameLocalFragment.class.getName()))
             outState.putBoolean(ARG_GAME_IN_PROGRESS, true);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onWinnerFragmentInteraction(Uri action) {
+        // navigate to the main menu
+        if (action.equals(WinnerFragment.mainMenu)) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            while (fragmentManager.getBackStackEntryCount() > 0)
+                fragmentManager.popBackStackImmediate();
+
+            loadFragment(MainMenuFragment.FRAGMENT_ID, null);
+        }
+        else if (action.equals(WinnerFragment.replay)) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStackImmediate(); // pop the dialog
+            fragmentManager.popBackStackImmediate(); // pop the game fragment
+            loadFragment(GameLocalFragment.FRAGMENT_ID, null);
+        }
+        else if (action.equals(WinnerFragment.achievements)) {
+            //TODO: start intent to show the achievements screen
+        }
     }
 }

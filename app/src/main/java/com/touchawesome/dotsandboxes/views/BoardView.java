@@ -339,7 +339,7 @@ public class BoardView extends View {
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getRows() + 1) + (int) x2temp;
-                game.makeAMove(numberDotStart, numberDotEnd);
+                game.takeATurn(numberDotStart, numberDotEnd);
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {

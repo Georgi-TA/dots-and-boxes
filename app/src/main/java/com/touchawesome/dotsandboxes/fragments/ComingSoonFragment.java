@@ -36,8 +36,7 @@ public class ComingSoonFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_coming_soon, container, false);
         mainTitle = (TextView) root.findViewById(R.id.comingSoonText);
         return root;

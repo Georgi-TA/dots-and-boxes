@@ -15,4 +15,9 @@
     <!-- Local menu -->
     <string name="menu_option_play_local_player">Player</string>
     <string name="menu_option_play_local_cpu">Computer</string>
+    <string name="winner">Winner</string>
+    <string name="winner_points">%d points</string>
+    <string name="you_win">You Win!</string>
+    <string name="draw">It\'s a Draw</string>
+    <string name="you_lose">You lose.</string>
 </resources>

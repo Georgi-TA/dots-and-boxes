@@ -8,4 +8,6 @@
     <dimen name="line_size">4dp</dimen>
     <dimen name="menu_box_width">198dp</dimen>
     <dimen name="menu_box_height">54dp</dimen>
+    <dimen name="player_image_size">72dp</dimen>
+    <dimen name="player_image_border">4dp</dimen>
 </resources>
