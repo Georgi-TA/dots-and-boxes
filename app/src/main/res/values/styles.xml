@@ -6,7 +6,18 @@
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
         <item name="android:colorBackground">@color/background</item>
+    </style>
+
+    <!-- Settings application theme. -->
+    <style name="SettingsTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/textColorPrimary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
+        <item name="android:colorBackground">@color/primary</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">

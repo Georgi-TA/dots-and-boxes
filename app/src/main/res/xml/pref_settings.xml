@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_music_note_black_24dp"
+        android:key="pref_music"
+        android:summary="@string/pref_music_summary"
+        android:title="@string/pref_music_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_volume_up_black_24dp"
+        android:key="pref_sound"
+        android:summary="@string/pref_sound_summary"
+        android:title="@string/pref_sound_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_vibration_black_24dp"
+        android:key="pref_vibrate"
+        android:summary="@string/pref_vibrate_summary"
+        android:title="@string/pref_vibrate_title" />
+
+</PreferenceScreen>
