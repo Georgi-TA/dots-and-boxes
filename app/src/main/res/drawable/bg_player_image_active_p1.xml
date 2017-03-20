@@ -3,7 +3,7 @@
     android:shape="oval">
 
     <stroke android:width="@dimen/player_image_border"
-            android:color="@color/textColorPrimary" />
+            android:color="@color/boxPlayer1" />
 
     <solid android:color="@android:color/transparent"/>
 

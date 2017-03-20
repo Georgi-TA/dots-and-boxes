@@ -1,100 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:elevation="4dp"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:orientation="horizontal"
-    android:background="@color/primary"
-    android:layout_weight="1"
-    android:weightSum="2"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin">
+    android:layout_weight="1">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:orientation="horizontal"
+        android:background="@color/primary"
+        android:weightSum="2"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/player1_border"
-                    style="@style/PlayerImageBorder"
-                    android:background="@drawable/bg_player_image" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/player1_image"
-                    style="@style/PlayerImage" />
+                    <ImageView
+                        android:id="@+id/player1_border"
+                        style="@style/PlayerImageBorder"
+                        android:background="@drawable/bg_player_image" />
 
-            </FrameLayout>
+                    <ImageView
+                        android:id="@+id/player1_image"
+                        style="@style/PlayerImage" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/player1_name"
+                    android:layout_gravity="center_horizontal"
+                    android:text="You"
+                    style="@style/PlayerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/player1_name"
-                android:layout_gravity="center_horizontal"
-                android:text="You"
-                style="@style/PlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/player1_score"
+                style="@style/ScoreView"
+                android:text="0"/>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/player1_score"
-            style="@style/ScoreView"
-            android:text="0"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/player2_score"
-            style="@style/ScoreView"
-            android:text="0"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical">
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/player2_border"
-                    style="@style/PlayerImageBorder"
-                    android:background="@drawable/bg_player_image" />
-
-                <ImageView
-                    android:id="@+id/player2_image"
-                    style="@style/PlayerImage" />
-
-            </FrameLayout>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/player2_name"
-                android:layout_gravity="center_horizontal"
-                android:text="Etnies"
-                style="@style/PlayerName"
+                android:id="@+id/player2_score"
+                style="@style/ScoreView"
+                android:text="0"/>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/player2_border"
+                        style="@style/PlayerImageBorder"
+                        android:background="@drawable/bg_player_image" />
+
+                    <ImageView
+                        android:id="@+id/player2_image"
+                        style="@style/PlayerImage" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/player2_name"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Etnies"
+                    style="@style/PlayerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
-</LinearLayout>
+    <com.touchawesome.dotsandboxes.views.TurnView
+        android:id="@+id/turn_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:padding="2dp"
+        android:layout_gravity="bottom"/>
+</FrameLayout>

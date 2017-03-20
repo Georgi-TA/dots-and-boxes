@@ -2,21 +2,14 @@ package com.touchawesome.dotsandboxes.services;
 
 import android.app.IntentService;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.blackbear.scelus.dotsandboxes.R;
 
 import java.io.IOException;
-
-import javax.xml.transform.ErrorListener;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

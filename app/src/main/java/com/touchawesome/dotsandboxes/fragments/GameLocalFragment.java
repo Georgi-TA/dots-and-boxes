@@ -1,6 +1,8 @@
 package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -37,17 +39,14 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private PlayerBot bot;     // the bot to play in CPU mode
 
     // TODO: 15.03.17 connect with difficulties screen
-    private int rows = 2;
-    private int columns = 2;
+    private int rows = 3;
+    private int columns = 3;
 
     private TextView scorePlayer1;
     private TextView scorePlayer2;
 
-    private ImageView imagePlayer1;
-    private ImageView imagePlayer2;
-
-    private ImageView imagePlayer1Border;
-    private ImageView imagePlayer2Border;
+    private TransitionDrawable tdPlayer1;
+    private TransitionDrawable tdPlayer2;
 
 
     public static GameLocalFragment newInstance(Bundle args) {
@@ -83,11 +82,28 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
 
-        imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
-        imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
+        ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
+        ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
 
-        imagePlayer1Border = (ImageView) root.findViewById(R.id.player1_border);
-        imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
+        ImageView imagePlayer1Border = (ImageView) root.findViewById(R.id.player1_border);
+        ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
+
+        // set transition drawable to player 1 border
+        tdPlayer1 = new TransitionDrawable( new Drawable[] {
+                getResources().getDrawable(R.drawable.bg_player_image),
+                getResources().getDrawable(R.drawable.bg_player_image_active_p1)
+        });
+        imagePlayer1Border.setImageDrawable(tdPlayer1);
+        tdPlayer1.startTransition(16);
+
+
+        // set transition drawable to player 2 border
+        tdPlayer2 = new TransitionDrawable( new Drawable[] {
+                getResources().getDrawable(R.drawable.bg_player_image_active_p2),
+                getResources().getDrawable(R.drawable.bg_player_image)
+        });
+        imagePlayer2Border.setImageDrawable(tdPlayer2);
+        tdPlayer1.startTransition(16);
 
         int padding = getResources().getDimensionPixelSize(R.dimen.player_image_border);
         Picasso.with(getContext())
@@ -154,12 +170,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         // UI player images border
         if (nextToMove == Game.Player.PLAYER1) {
-            imagePlayer1Border.setBackgroundResource(R.drawable.bg_player_image_active);
-            imagePlayer2Border.setBackgroundResource(R.drawable.bg_player_image);
+            tdPlayer1.startTransition(100);
+            tdPlayer2.startTransition(100);
         }
         else {
-            imagePlayer1Border.setBackgroundResource(R.drawable.bg_player_image);
-            imagePlayer2Border.setBackgroundResource(R.drawable.bg_player_image_active);
+            tdPlayer1.reverseTransition(100);
+            tdPlayer2.reverseTransition(100);
         }
     }
 

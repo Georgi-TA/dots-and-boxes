@@ -221,12 +221,10 @@ public class Game {
                 gameState = State.END;
             }
             // if it is a draw
-            else if (player1Score ==  player2Score) {
+            else if (player1Score ==  player2Score && player1Score + player2Score == maxScore) {
                 notifyGameEnd(Player.NONE);
                 gameState = State.END;
             }
-
-            notifyTurnChange(Player.PLAYER2);
         }
         else {
             gameState = State.PLAYER1_TURN;
