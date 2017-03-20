@@ -12,12 +12,13 @@
 
     <!-- Settings application theme. -->
     <style name="SettingsTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/textColorPrimary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
         <item name="android:colorBackground">@color/primary</item>
+        <item name="android:windowBackground">@color/primary</item>
+        <item name="colorAccent">@color/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">
@@ -94,7 +95,6 @@
     <style name="WinnerMenuButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">54dp</item>
         <item name="android:layout_height">54dp</item>
-
         <item name="android:tint">@color/textColorPrimary</item>
         <item name="android:background">@color/primaryDark</item>
         <item name="android:layout_margin">16dp</item>

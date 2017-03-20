@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
-        android:defaultValue="true"
+    <SwitchPreferenceCompat
         android:icon="@drawable/ic_music_note_black_24dp"
-        android:key="pref_music"
-        android:summary="@string/pref_music_summary"
-        android:title="@string/pref_music_title" />
+        android:key="@string/pref_key_music"
+        android:title="@string/pref_music_title"
+        android:persistent="true"
+        android:defaultValue="true"/>
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:persistent="true"
         android:icon="@drawable/ic_volume_up_black_24dp"
-        android:key="pref_sound"
-        android:summary="@string/pref_sound_summary"
+        android:key="@string/pref_key_sound"
         android:title="@string/pref_sound_title" />
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:persistent="true"
         android:icon="@drawable/ic_vibration_black_24dp"
-        android:key="pref_vibrate"
-        android:summary="@string/pref_vibrate_summary"
+        android:key="@string/pref_key_vibrate"
         android:title="@string/pref_vibrate_title" />
 
 </PreferenceScreen>
