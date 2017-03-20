@@ -4,19 +4,107 @@
     android:layout_height="match_parent"
     tools:context="com.touchawesome.dotsandboxes.fragments.GameLocalFragment">
 
-    <com.touchawesome.dotsandboxes.views.BoardView
-        android:id="@+id/boardView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:padding="8dp"
-        android:background="@drawable/box_unselected"/>
+        android:layout_weight="1"
+        android:background="@color/primary"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:weightSum="2">
 
-    <include
-        layout="@layout/score_layout"
-        android:layout_width="64dp"
-        android:layout_height="match_parent"
-        android:id="@+id/scoreLayout"
-        android:layout_toEndOf="@+id/boardView"
-        android:layout_toRightOf="@+id/boardView"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/player1_border"
+                    style="@style/PlayerImageBorder"
+                    android:background="@drawable/bg_player_image" />
+
+                <ImageView
+                    android:id="@+id/player1_image"
+                    style="@style/PlayerImage" />
+
+            </FrameLayout>
+            <TextView
+                android:id="@+id/player1_name"
+                style="@style/PlayerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="You" />
+
+
+            <TextView
+                android:id="@+id/player1_score"
+                style="@style/ScoreView"
+                android:layout_gravity="center_horizontal"
+                android:text="0" />
+
+        </LinearLayout>
+
+        <com.touchawesome.dotsandboxes.views.BoardView
+            android:id="@+id/boardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/background"
+            android:padding="64dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/player2_border"
+                    style="@style/PlayerImageBorder"
+                    android:background="@drawable/bg_player_image" />
+
+                <ImageView
+                    android:id="@+id/player2_image"
+                    style="@style/PlayerImage" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/player2_name"
+                style="@style/PlayerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="P2" />
+
+            <TextView
+                android:id="@+id/player2_score"
+                style="@style/ScoreView"
+                android:layout_gravity="center_horizontal"
+                android:text="0" />
+
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

@@ -11,7 +11,7 @@
         <TextView
             android:id="@+id/mainLocalTitleText"
             android:text="@string/menu_title"
-
+            android:gravity="center"
             style="@style/MenuTitle" />
 
     </android.support.v7.widget.Toolbar>

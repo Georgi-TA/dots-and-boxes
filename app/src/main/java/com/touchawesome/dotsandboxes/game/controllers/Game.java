@@ -33,12 +33,31 @@ public class Game {
         return graph;
     }
 
+    public void takeATurn(int numberDotStart, int numberDotEnd) {
+        switch (gameState) {
+            case START:
+                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER1);
+                break;
+            case PLAYER1_TURN:
+                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER1);
+                break;
+            case PLAYER2_TURN:
+                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER2);
+                break;
+        }
+    }
+
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
     private enum State {
         START, PLAYER1_TURN, PLAYER2_TURN, END
     }
+
+    public State getGameState() {
+        return gameState;
+    }
+
     private State gameState = State.START;
 
     /**
@@ -100,21 +119,35 @@ public class Game {
      * @param dotStart starting point
      * @param dotEnd ending point
      */
-    public boolean makeAMove(int dotStart, int dotEnd) {
+    public boolean makeAMove(int dotStart, int dotEnd, Player player) {
         // you cannot make a move on an existing line
         if (gameTree.hasEdge(dotStart, dotEnd))
             return false;
 
+        gameTree.addEdge(new Edge(dotStart, dotEnd));
+
         switch (gameState) {
             case START:
-                movePlayer1(dotStart, dotEnd);
+                if (player == Player.PLAYER2)
+                    return false;
+
+                takeTurnPlayer1(dotStart, dotEnd);
                 return true;
+
             case PLAYER1_TURN:
-                movePlayer1(dotStart, dotEnd);
+                if (player == Player.PLAYER2)
+                    return false;
+
+                takeTurnPlayer1(dotStart, dotEnd);
                 return true;
+
             case PLAYER2_TURN:
-                movePlayer2(dotStart, dotEnd);
+                if (player == Player.PLAYER1)
+                    return false;
+
+                takeTurnPlayer2(dotStart, dotEnd);
                 break;
+
             case END:
 
                 return false;
@@ -142,18 +175,24 @@ public class Game {
     /**
      * A move will be executed with Player1 being active
      */
-    private void movePlayer1(int dotStart, int dotEnd) {
+    private void takeTurnPlayer1(int dotStart, int dotEnd) {
         // register the move on the board for the first player
         boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
 
         if (boxCompleted) {
             // calculate the score
             int player1Score = board.getScore(Player.PLAYER1);
+            int player2Score = board.getScore(Player.PLAYER2);
             notifyScoreChange(Player.PLAYER1, player1Score);
 
             // determine if p1 is a winner
             if (player1Score > maxScore / 2 + maxScore % 2) {
                 notifyGameEnd(Player.PLAYER1);
+                gameState = State.END;
+            }
+            // if it is a draw
+            else if (player1Score ==  player2Score) {
+                notifyGameEnd(Player.NONE);
                 gameState = State.END;
             }
         }
@@ -166,18 +205,24 @@ public class Game {
     /**
      * A move will be executed with Player2 being active
      */
-    private void movePlayer2(int dotStart, int dotEnd) {
+    private void takeTurnPlayer2(int dotStart, int dotEnd) {
         // register the move on the board for the first player
         boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER2);
 
         if (boxCompleted) {
             // calculate the score
+            int player1Score = board.getScore(Player.PLAYER1);
             int player2Score = board.getScore(Player.PLAYER2);
             notifyScoreChange(Player.PLAYER2, player2Score);
 
             // calculate the score and see if p2 is a winner
             if (player2Score > maxScore / 2 + maxScore % 2) {
                 notifyGameEnd(Player.PLAYER2);
+                gameState = State.END;
+            }
+            // if it is a draw
+            else if (player1Score ==  player2Score) {
+                notifyGameEnd(Player.NONE);
                 gameState = State.END;
             }
 

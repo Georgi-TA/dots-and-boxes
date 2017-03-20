@@ -1,9 +1,13 @@
 package com.touchawesome.dotsandboxes.views;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,11 +16,15 @@ import com.blackbear.scelus.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 
 /**
  * Class responsible for displaying and interacting with the board
  */
 public class BoardView extends View {
+
+    private Vibrator vibrator;
 
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
@@ -84,6 +92,8 @@ public class BoardView extends View {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
+
+        vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
     }
 
     /**
@@ -259,6 +269,16 @@ public class BoardView extends View {
         Board board = game.getBoard();
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+                boolean shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
+
+                if (shouldMakeASound)
+                    performClick();
+                
+                if (shouldVibrate)
+                    vibrator.vibrate(125);
+                
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur
                 float touchX = motionEvent.getX() - horizontalOffset;
@@ -339,7 +359,7 @@ public class BoardView extends View {
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getRows() + 1) + (int) x2temp;
-                game.makeAMove(numberDotStart, numberDotEnd);
+                game.takeATurn(numberDotStart, numberDotEnd);
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {

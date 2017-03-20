@@ -2,20 +2,31 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
         <item name="android:colorBackground">@color/background</item>
     </style>
 
+    <!-- Settings application theme. -->
+    <style name="SettingsTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
+        <item name="android:colorBackground">@color/primary</item>
+        <item name="android:windowBackground">@color/primary</item>
+        <item name="colorAccent">@color/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
     <style name="ScoreView" parent="TextAppearance.AppCompat">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:layout_margin">4dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
@@ -30,8 +41,17 @@
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
+    <style name="PlayerName" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
 
     <style name="MenuButton">
+        <item name="android:textColor">@color/textColorPrimaryDark</item>
         <item name="android:layout_width">@dimen/menu_button_width</item>
         <item name="android:layout_height">@dimen/menu_button_height</item>
         <item name="android:background">@drawable/bg_menu_button</item>
@@ -40,11 +60,43 @@
     </style>
 
     <style name="MenuTitle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="ScreenTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="PlayerImage">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="PlayerImageBorder">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@drawable/bg_player_image</item>
+    </style>
+
+    <style name="WinnerMenuButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">54dp</item>
+        <item name="android:layout_height">54dp</item>
+        <item name="android:tint">@color/textColorPrimary</item>
+        <item name="android:background">@color/primaryDark</item>
+        <item name="android:layout_margin">16dp</item>
     </style>
 </resources>

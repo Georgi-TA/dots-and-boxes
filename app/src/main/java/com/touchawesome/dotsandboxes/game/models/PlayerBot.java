@@ -178,7 +178,6 @@ public class PlayerBot {
                 }
             }
         }
-
         return completionEdge;
     }
 }

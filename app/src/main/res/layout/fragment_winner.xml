@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    app:contentPadding="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/winner_title"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/winner" />
+
+        <TextView
+            android:id="@+id/winner_name"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Name"
+            android:textSize="28dp" />
+
+        <TextView
+            android:id="@+id/winner_score"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="12 points"
+            android:textSize="28dp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+
+            <ImageButton
+                android:id="@+id/replay_button"
+                style="@style/WinnerMenuButton"
+                android:src="@drawable/ic_replay_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/winner_menu_button"
+                style="@style/WinnerMenuButton"
+                android:src="@drawable/ic_menu_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/achievements_button"
+                style="@style/WinnerMenuButton"
+                android:src="@drawable/ic_extension_black_24dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

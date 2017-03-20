@@ -15,8 +15,6 @@ public class LocalMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 5267;
     private OnFragmentInteractionListener mListener;
 
-
-
     public static LocalMenuFragment newInstance(Bundle args) {
         LocalMenuFragment fragment = new LocalMenuFragment();
         fragment.setArguments(args);
@@ -31,8 +29,6 @@ public class LocalMenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

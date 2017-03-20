@@ -6,7 +6,7 @@ import android.graphics.Typeface;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
 /**
- * Created by SceLus on 15/10/2014.
+ * Created by SceLus on 15/10/2014
  */
 public class App extends Application {
 
