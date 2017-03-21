@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 
 import static android.content.ContentValues.TAG;
 

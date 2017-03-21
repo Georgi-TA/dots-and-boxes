@@ -7,7 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 
 import java.io.IOException;
 

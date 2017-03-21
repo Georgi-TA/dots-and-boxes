@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
@@ -38,7 +38,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private Game game;         // game state object and controller
     private PlayerBot bot;     // the bot to play in CPU mode
 
-    // TODO: 15.03.17 connect with difficulties screen
     private int rows = 3;
     private int columns = 3;
 
@@ -71,6 +70,9 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         else {
             mode = Game.Mode.PLAYER;
         }
+
+        rows = getArguments().getInt("rows", 3);
+        columns = getArguments().getInt("columns", 3);
     }
 
     @Override
@@ -170,12 +172,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         // UI player images border
         if (nextToMove == Game.Player.PLAYER1) {
-            tdPlayer1.startTransition(100);
-            tdPlayer2.startTransition(100);
-        }
-        else {
             tdPlayer1.reverseTransition(100);
             tdPlayer2.reverseTransition(100);
+        }
+        else {
+            tdPlayer1.startTransition(100);
+            tdPlayer2.startTransition(100);
         }
     }
 

@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 
 import static android.content.ContentValues.TAG;

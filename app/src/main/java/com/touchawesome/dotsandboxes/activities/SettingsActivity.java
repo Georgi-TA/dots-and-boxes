@@ -1,18 +1,12 @@
 package com.touchawesome.dotsandboxes.activities;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.SettingsFragment;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
 
 public class SettingsActivity extends AppCompatActivity {
 

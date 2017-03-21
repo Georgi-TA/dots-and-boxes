@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:dividerPadding="16dp"
+        android:layout_marginTop="32dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/db_logo"
+            android:padding="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_board_layout"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:textColor="@color/textColorPrimaryDark"/>
+
+        <Button
+            android:text="@string/three_by_three"
+            android:id="@+id/buttonPlayThreeByThree"
+            style="@style/MenuLayoutButton" />
+
+        <Button
+            android:text="@string/four_by_four"
+            android:id="@+id/buttonPlayFourByFour"
+            style="@style/MenuLayoutButton"/>
+
+        <Button
+            android:text="@string/five_by_five"
+            android:id="@+id/buttonPlayFiveByFive"
+            style="@style/MenuLayoutButton" />
+    </LinearLayout>
+</RelativeLayout>

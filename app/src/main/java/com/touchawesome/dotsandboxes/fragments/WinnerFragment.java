@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 import java.util.Locale;

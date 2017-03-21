@@ -7,12 +7,11 @@ import android.graphics.Paint;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
 

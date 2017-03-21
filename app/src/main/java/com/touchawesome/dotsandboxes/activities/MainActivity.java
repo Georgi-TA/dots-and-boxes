@@ -9,10 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,23 +21,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.BaseGameUtils;
+import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
-import com.touchawesome.dotsandboxes.fragments.LocalMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
+import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class MainActivity extends AppCompatActivity
                           implements MainMenuFragment.OnFragmentInteractionListener,
-                                     LocalMenuFragment.OnFragmentInteractionListener,
                                      GameLocalFragment.OnFragmentInteractionListener,
-                                     WinnerFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener {
+                                     WinnerFragment.OnFragmentInteractionListener,
+                                     ChooseLayoutFragment.OnFragmentInteractionListener,
+                                     FragmentManager.OnBackStackChangedListener {
 
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
-    private TextView mainTitle;
     private MusicIntentService mService;
     private boolean mBound = false;
 
@@ -47,13 +54,11 @@ public class MainActivity extends AppCompatActivity
 
         // Load the toolbar as a support appbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mainTitle = (TextView) findViewById(R.id.mainLocalTitleText);
         setSupportActionBar(toolbar);
 
         // Setup action bar appearance
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("");
 
         if (savedInstanceState != null) {
@@ -104,7 +109,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        setFonts();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean playMusic = prefs.getBoolean(getString(R.string.pref_key_music), false);
@@ -162,21 +166,11 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    private boolean mIsBound;
-
-    private void setFonts () {
-        mainTitle.setTypeface(Globals.kgTrueColors);
-    }
-
     private void loadFragment(int fragmentId, Bundle args) {
         Fragment fragment;
         switch (fragmentId) {
             case MainMenuFragment.FRAGMENT_ID: {
                 fragment = MainMenuFragment.newInstance(args);
-                break;
-            }
-            case LocalMenuFragment.FRAGMENT_ID: {
-                fragment = LocalMenuFragment.newInstance(args);
                 break;
             }
             case GameLocalFragment.FRAGMENT_ID: {
@@ -186,6 +180,10 @@ public class MainActivity extends AppCompatActivity
             case WinnerFragment.FRAGMENT_ID: {
                 fragment = WinnerFragment.newInstance(args);
 
+                break;
+            }
+            case ChooseLayoutFragment.FRAGMENT_ID: {
+                fragment = ChooseLayoutFragment.newInstance(args);
                 break;
             }
             case ComingSoonFragment.FRAGMENT_ID: {
@@ -206,14 +204,9 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    @Override
-    public void onMainMenuFragmentInteraction(int fragmentId, Bundle args) {
-        loadFragment(fragmentId, args);
-    }
-
-    @Override
-    public void onLocalMenuFragmentInteraction(int fragmentId, Bundle args) {
-        loadFragment(fragmentId, args);
+    private void startNetworkPlay() {
+        Intent intent = new Intent(this, NetworkPlayActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -262,5 +255,32 @@ public class MainActivity extends AppCompatActivity
 
         if (backStackCount < 1)
             finish();
+    }
+
+    @Override
+    public void onComputerPlaySelected() {
+        Bundle args = new Bundle();
+        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
+        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+    }
+
+    @Override
+    public void onFriendPlaySelected() {
+        Bundle args = new Bundle();
+        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
+        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+    }
+
+    @Override
+    public void onNetworkPlaySelected() {
+        startNetworkPlay();
+    }
+
+    @Override
+    public void onLayoutChosen(Bundle args, int rows, int columns) {
+        args.putInt("rows", rows);
+        args.putInt("columns", columns);
+        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
+        loadFragment(GameLocalFragment.FRAGMENT_ID, args);
     }
 }

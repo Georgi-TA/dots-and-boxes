@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.blackbear.scelus.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.R;
 
 public class MainMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
@@ -33,14 +33,24 @@ public class MainMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
-        Button localPlayButton = (Button) root.findViewById(R.id.buttonPlayLocal);
+        Button friendPlayButton = (Button) root.findViewById(R.id.buttonPlayFriend);
+        Button computerPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
         Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
 
-        localPlayButton.setOnClickListener(new View.OnClickListener() {
+        friendPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onMainMenuFragmentInteraction(LocalMenuFragment.FRAGMENT_ID, new Bundle());
+                    mListener.onFriendPlaySelected();
+                }
+            }
+        });
+
+        computerPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onComputerPlaySelected();
                 }
             }
         });
@@ -49,7 +59,7 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onMainMenuFragmentInteraction(ComingSoonFragment.FRAGMENT_ID, new Bundle());
+                    mListener.onNetworkPlaySelected();
                 }
             }
         });
@@ -75,6 +85,8 @@ public class MainMenuFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onMainMenuFragmentInteraction(int fragmentId, Bundle args);
+        void onComputerPlaySelected();
+        void onFriendPlaySelected();
+        void onNetworkPlaySelected();
     }
 }
