@@ -27,9 +27,17 @@
         android:gravity="center"
         android:padding="20dp">
 
+        <ImageView
+            android:id="@+id/db_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:src="@drawable/db_logo"/>
+
         <Button style="@style/NetworkMenuButton"
+            android:layout_marginTop="16dp"
             android:text="@string/network_menu_play_local"
-            android:id="@+id/play" />
+            android:id="@+id/play_network_button" />
+
     </LinearLayout>
 
     <LinearLayout android:id="@+id/sign_in_bar"

@@ -11,16 +11,7 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:layout_below="@id/toolbar"
-        android:id="@+id/logo"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:src="@drawable/db_logo"
-        android:padding="4dp"/>
-
     <FrameLayout
-        android:layout_alignTop="@id/logo"
         android:id="@+id/fragment_container"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"

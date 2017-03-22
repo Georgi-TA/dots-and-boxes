@@ -27,8 +27,17 @@
         android:gravity="center"
         android:padding="20dp">
 
+        <ImageView
+            android:layout_below="@id/toolbar"
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:src="@drawable/db_logo"
+            android:padding="4dp"/>
+
         <Button style="@style/NetworkMenuButton"
             android:text="@string/network_menu_play_local"
+            android:layout_marginTop="16dp"
             android:id="@+id/play" />
     </LinearLayout>
 

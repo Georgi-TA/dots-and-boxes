@@ -213,6 +213,7 @@ public class MainActivity extends AppCompatActivity
     public void onGameLocalFragmentInteraction(int fragmentId, Bundle args) {
         if (fragmentId == WinnerFragment.FRAGMENT_ID) {
             WinnerFragment dialog = WinnerFragment.newInstance(args);
+            dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
             dialog.setCancelable(false);
         }
@@ -225,27 +226,6 @@ public class MainActivity extends AppCompatActivity
         if (manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName().equals(GameLocalFragment.class.getName()))
             outState.putBoolean(ARG_GAME_IN_PROGRESS, true);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onWinnerFragmentInteraction(Uri action) {
-        // navigate to the main menu
-        if (action.equals(WinnerFragment.mainMenu)) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            while (fragmentManager.getBackStackEntryCount() > 0)
-                fragmentManager.popBackStackImmediate();
-
-            loadFragment(MainMenuFragment.FRAGMENT_ID, null);
-        }
-        else if (action.equals(WinnerFragment.replay)) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.popBackStackImmediate(); // pop the dialog
-            fragmentManager.popBackStackImmediate(); // pop the game fragment
-            loadFragment(GameLocalFragment.FRAGMENT_ID, null);
-        }
-        else if (action.equals(WinnerFragment.achievements)) {
-            //TODO: start intent to show the achievements screen
-        }
     }
 
     @Override
@@ -282,5 +262,20 @@ public class MainActivity extends AppCompatActivity
         args.putInt("columns", columns);
         args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
         loadFragment(GameLocalFragment.FRAGMENT_ID, args);
+    }
+
+    @Override
+    public void onReplayRequested(Bundle arguments) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate(); // pop the dialog
+        fragmentManager.popBackStackImmediate(); // pop the game fragment
+        loadFragment(GameLocalFragment.FRAGMENT_ID, arguments);
+    }
+
+    @Override
+    public void onMenuRequested() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 1)
+            fragmentManager.popBackStackImmediate();
     }
 }

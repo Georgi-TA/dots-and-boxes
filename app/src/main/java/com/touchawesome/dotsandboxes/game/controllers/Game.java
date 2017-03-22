@@ -128,23 +128,14 @@ public class Game {
 
         switch (gameState) {
             case START:
-                if (player == Player.PLAYER2)
-                    return false;
-
                 takeTurnPlayer1(dotStart, dotEnd);
                 return true;
 
             case PLAYER1_TURN:
-                if (player == Player.PLAYER2)
-                    return false;
-
                 takeTurnPlayer1(dotStart, dotEnd);
                 return true;
 
             case PLAYER2_TURN:
-                if (player == Player.PLAYER1)
-                    return false;
-
                 takeTurnPlayer2(dotStart, dotEnd);
                 break;
 
@@ -185,14 +176,18 @@ public class Game {
             int player2Score = board.getScore(Player.PLAYER2);
             notifyScoreChange(Player.PLAYER1, player1Score);
 
-            // determine if p1 is a winner
-            if (player1Score > maxScore / 2 + maxScore % 2) {
-                notifyGameEnd(Player.PLAYER1);
-                gameState = State.END;
-            }
-            // if it is a draw
-            else if (player1Score ==  player2Score && player1Score + player2Score == maxScore) {
-                notifyGameEnd(Player.NONE);
+            // if the board is filled
+            if (player1Score + player2Score == maxScore) {
+                if (player1Score == player2Score) {
+                    notifyGameEnd(Player.NONE);
+                }
+                else if (player1Score > player2Score) {
+                    notifyGameEnd(Player.PLAYER1);
+                }
+                else {
+                    notifyGameEnd(Player.PLAYER2);
+                }
+
                 gameState = State.END;
             }
         }
@@ -215,14 +210,18 @@ public class Game {
             int player2Score = board.getScore(Player.PLAYER2);
             notifyScoreChange(Player.PLAYER2, player2Score);
 
-            // calculate the score and see if p2 is a winner
-            if (player2Score > maxScore / 2 + maxScore % 2) {
-                notifyGameEnd(Player.PLAYER2);
-                gameState = State.END;
-            }
-            // if it is a draw
-            else if (player1Score ==  player2Score && player1Score + player2Score == maxScore) {
-                notifyGameEnd(Player.NONE);
+            // if the board is filled
+            if (player1Score + player2Score == maxScore) {
+                if (player1Score == player2Score) {
+                    notifyGameEnd(Player.NONE);
+                }
+                else if (player1Score > player2Score) {
+                    notifyGameEnd(Player.PLAYER1);
+                }
+                else {
+                    notifyGameEnd(Player.PLAYER2);
+                }
+
                 gameState = State.END;
             }
         }

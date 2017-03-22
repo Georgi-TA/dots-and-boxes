@@ -5,17 +5,27 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.games.Games;
+import com.google.android.gms.games.Player;
+import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
 
 public class NetworkMenuFragment extends Fragment implements View.OnClickListener {
-    String mGreeting = "Hello, anonymous user (not signed in)";
     public static final int FRAGMENT_ID = 7725;
+    private Player player;
+    private ImageView avatar;
 
+    public void setPlayer(Player player) {
+        this.player = player;
+
+        Picasso.with(getContext()).load(player.getIconImageUri()).into(avatar);
+    }
 
     public interface Listener {
-        public void onStartGameRequested(boolean hardMode);
+        public void onStartGameRequested();
         public void onShowAchievementsRequested();
         public void onShowLeaderboardsRequested();
         public void onSignInButtonClicked();
@@ -30,11 +40,15 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_network_menu, container, false);
         final int[] CLICKABLES = new int[] {
-               R.id.sign_in_button, R.id.sign_out_button
+                R.id.play_network_button,
+                R.id.sign_in_button,
+                R.id.sign_out_button
         };
         for (int i : CLICKABLES) {
             v.findViewById(i).setOnClickListener(this);
         }
+
+        avatar = (ImageView) v.findViewById(R.id.db_logo);
         return v;
     }
 
@@ -48,15 +62,8 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
         updateUi();
     }
 
-    public void setGreeting(String greeting) {
-        mGreeting = greeting;
-        updateUi();
-    }
-
     void updateUi() {
         if (getActivity() == null) return;
-        TextView tv = (TextView) getActivity().findViewById(R.id.hello);
-        if (tv != null) tv.setText(mGreeting);
 
         getActivity().findViewById(R.id.sign_in_bar).setVisibility(mShowSignIn ?
                 View.VISIBLE : View.GONE);
@@ -67,6 +74,9 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.play_network_button:
+                mListener.onStartGameRequested();
+                break;
             case R.id.sign_in_button:
                 mListener.onSignInButtonClicked();
                 break;

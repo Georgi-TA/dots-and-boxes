@@ -32,7 +32,8 @@ public class WinnerFragment extends DialogFragment {
     private WinnerFragment.OnFragmentInteractionListener mListener;
 
     public interface OnFragmentInteractionListener {
-        void onWinnerFragmentInteraction(Uri action);
+        void onReplayRequested(Bundle arguments);
+        void onMenuRequested();
     }
 
     public static WinnerFragment newInstance(Bundle args) {
@@ -84,7 +85,7 @@ public class WinnerFragment extends DialogFragment {
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onWinnerFragmentInteraction(replay);
+                mListener.onReplayRequested(getArguments());
                 dismiss();
             }
         });
@@ -93,16 +94,7 @@ public class WinnerFragment extends DialogFragment {
         mainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onWinnerFragmentInteraction(mainMenu);
-                dismiss();
-            }
-        });
-
-        ImageButton achievementsButton = (ImageButton) view.findViewById(R.id.achievements_button);
-        achievementsButton .setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onWinnerFragmentInteraction(achievements);
+                mListener.onMenuRequested();
                 dismiss();
             }
         });

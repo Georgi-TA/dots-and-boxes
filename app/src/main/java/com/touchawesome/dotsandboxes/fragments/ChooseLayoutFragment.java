@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.activities.NetworkPlayActivity;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class ChooseLayoutFragment extends Fragment {
@@ -81,6 +82,10 @@ public class ChooseLayoutFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setListener(OnFragmentInteractionListener listener) {
+        this.mListener = listener;
     }
 
     public interface OnFragmentInteractionListener {

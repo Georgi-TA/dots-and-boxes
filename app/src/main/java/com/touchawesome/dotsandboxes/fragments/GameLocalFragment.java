@@ -92,20 +92,17 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         // set transition drawable to player 1 border
         tdPlayer1 = new TransitionDrawable( new Drawable[] {
-                getResources().getDrawable(R.drawable.bg_player_image),
-                getResources().getDrawable(R.drawable.bg_player_image_active_p1)
+                getResources().getDrawable(R.drawable.bg_player_image_active_p1),
+                getResources().getDrawable(R.drawable.bg_player_image)
         });
         imagePlayer1Border.setImageDrawable(tdPlayer1);
-        tdPlayer1.startTransition(16);
-
 
         // set transition drawable to player 2 border
         tdPlayer2 = new TransitionDrawable( new Drawable[] {
-                getResources().getDrawable(R.drawable.bg_player_image_active_p2),
-                getResources().getDrawable(R.drawable.bg_player_image)
+                getResources().getDrawable(R.drawable.bg_player_image),
+                getResources().getDrawable(R.drawable.bg_player_image_active_p2)
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
-        tdPlayer1.startTransition(16);
 
         int padding = getResources().getDimensionPixelSize(R.dimen.player_image_border);
         Picasso.with(getContext())
@@ -172,8 +169,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         // UI player images border
         if (nextToMove == Game.Player.PLAYER1) {
-            tdPlayer1.reverseTransition(100);
-            tdPlayer2.reverseTransition(100);
+            tdPlayer1.startTransition(100);
+            tdPlayer2.startTransition(100);
         }
         else {
             tdPlayer1.startTransition(100);
@@ -184,7 +181,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     @Override
     public void onGameEnd(Game.Player winner) {
         boardView.setOnTouchListener(this);
-        Bundle args = new Bundle();
+        Bundle args = getArguments();
         args.putString(ARG_STATUS, winner.name());
         args.putString(ARG_WINNER_NAME, "Name");
         args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));

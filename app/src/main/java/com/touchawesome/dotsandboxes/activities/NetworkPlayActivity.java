@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -17,14 +18,22 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
+import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 /**
- * Created by scelus on 21.03.17.
+ * Created by scelus on 21.03.17
  */
 
-public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, NetworkMenuFragment.Listener {
+public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+                                                                      GoogleApiClient.OnConnectionFailedListener,
+                                                                      NetworkMenuFragment.Listener,
+                                                                      ChooseLayoutFragment.OnFragmentInteractionListener,
+                                                                      GameLocalFragment.OnFragmentInteractionListener{
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -55,6 +64,8 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
     AccomplishmentsOutbox mOutbox = new AccomplishmentsOutbox();
 
     private NetworkMenuFragment mMainMenuFragment;
+    private ChooseLayoutFragment mChooseLayoutFragment;
+    private GameLocalFragment mGameFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +94,10 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
 
         // listen to fragment events
         mMainMenuFragment.setListener(this);
+
+
+        mChooseLayoutFragment = new ChooseLayoutFragment();
+        mChooseLayoutFragment.setListener(this);
 
         // add initial fragment (welcome fragment)
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mMainMenuFragment).commit();
@@ -155,8 +170,8 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
-    public void onStartGameRequested(boolean hardMode) {
-        startGame(hardMode);
+    public void onStartGameRequested() {
+        startGame();
     }
 
     @Override
@@ -182,14 +197,9 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
     /**
      * Start gameplay. This means updating some status variables and switching
      * to the "gameplay" screen (the screen where the user types the score they want).
-     *
-     * @param hardMode whether to start gameplay in "hard mode".
      */
-    void startGame(boolean hardMode) {
-//        mHardMode = hardMode;
-//        switchToFragment(mGameplayFragment);
-
-        //TODO: set size of board
+    void startGame() {
+        switchToFragment(mChooseLayoutFragment);
     }
 
     //TODO: should be added to the gameplay fragment
@@ -316,11 +326,6 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
         }
     }
 
-//    @Override
-//    public void onWinScreenDismissed() {
-//        switchToFragment(mMainMenuFragment);
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -346,15 +351,7 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
 
         // Set the greeting appropriately on main menu
         Player p = Games.Players.getCurrentPlayer(mGoogleApiClient);
-        String displayName;
-        if (p == null) {
-            Log.w(TAG, "mGamesClient.getCurrentPlayer() is NULL!");
-            displayName = "???";
-        } else {
-            displayName = p.getDisplayName();
-        }
-        mMainMenuFragment.setGreeting("Hello, " + displayName);
-
+        mMainMenuFragment.setPlayer(p);
 
         // if we have accomplishments to push, push them
         if (!mOutbox.isEmpty()) {
@@ -366,15 +363,12 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended(): attempting to connect");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed(): attempting to resolve" + connectionResult.getErrorMessage());
         if (mResolvingConnectionFailure) {
-            Log.d(TAG, "onConnectionFailed(): already resolving");
             return;
         }
 
@@ -389,7 +383,6 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
         }
 
         // Sign-in failed, so show sign-in button on main menu
-        mMainMenuFragment.setGreeting(getString(R.string.signed_out_greeting));
         mMainMenuFragment.setShowSignInButton(true);
         // mWinFragment.setShowSignInButton(true);
     }
@@ -417,12 +410,28 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
             mGoogleApiClient.disconnect();
         }
 
-        mMainMenuFragment.setGreeting(getString(R.string.signed_out_greeting));
         mMainMenuFragment.setShowSignInButton(true);
         // mWinFragment.setShowSignInButton(true);
     }
 
+    @Override
+    public void onLayoutChosen(Bundle args, int rows, int columns) {
+        Bundle arguments = new Bundle();
+        arguments.putInt("rows", rows);
+        arguments.putInt("columns", columns);
+        arguments.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
+
+        mGameFragment = GameLocalFragment.newInstance(arguments);
+        switchToFragment(mGameFragment);
+    }
+
+    @Override
+    public void onGameLocalFragmentInteraction(int fragmentId, Bundle args) {
+        // TODO: 22.03.17 add  
+    }
+
     class AccomplishmentsOutbox {
+
         boolean mPrimeAchievement = false;
         boolean mHumbleAchievement = false;
         boolean mLeetAchievement = false;
@@ -430,7 +439,6 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
         int mBoredSteps = 0;
         int mEasyModeScore = -1;
         int mHardModeScore = -1;
-
         boolean isEmpty() {
             return !mPrimeAchievement && !mHumbleAchievement && !mLeetAchievement &&
                     !mArrogantAchievement && mBoredSteps == 0 && mEasyModeScore < 0 &&
@@ -448,12 +456,17 @@ public class NetworkPlayActivity extends AppCompatActivity implements GoogleApiC
             /* TODO: This is left as an exercise. Write code here that loads data
              * from the file you wrote in saveLocal(). */
         }
+
     }
-//
 //    @Override
 //    public void onWinScreenSignInClicked() {
 //        mSignInClicked = true;
 //        mGoogleApiClient.connect();
+//    }
+//
+//    @Override
+//    public void onWinScreenDismissed() {
+//        switchToFragment(mMainMenuFragment);
 //    }
 
 }

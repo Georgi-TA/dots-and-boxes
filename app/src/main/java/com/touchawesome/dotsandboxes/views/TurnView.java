@@ -71,8 +71,6 @@ public class TurnView extends View {
         leftRect.set(getPaddingLeft(), getPaddingTop(), width/2, height - getPaddingBottom());
         rightRect.set(width/2, getPaddingTop(), width - getPaddingRight(), height - getPaddingBottom());
 
-        Log.d(TAG, "onMeasure: " + leftRect.toString());
-        Log.d(TAG, "onMeasure: " + rightRect.toString());
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

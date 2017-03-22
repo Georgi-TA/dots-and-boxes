@@ -3,6 +3,4 @@
     <string name="app_id">733740911732</string>
     <string name="achievement_started_up_id">CgkI9Jj3sq0VEAIQAg</string>
     <string name="achievement_winner_winner_id">CgkI9Jj3sq0VEAIQAw</string>
-
-    <item name="hello" type="id">Hello</item>
 </resources>
