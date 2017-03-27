@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="@color/primary"
+        android:background="@color/background_settings"
         android:weightSum="2"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/score_board_layout"
+        android:paddingStart="@dimen/score_board_layout"
+        android:paddingRight="@dimen/score_board_layout"
+        android:paddingEnd="@dimen/score_board_layout">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -33,22 +33,13 @@
 
                     <ImageView
                         android:id="@+id/player1_border"
-                        style="@style/PlayerImageBorder"
-                        android:background="@drawable/bg_player_image" />
+                        style="@style/PlayerImageBorder" />
 
                     <ImageView
                         android:id="@+id/player1_image"
                         style="@style/PlayerImage" />
 
                 </FrameLayout>
-
-                <TextView
-                    android:id="@+id/player1_name"
-                    android:layout_gravity="center_horizontal"
-                    android:text="You"
-                    style="@style/PlayerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
@@ -79,8 +70,7 @@
 
                     <ImageView
                         android:id="@+id/player2_border"
-                        style="@style/PlayerImageBorder"
-                        android:background="@drawable/bg_player_image" />
+                        style="@style/PlayerImageBorder" />
 
                     <ImageView
                         android:id="@+id/player2_image"
@@ -88,13 +78,7 @@
 
                 </FrameLayout>
 
-                <TextView
-                    android:id="@+id/player2_name"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Etnies"
-                    style="@style/PlayerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -103,5 +87,11 @@
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:padding="2dp"
+        android:layout_gravity="bottom"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
         android:layout_gravity="bottom"/>
 </FrameLayout>

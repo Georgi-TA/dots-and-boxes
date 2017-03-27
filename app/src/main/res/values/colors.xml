@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="line">#FF333333</color>
+    <color name="line">#FF555555</color>
     <color name="line_temp">#7F000000</color>
     <color name="boxPlayer1">#FF6767</color>
     <color name="boxPlayer2">#66C6FF</color>
@@ -8,13 +8,23 @@
     <color name="scorePlayer1">#FF6767</color>
     <color name="scorePlayer2">#66C6FF</color>
 
-    <color name="background">#EEEEEE</color>
+    <color name="background">#FEFEFE</color>
     <color name="backgroundDarker">#CCCCCC</color>
     <color name="textColorPrimary">#EFEFEF</color>
-    <color name="textColorPrimaryDark">#232323</color>
-    <color name="colorAccent">#a31720</color>
-    <color name="primaryDark">#CCCCCC</color>
-    <color name="primaryLight">#9ca9c1</color>
-    <color name="primary">#EFEFEF</color>
+    <color name="textColorPrimaryDark">#404040</color>
 
+    <color name="colorAccent">#a31720</color>
+    <color name="primaryDark">#232323</color>
+    <color name="primaryLight">#9ca9c1</color>
+    <color name="primary">#555555</color>
+
+    <!-- Settings -->
+    <color name="settings_icons">#757575</color>
+    <color name="background_settings">#FFFFFF</color>
+    <color name="settings_controls">#80CBC4</color>
+
+    <!-- Main menu -->
+    <color name="menu_icons">#FF000000</color>
+    <color name="player_image_inactive">#FF232323</color>
+    <color name="button_selected">#F4F4F4</color>
 </resources>

@@ -18,6 +18,7 @@ import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.CircleTransform;
+import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
 import java.util.Locale;
@@ -40,9 +41,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     private int rows = 3;
     private int columns = 3;
-
-    private TextView scorePlayer1;
-    private TextView scorePlayer2;
 
     private TransitionDrawable tdPlayer1;
     private TransitionDrawable tdPlayer2;
@@ -76,13 +74,14 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
         boardView = (BoardView) root.findViewById(R.id.boardView);
 
-        scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
-        scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
+        TextView scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
+        scorePlayer1.setTypeface(Globals.kgTrueColors);
+        TextView scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
+        scorePlayer2.setTypeface(Globals.kgTrueColors);
 
         ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
         ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
@@ -92,27 +91,25 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         // set transition drawable to player 1 border
         tdPlayer1 = new TransitionDrawable( new Drawable[] {
-                getResources().getDrawable(R.drawable.bg_player_image_active_p1),
-                getResources().getDrawable(R.drawable.bg_player_image)
+                getResources().getDrawable(R.drawable.bg_player1_image_active),
+                getResources().getDrawable(R.drawable.bg_player_image_inactive)
         });
         imagePlayer1Border.setImageDrawable(tdPlayer1);
 
         // set transition drawable to player 2 border
         tdPlayer2 = new TransitionDrawable( new Drawable[] {
-                getResources().getDrawable(R.drawable.bg_player_image),
-                getResources().getDrawable(R.drawable.bg_player_image_active_p2)
+                getResources().getDrawable(R.drawable.bg_player_image_inactive),
+                getResources().getDrawable(R.drawable.bg_player2_image_active)
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
 
         int padding = getResources().getDimensionPixelSize(R.dimen.player_image_border);
         Picasso.with(getContext())
                 .load(R.drawable.sol_image)
-                .transform(new CircleTransform(padding))
                 .into(imagePlayer1);
 
         Picasso.with(getContext())
                 .load(R.drawable.ky_image)
-                .transform(new CircleTransform(padding))
                 .into(imagePlayer2);
 
         bot = new PlayerBot();
@@ -138,9 +135,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         super.onAttach(context);
         try {
             mListener = (OnFragmentInteractionListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+        } catch (ClassCastException e) { throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -152,10 +147,10 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     @Override
     public void onScoreChange(Game.Player player, int score) {
-        if (player == Game.Player.PLAYER1)
-            scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
-        else
-            scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
+//        if (player == Game.Player.PLAYER1)
+//            scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
+//        else
+//            scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
     }
 
     @Override
@@ -173,8 +168,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
             tdPlayer2.startTransition(100);
         }
         else {
-            tdPlayer1.startTransition(100);
-            tdPlayer2.startTransition(100);
+            tdPlayer1.reverseTransition(100);
+            tdPlayer2.reverseTransition(100);
         }
     }
 

@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.activities.NetworkPlayActivity;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class ChooseLayoutFragment extends Fragment {
@@ -49,12 +48,15 @@ public class ChooseLayoutFragment extends Fragment {
                 mListener.onLayoutChosen(getArguments(), 3, 3);
             }
         });
+        threeByThree.setTypeface(Globals.kgTrueColors);
+
         fourByFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onLayoutChosen(getArguments(), 4, 4);
             }
         });
+        fourByFour.setTypeface(Globals.kgTrueColors);
 
         fiveByFive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +64,7 @@ public class ChooseLayoutFragment extends Fragment {
                 mListener.onLayoutChosen(getArguments(), 5, 5);
             }
         });
-
+        fiveByFive.setTypeface(Globals.kgTrueColors);
 
         return root;
     }

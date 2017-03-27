@@ -44,6 +44,7 @@ public class TurnView extends View {
         leftRect = new Rect();
         rightRect = new Rect();
 
+
         colorPlayer1 = ContextCompat.getColor(getContext(), R.color.boxPlayer1);
         colorPlayer2 = ContextCompat.getColor(getContext(), R.color.boxPlayer2);
 

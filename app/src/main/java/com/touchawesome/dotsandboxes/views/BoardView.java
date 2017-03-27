@@ -255,6 +255,10 @@ public class BoardView extends View {
         this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+    boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+    boolean shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
+
     /**
      * Using the native {@link View} method to service the touch events
      * @param motionEvent the motion event to be processed
@@ -268,9 +272,7 @@ public class BoardView extends View {
         Board board = game.getBoard();
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-                boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
-                boolean shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
+
 
                 if (shouldMakeASound)
                     performClick();
