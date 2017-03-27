@@ -29,9 +29,6 @@ public class GameActivity extends AppCompatActivity implements GameLocalFragment
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView title = (TextView) toolbar.findViewById(R.id.game_title);
-        title.setTypeface(Globals.kgTrueColors);
-
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         loadGameFragment();
     }
@@ -42,8 +39,8 @@ public class GameActivity extends AppCompatActivity implements GameLocalFragment
         gameFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                                        R.anim.enter_from_left, R.anim.exit_to_right);
+//        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
+//                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, gameFragment);
         transaction.commit();
     }
@@ -69,7 +66,7 @@ public class GameActivity extends AppCompatActivity implements GameLocalFragment
 
     @Override
     public void onReplayRequested(Bundle arguments) {
-        // loadGameFragment();
+        loadGameFragment();
     }
 
     @Override

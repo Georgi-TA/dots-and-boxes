@@ -10,7 +10,7 @@
 
     <color name="background">#FEFEFE</color>
     <color name="backgroundDarker">#CCCCCC</color>
-    <color name="textColorPrimary">#EFEFEF</color>
+    <color name="textColorPrimary">#FEFEFE</color>
     <color name="textColorPrimaryDark">#404040</color>
 
     <color name="colorAccent">#a31720</color>

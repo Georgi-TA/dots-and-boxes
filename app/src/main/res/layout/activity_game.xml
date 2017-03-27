@@ -9,18 +9,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-
-        <TextView
-            android:id="@+id/game_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="24sp"
-            android:textColor="@color/textColorPrimaryDark"
-            android:gravity="center_vertical"
-            android:text="Your turn"/>
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"/>
 
     <FrameLayout
         android:id="@+id/content"

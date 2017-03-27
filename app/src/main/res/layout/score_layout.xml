@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="@color/background_settings"
+        android:background="@color/primary"
         android:weightSum="2"
         android:paddingLeft="@dimen/score_board_layout"
         android:paddingStart="@dimen/score_board_layout"

@@ -4,10 +4,22 @@
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
+        <item name="colorAccent">@color/textColorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
         <item name="android:colorBackground">@color/background</item>
+        <item name="android:colorControlNormal">@color/primary</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="GameTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:colorControlNormal">@color/textColorPrimary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -36,7 +48,7 @@
         <item name="android:textSize">32sp</item>
         <item name="android:layout_margin">4dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/textColorPrimaryDark</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
     <style name="ScoreViewVertical" parent="TextAppearance.AppCompat">

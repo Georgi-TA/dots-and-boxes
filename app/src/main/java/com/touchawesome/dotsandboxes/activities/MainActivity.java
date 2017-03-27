@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // add the toolbar
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         // Create the Google API Client with access to Games
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -252,8 +255,15 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
 
-        if (backStackCount < 1)
+        if (backStackCount > 1) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        if (backStackCount == 1) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        else if (backStackCount < 1) {
             finish();
+        }
     }
 
     @Override

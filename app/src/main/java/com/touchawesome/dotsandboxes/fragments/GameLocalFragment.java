@@ -45,6 +45,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private TransitionDrawable tdPlayer1;
     private TransitionDrawable tdPlayer2;
 
+    private TextView scorePlayer1;
+    private TextView scorePlayer2;
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -78,9 +80,9 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
         boardView = (BoardView) root.findViewById(R.id.boardView);
 
-        TextView scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
+        scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer1.setTypeface(Globals.kgTrueColors);
-        TextView scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
+        scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
         scorePlayer2.setTypeface(Globals.kgTrueColors);
 
         ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
@@ -106,10 +108,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         int padding = getResources().getDimensionPixelSize(R.dimen.player_image_border);
         Picasso.with(getContext())
                 .load(R.drawable.sol_image)
+                .resize(100, 100)
                 .into(imagePlayer1);
 
         Picasso.with(getContext())
                 .load(R.drawable.ky_image)
+                .resize(100, 100)
                 .into(imagePlayer2);
 
         bot = new PlayerBot();
@@ -147,10 +151,10 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     @Override
     public void onScoreChange(Game.Player player, int score) {
-//        if (player == Game.Player.PLAYER1)
-//            scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
-//        else
-//            scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
+        if (player == Game.Player.PLAYER1)
+            scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
+        else
+            scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
     }
 
     @Override
