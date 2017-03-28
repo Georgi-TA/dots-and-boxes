@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingTop="8dp"
-        android:text=""
+        android:text="You win"
         android:textSize="24sp"
         android:background="@color/primary"
         android:textColor="@color/textColorPrimary"
@@ -57,7 +57,8 @@
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/scoreLayout"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

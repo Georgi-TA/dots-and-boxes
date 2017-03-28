@@ -84,6 +84,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         turnText = (TextView) root.findViewById(R.id.turnText);
         turnText.setTypeface(Globals.kgTrueColors);
+        turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
         scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer1.setTypeface(Globals.kgTrueColors);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
@@ -174,13 +175,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         if (nextToMove == Game.Player.PLAYER2) {
             tdPlayer1.startTransition(100);
             tdPlayer2.startTransition(100);
-            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
+            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player2name)));
         }
         else {
             tdPlayer1.reverseTransition(100);
             tdPlayer2.reverseTransition(100);
-            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player2name)));
-
+            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
         }
     }
 
