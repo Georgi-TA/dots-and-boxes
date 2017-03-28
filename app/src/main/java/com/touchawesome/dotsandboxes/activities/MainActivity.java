@@ -45,6 +45,10 @@ public class MainActivity extends AppCompatActivity
                                      NetworkMenuFragment.Listener,
                                      ChooseLayoutFragment.OnFragmentInteractionListener {
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
     private static final String TAG = MainActivity.class.getName();
     private MusicIntentService mService;
@@ -70,8 +74,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // add the toolbar
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -130,7 +132,6 @@ public class MainActivity extends AppCompatActivity
         return super.onSupportNavigateUp();
 
     }
-
 
     @Override
     public void onResume() {
@@ -258,14 +259,16 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
 
-        if (backStackCount > 1) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        if (backStackCount == 1) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        }
-        else if (backStackCount < 1) {
-            finish();
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            if (backStackCount > 1) {
+                supportActionBar.setDisplayHomeAsUpEnabled(true);
+            }
+            if (backStackCount == 1) {
+                supportActionBar.setDisplayHomeAsUpEnabled(false);
+            } else if (backStackCount < 1) {
+                finish();
+            }
         }
     }
 
@@ -298,8 +301,6 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);
         startActivity(intent);
     }
-
-
 
     @Override
     public void onConnectionSuspended(int i) {

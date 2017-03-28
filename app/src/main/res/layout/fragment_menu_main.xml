@@ -3,24 +3,25 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clipChildren="false"
+        android:paddingBottom="16dp">
 
         <Button
             android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayFriend"
-            style="@style/MenuButton" />
+            style="@style/MenuLayoutButton" />
 
         <Button
             android:text="@string/menu_option_play_local_cpu"
             android:id="@+id/buttonPlayLocalComputer"
-            style="@style/MenuButton" />
-
-
+            style="@style/MenuLayoutButton" />
 
         <!--<Button-->
             <!--android:text="@string/menu_option_play_network"-->

@@ -16,7 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:dividerPadding="16dp"
+
         android:layout_marginTop="32dp">
 
         <ImageView
@@ -33,22 +33,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp">
+        android:layout_marginBottom="32dp">
 
         <ImageButton
             android:id="@+id/button_about"
             style="@style/BottomBarButton"
-            app:srcCompat="@drawable/ic_button_aboutus"/>
+            android:src="@drawable/ic_button_aboutus"/>
 
         <ImageButton
             android:id="@+id/button_achievements"
             style="@style/BottomBarButton"
-            app:srcCompat="@drawable/ic_button_medal"/>
+            android:src="@drawable/ic_button_medal"/>
 
         <ImageButton
             android:id="@+id/button_settings"
-            app:srcCompat="@drawable/ic_button_settings"
+            android:src="@drawable/ic_button_settings"
             style="@style/BottomBarButton" />
+
     </LinearLayout>
 
     <FrameLayout
@@ -56,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/buttonPanel"
-        android:layout_below="@id/title"/>
+        android:layout_below="@id/title"
+        android:clipChildren="false"/>
 
 </RelativeLayout>

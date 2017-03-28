@@ -16,7 +16,7 @@
     <color name="colorAccent">#a31720</color>
     <color name="primaryDark">#232323</color>
     <color name="primaryLight">#9ca9c1</color>
-    <color name="primary">#555555</color>
+    <color name="primary">#414040</color>
 
     <!-- Settings -->
     <color name="settings_icons">#757575</color>
@@ -27,4 +27,5 @@
     <color name="menu_icons">#FF000000</color>
     <color name="player_image_inactive">#FF232323</color>
     <color name="button_selected">#F4F4F4</color>
+
 </resources>

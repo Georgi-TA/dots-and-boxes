@@ -1,10 +1,19 @@
 package com.touchawesome.dotsandboxes.game.controllers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
+
 import java.util.HashSet;
 
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.models.Board;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.Graph;
+
+import static android.content.Context.VIBRATOR_SERVICE;
+import static java.security.AccessController.getContext;
 
 /**
  * Game class object responsible for handling the game as it develops.
@@ -12,8 +21,10 @@ import com.touchawesome.dotsandboxes.game.models.Graph;
  * and indicated when a turn has changed.
  */
 public class Game {
+    private final Vibrator vibrator;
     private Graph gameTree;    // graph object representing the game tree
     private Board board;       // the board on which the two players will play
+    private boolean shouldVibrate;
 
     public void setNextPlayer(Player nextPlayer) {
         switch (nextPlayer) {
@@ -95,7 +106,7 @@ public class Game {
      * @param rows the rows of the board
      * @param columns the columns of the board
      */
-    public Game (int rows, int columns) {
+    public Game (Context context, int rows, int columns) {
         this.maxScore = rows * columns;
 
         this.board = new Board(rows, columns);
@@ -103,6 +114,10 @@ public class Game {
         this.listeners = new HashSet<>();
 
         this.nextToMove = Player.PLAYER1;
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        shouldVibrate = sharedPref.getBoolean(context.getString(R.string.pref_key_vibrate), true);
+        vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
     }
 
     /**
@@ -171,6 +186,10 @@ public class Game {
         boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
 
         if (boxCompleted) {
+
+            if (shouldVibrate)
+                vibrator.vibrate(125);
+
             // calculate the score
             int player1Score = board.getScore(Player.PLAYER1);
             int player2Score = board.getScore(Player.PLAYER2);

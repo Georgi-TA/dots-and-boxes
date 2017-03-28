@@ -4,6 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:id="@+id/title"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="128dp"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/db_logo"
+            android:padding="8dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/buttonPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

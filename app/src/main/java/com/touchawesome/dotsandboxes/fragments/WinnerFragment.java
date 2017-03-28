@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 import java.util.Locale;
 
@@ -63,22 +64,27 @@ public class WinnerFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         TextView title = (TextView) view.findViewById(R.id.winner_title);
-        switch (winner) {
-            case PLAYER1:
-                title.setText(R.string.you_win);
-                break;
-            case NONE:
-                title.setText(R.string.draw);
-                break;
-            case PLAYER2:
-                title.setText(R.string.you_lose);
-                break;
-        }
+        title.setTypeface(Globals.kgTrueColors);
+        title.setText(R.string.you_win);
+
+//        switch (winner) {
+//            case PLAYER1:
+//                title.setText(R.string.you_win);
+//                break;
+//            case NONE:
+//                title.setText(R.string.draw);
+//                break;
+//            case PLAYER2:
+//                title.setText(R.string.you_lose);
+//                break;
+//        }
 
         TextView name = (TextView) view.findViewById(R.id.winner_name);
+        name.setTypeface(Globals.kgTrueColors);
         name.setText(winnerName);
 
         TextView score = (TextView) view.findViewById(R.id.winner_score);
+        score.setTypeface(Globals.kgTrueColors);
         score.setText(String.format(Locale.getDefault(), getString(R.string.winner_points), winnerScore));
 
         ImageButton replayButton = (ImageButton) view.findViewById(R.id.replay_button);

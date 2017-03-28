@@ -122,7 +122,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
                 .into(imagePlayer2);
 
         bot = new PlayerBot();
-        game = new Game(rows, columns);
+        game = new Game(getContext(), rows, columns);
         game.registerListener(this);
         boardView.setGame(game);
 
@@ -144,7 +144,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         super.onAttach(context);
         try {
             mListener = (OnFragmentInteractionListener) context;
-        } catch (ClassCastException e) { throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -189,8 +190,23 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         boardView.setOnTouchListener(this);
         Bundle args = getArguments();
         args.putString(ARG_STATUS, winner.name());
-        args.putString(ARG_WINNER_NAME, "Name");
-        args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
+
+        int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
+        int player2Score = game.getBoard().getScore(Game.Player.PLAYER2);
+
+        if (mode == Game.Mode.CPU) {
+            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
+        }
+        else if (player1Score > player2Score){
+            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
+            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
+        }
+        else {
+            args.putString(ARG_WINNER_NAME, getString(R.string.player2name));
+            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER2));
+        }
+
+
         mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
     }
 

@@ -21,12 +21,12 @@
             android:text="@string/menu_option_play_local_cpu"
             android:id="@+id/buttonPlayLocalComputer"
             android:layout_marginTop="16dp"
-            style="@style/MenuButton" />
+            style="@style/MenuLayoutButton" />
 
         <Button
             android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayFriend"
-            style="@style/MenuButton" />
+            style="@style/MenuLayoutButton" />
 
         <!--<Button-->
             <!--android:text="@string/menu_option_play_network"-->

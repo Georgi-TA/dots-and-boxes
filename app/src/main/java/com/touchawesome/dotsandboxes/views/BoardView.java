@@ -92,7 +92,7 @@ public class BoardView extends View {
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
 
-        vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
+
     }
 
     /**
@@ -257,7 +257,6 @@ public class BoardView extends View {
 
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
     boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
-    boolean shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
 
     /**
      * Using the native {@link View} method to service the touch events
@@ -276,9 +275,6 @@ public class BoardView extends View {
 
                 if (shouldMakeASound)
                     performClick();
-                
-                if (shouldVibrate)
-                    vibrator.vibrate(125);
                 
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur

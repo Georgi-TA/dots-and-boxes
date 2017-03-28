@@ -40,14 +40,6 @@
                     style="@style/PlayerImage" />
 
             </FrameLayout>
-            <TextView
-                android:id="@+id/player1_name"
-                style="@style/PlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="You" />
-
 
             <TextView
                 android:id="@+id/player1_score"
@@ -57,11 +49,25 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/turnText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="You win"
+            android:textSize="24sp"
+            android:background="@color/primary"
+            android:textColor="@color/textColorPrimary"
+            android:layout_alignParentTop="true"/>
+
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:layout_below="@id/turnText"
             android:background="@color/background"
             android:padding="32dp" />
 
@@ -88,14 +94,6 @@
                     style="@style/PlayerImage" />
 
             </FrameLayout>
-
-            <TextView
-                android:id="@+id/player2_name"
-                style="@style/PlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="P2" />
 
             <TextView
                 android:id="@+id/player2_score"

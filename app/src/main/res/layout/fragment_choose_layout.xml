@@ -3,12 +3,15 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:clipChildren="false">
 
         <Button
             android:id="@+id/buttonPlayThreeByThree"
