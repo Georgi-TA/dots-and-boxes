@@ -142,12 +142,16 @@ public class MainActivity extends AppCompatActivity
 
         if (mBoundMusicService && playMusic)
             mService.send(new Intent(MusicIntentService.ACTION_START_MUSIC));
-    }
 
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+    }
+    
     @Override
     public void onPause() {
         super.onPause();
-        mService.send(new Intent(MusicIntentService.ACTION_PAUSE_MUSIC));
+        if (mService != null)
+            mService.send(new Intent(MusicIntentService.ACTION_PAUSE_MUSIC));
     }
 
     @Override
