@@ -48,6 +48,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private TextView scorePlayer1;
     private TextView scorePlayer2;
 
+    private TextView turnText;
+
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
         fragment.setArguments(args);
@@ -80,6 +82,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
         boardView = (BoardView) root.findViewById(R.id.boardView);
 
+        turnText = (TextView) root.findViewById(R.id.turnText);
+        turnText.setTypeface(Globals.kgTrueColors);
         scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer1.setTypeface(Globals.kgTrueColors);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
@@ -167,13 +171,16 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         }
 
         // UI player images border
-        if (nextToMove == Game.Player.PLAYER1) {
+        if (nextToMove == Game.Player.PLAYER2) {
             tdPlayer1.startTransition(100);
             tdPlayer2.startTransition(100);
+            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
         }
         else {
             tdPlayer1.reverseTransition(100);
             tdPlayer2.reverseTransition(100);
+            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player2name)));
+
         }
     }
 

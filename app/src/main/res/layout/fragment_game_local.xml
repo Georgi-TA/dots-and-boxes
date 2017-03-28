@@ -5,9 +5,22 @@
     android:layout_height="match_parent"
     tools:context="com.touchawesome.dotsandboxes.fragments.GameLocalFragment">
 
+    <TextView
+        android:id="@+id/turnText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="8dp"
+        android:text=""
+        android:textSize="24sp"
+        android:background="@color/primary"
+        android:textColor="@color/textColorPrimary"
+        android:layout_alignParentTop="true"/>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/turnText"
         android:weightSum="3"
         android:orientation="vertical"
         android:clipChildren="false"

@@ -116,7 +116,7 @@
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColorPrimaryDark</item>
     </style>
 
     <style name="PlayerImage">
@@ -136,9 +136,9 @@
     <style name="WinnerMenuButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">54dp</item>
         <item name="android:layout_height">54dp</item>
-        <item name="android:tint">@color/textColorPrimary</item>
-        <item name="android:background">@color/primaryDark</item>
         <item name="android:layout_margin">16dp</item>
+        <item name="android:tint">@color/primary</item>
+        <item name="android:background">@drawable/ic_svg_square_icons</item>
     </style>
 
     <style name="BottomBarButton" parent="Widget.AppCompat.ImageButton">
