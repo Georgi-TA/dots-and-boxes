@@ -46,6 +46,7 @@
 
         <activity android:name=".activities.GameActivity"
             android:label=""
+            android:exported="true"
             android:theme="@style/GameTheme"/>
 
         <activity android:name=".activities.InfoActivity"

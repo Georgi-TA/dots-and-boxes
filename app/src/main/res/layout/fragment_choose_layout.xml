@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:showDividers="middle"
+        android:divider="@drawable/list_divider">
 
         <Button
             android:id="@+id/buttonPlayThreeByThree"

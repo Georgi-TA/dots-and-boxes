@@ -9,12 +9,13 @@
         android:id="@+id/turnText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:paddingTop="8dp"
-        android:textSize="24sp"
+        android:layout_alignParentTop="true"
         android:background="@color/primary"
+        android:gravity="top|center_horizontal"
+        android:paddingTop="8dp"
+        android:text="@string/achievement"
         android:textColor="@color/textColorPrimary"
-        android:layout_alignParentTop="true"/>
+        android:textSize="20sp" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

@@ -8,10 +8,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:clipChildren="false"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:showDividers="middle"
+        android:divider="@drawable/list_divider">
 
         <Button
             android:text="@string/menu_option_play_local_player"
@@ -19,9 +21,9 @@
             style="@style/MenuLayoutButton" />
 
         <Button
-            android:text="@string/menu_option_play_local_cpu"
             android:id="@+id/buttonPlayLocalComputer"
-            style="@style/MenuLayoutButton" />
+            style="@style/MenuLayoutButton"
+            android:text="@string/menu_option_play_local_cpu" />
 
         <!--<Button-->
             <!--android:text="@string/menu_option_play_network"-->

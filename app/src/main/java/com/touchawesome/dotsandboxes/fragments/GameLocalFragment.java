@@ -114,11 +114,16 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
                 mode = Game.Mode.PLAYER;
         }
         else {
-            mode = Game.Mode.PLAYER;
+            // TODO: 30.03.17 REMOVE
+            args = new Bundle();
+            args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
+
+
+            mode = Game.Mode.CPU;
         }
 
-        int rows = getArguments().getInt("rows", 3);
-        int columns = getArguments().getInt("columns", 3);
+        int rows = args.getInt("rows", 3);
+        int columns = args.getInt("columns", 3);
 
         game = new Game(rows, columns);
         game.registerListener(this);
