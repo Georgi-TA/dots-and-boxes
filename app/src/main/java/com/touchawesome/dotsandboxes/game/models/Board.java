@@ -35,6 +35,8 @@ public class Board {
                 player = Game.Player.PLAYER1;
             else if ((b & 32) == 32)
                 player = Game.Player.PLAYER2;
+            else
+                player = Game.Player.NONE;
         }
     }
 
@@ -105,18 +107,15 @@ public class Board {
      * @param dotEnd the dot that is with a number greater than the one for dotStart
      * @param player the player that is placing the line
      *
-     * @return if the move completed a square
+     * @return how many boxes the move completed
      */
-    public boolean setLineForDots(int dotStart, int dotEnd, Game.Player player) {
+    public int setLineForDots(int dotStart, int dotEnd, Game.Player player) {
         int rowStart = dotStart / (columns + 1);
         int rowEnd = dotEnd / (columns + 1);
         int columnStart = dotStart % (columns + 1);
         int columnEnd = dotEnd % (columns + 1);
 
-        // sanity check
-        return  rowStart <= rowEnd
-                && columnStart <= columnEnd
-                && toggleLine(true, rowStart, columnStart, rowEnd, columnEnd, player);
+        return toggleLine(true, rowStart, columnStart, rowEnd, columnEnd, player);
     }
 
     /**
@@ -146,9 +145,9 @@ public class Board {
      * @param line the type of line being placed
      * @param player the player that is placing the line
      *
-     * @return if the line completed a box
+     * @return 1 if the box is completed by this move, 0 otherwise
      */
-    private boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
+    private int setLineAtBox(int row, int column, Line line, Game.Player player) {
         switch (line){
             case TOP:
                 boxes[row][column] |= 1;
@@ -174,10 +173,10 @@ public class Board {
                 boxes[row][column] |= 32;
                 boxes[row][column] &= ~16;
             }
-            return true;
+            return 1;
         }
 
-        return false;
+        return 0;
     }
 
     /**
@@ -213,13 +212,14 @@ public class Board {
      * @param columnEnd column of ending dot
      * @param rowEnd row of ending dot
      * @param player the player placing the line
+     * @return how many boxes are completed
      */
-    private boolean toggleLine(boolean set, int rowStart, int columnStart, int rowEnd, int columnEnd, Game.Player player) {
+    private int toggleLine(boolean set, int rowStart, int columnStart, int rowEnd, int columnEnd, Game.Player player) {
         if (columnStart < 0 || columnStart > columns ||
             columnEnd < 0 || columnEnd > columns ||
             rowStart < 0 || rowStart > rows ||
             rowEnd < 0 || rowEnd > rows)
-        return false;
+        return 0;
 
         // get the starting coordinates (row, column)
         int row = rowStart < rowEnd ? rowStart : rowEnd;
@@ -244,7 +244,7 @@ public class Board {
             // middle rows
             else {
                 if (set) {
-                    return setLineAtBox(row, column, Line.TOP, player) |
+                    return setLineAtBox(row, column, Line.TOP, player) +
                            setLineAtBox(row - 1, column, Line.BOTTOM, player);
                 }
                 else {
@@ -272,7 +272,7 @@ public class Board {
             // middle columns
             else {
                 if (set) {
-                    return setLineAtBox(row, column - 1, Line.RIGHT, player) |
+                    return setLineAtBox(row, column - 1, Line.RIGHT, player) +
                            setLineAtBox(row, column, Line.LEFT, player);
                 }
                 else {
@@ -282,7 +282,7 @@ public class Board {
             }
         }
 
-        return false;
+        return 0;
     }
 
     /**

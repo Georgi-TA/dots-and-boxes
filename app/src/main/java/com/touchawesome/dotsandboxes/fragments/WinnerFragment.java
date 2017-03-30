@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
@@ -49,7 +50,7 @@ public class WinnerFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        winner = Game.Player.valueOf(getArguments().getString(GameLocalFragment.ARG_STATUS));
+        winner = (Game.Player) getArguments().getSerializable(GameLocalFragment.ARG_WINNER_PLAYER);
         winnerName = getArguments().getString(GameLocalFragment.ARG_WINNER_NAME);
         winnerScore = getArguments().getInt(GameLocalFragment.ARG_WINNER_SCORE);
     }
@@ -65,19 +66,26 @@ public class WinnerFragment extends DialogFragment {
 
         TextView title = (TextView) view.findViewById(R.id.winner_title);
         title.setTypeface(Globals.kgTrueColors);
-        title.setText(R.string.you_win);
 
-//        switch (winner) {
-//            case PLAYER1:
-//                title.setText(R.string.you_win);
-//                break;
-//            case NONE:
-//                title.setText(R.string.draw);
-//                break;
-//            case PLAYER2:
-//                title.setText(R.string.you_lose);
-//                break;
-//        }
+        ImageView winnerImage = (ImageView) view.findViewById(R.id.winner_image);
+
+        switch (winner) {
+            case PLAYER1:
+                title.setText(R.string.you_win);
+                winnerImage.setVisibility(View.VISIBLE);
+                break;
+            case NONE:
+                title.setText(R.string.draw);
+                winnerImage.setVisibility(View.VISIBLE);
+                break;
+            case PLAYER2:
+                title.setText(R.string.you_lose);
+                winnerImage.setVisibility(View.INVISIBLE);
+                break;
+            default:
+                title.setText(R.string.you_win);
+                winnerImage.setVisibility(View.VISIBLE);
+        }
 
         TextView name = (TextView) view.findViewById(R.id.winner_name);
         name.setTypeface(Globals.kgTrueColors);

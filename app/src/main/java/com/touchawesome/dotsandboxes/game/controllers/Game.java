@@ -27,20 +27,6 @@ public class Game {
         }
     }
 
-    public void takeATurn(int numberDotStart, int numberDotEnd) {
-        switch (gameState) {
-            case START:
-                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER1);
-                break;
-            case PLAYER1_TURN:
-                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER1);
-                break;
-            case PLAYER2_TURN:
-                makeAMove(numberDotStart, numberDotEnd, Player.PLAYER2);
-                break;
-        }
-    }
-
     public State getState() {
         return gameState;
     }
@@ -49,14 +35,18 @@ public class Game {
         return gameTree;
     }
 
+    public int getMaxScore() {
+        return board.getRows() * board.getColumns();
+    }
+
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
     public enum State {
-        START, PLAYER1_TURN, PLAYER2_TURN, END
+        PLAYER1_TURN, PLAYER2_TURN, END
     }
 
-    private State gameState = State.START;
+    private State gameState = State.PLAYER1_TURN;
 
     /**
      * Enumeration of the players, who own a square. Also used for turn based decisions.
@@ -126,43 +116,36 @@ public class Game {
      *
      * @param dotStart starting point
      * @param dotEnd   ending point
-     * @return if the move was valid or not
+     * @return how many boxes were completed. -1 if the move is invalid.
      */
-    public boolean makeAMove(int dotStart, int dotEnd, Player player) {
+    public int makeAMove(int dotStart, int dotEnd, Player player) {
         if (gameTree.hasEdge(dotStart, dotEnd))
-            return false;
+            return -1;
 
         gameTree.addEdge(new Edge(dotStart, dotEnd));
-
-        switch (gameState) {
-            case START:
-                takeTurnPlayer1(dotStart, dotEnd);
-                return true;
-
+         switch (gameState) {
             case PLAYER1_TURN:
-                takeTurnPlayer1(dotStart, dotEnd);
-                return true;
+                return takeTurnPlayer1(dotStart, dotEnd);
 
             case PLAYER2_TURN:
-                takeTurnPlayer2(dotStart, dotEnd);
-                return true;
+                return takeTurnPlayer2(dotStart, dotEnd);
 
             case END:
 
-                return false;
+                return 0;
         }
 
-        return false;
+        return 0;
     }
 
     /**
      * A move will be executed with Player1 being active
      */
-    private void takeTurnPlayer1(int dotStart, int dotEnd) {
+    private int takeTurnPlayer1(int dotStart, int dotEnd) {
         // register the move on the board for the first player
-        boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
+        int boxesCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
 
-        if (boxCompleted) {
+        if (boxesCompleted > 0) {
             // calculate the score
             int player1Score = board.getScore(Player.PLAYER1);
             int player2Score = board.getScore(Player.PLAYER2);
@@ -185,16 +168,18 @@ public class Game {
             gameState = State.PLAYER2_TURN;
             notifyTurnChange(Player.PLAYER2);
         }
+
+        return boxesCompleted;
     }
 
     /**
      * A move will be executed with Player2 being active
      */
-    private void takeTurnPlayer2(int dotStart, int dotEnd) {
+    private int takeTurnPlayer2(int dotStart, int dotEnd) {
         // register the move on the board for the first player
-        boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER2);
+        int boxesCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER2);
 
-        if (boxCompleted) {
+        if (boxesCompleted > 0) {
             // calculate the score
             int player1Score = board.getScore(Player.PLAYER1);
             int player2Score = board.getScore(Player.PLAYER2);
@@ -218,6 +203,8 @@ public class Game {
             gameState = State.PLAYER1_TURN;
             notifyTurnChange(Player.PLAYER1);
         }
+
+        return boxesCompleted;
     }
 
     /**
