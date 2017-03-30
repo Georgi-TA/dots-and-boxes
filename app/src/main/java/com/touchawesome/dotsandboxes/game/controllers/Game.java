@@ -1,19 +1,11 @@
-package com.touchawesome.dotsandboxes.game.controllers;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Vibrator;
-import android.preference.PreferenceManager;
+package com.touchawesome.dotsandboxes.game.controllers;
 
 import java.util.HashSet;
 
-import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.models.Board;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.Graph;
-
-import static android.content.Context.VIBRATOR_SERVICE;
-import static java.security.AccessController.getContext;
 
 /**
  * Game class object responsible for handling the game as it develops.
@@ -21,10 +13,8 @@ import static java.security.AccessController.getContext;
  * and indicated when a turn has changed.
  */
 public class Game {
-    private final Vibrator vibrator;
-    private Graph gameTree;    // graph object representing the game tree
-    private Board board;       // the board on which the two players will play
-    private boolean shouldVibrate;
+    private Board board;
+    private Graph gameTree;
 
     public void setNextPlayer(Player nextPlayer) {
         switch (nextPlayer) {
@@ -35,13 +25,6 @@ public class Game {
                 gameState = State.PLAYER2_TURN;
                 break;
         }
-    }
-
-    public Graph getGameTree() {
-        Graph graph = new Graph();
-        for (Edge edge : gameTree.getEdges().values())
-            graph.addEdge(edge);
-        return graph;
     }
 
     public void takeATurn(int numberDotStart, int numberDotEnd) {
@@ -58,15 +41,19 @@ public class Game {
         }
     }
 
+    public State getState() {
+        return gameState;
+    }
+
+    public Graph getGameTree() {
+        return gameTree;
+    }
+
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
-    private enum State {
+    public enum State {
         START, PLAYER1_TURN, PLAYER2_TURN, END
-    }
-
-    public State getGameState() {
-        return gameState;
     }
 
     private State gameState = State.START;
@@ -77,7 +64,6 @@ public class Game {
     public enum Player {
         PLAYER1, NONE, PLAYER2;
     }
-    private Player nextToMove;  // the player that is next to move
 
     /**
      * Enumeration of the Mode which the user has selected to play as.
@@ -85,14 +71,15 @@ public class Game {
     public enum Mode {
         PLAYER, CPU, NETWORK;
     }
-    private Mode gameMode = Mode.PLAYER;
 
     /**
      * Listener interface for the {@link Game} class
      */
     public interface GameListener {
         void onScoreChange(Player player, int score);
+
         void onTurnChange(Player nextToMove);
+
         void onGameEnd(Player winner);
     }
 
@@ -103,39 +90,45 @@ public class Game {
     /**
      * Basic default constructor setting initial values to zero
      * and placing PLAYER1 as the next to move.
-     * @param rows the rows of the board
+     *
+     * @param rows    the rows of the board
      * @param columns the columns of the board
      */
-    public Game (Context context, int rows, int columns) {
+    public Game(int rows, int columns) {
         this.maxScore = rows * columns;
-
         this.board = new Board(rows, columns);
-        this.gameTree = new Graph();
         this.listeners = new HashSet<>();
+        this.gameTree = new Graph(rows, columns);
+        this.gameState = State.PLAYER1_TURN;
+    }
 
-        this.nextToMove = Player.PLAYER1;
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        shouldVibrate = sharedPref.getBoolean(context.getString(R.string.pref_key_vibrate), true);
-        vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+    /**
+     * The getter for the board object
+     *
+     * @return the current board on which the game is played
+     */
+    public Board getBoard() {
+        return board;
     }
 
     /**
      * Add a listener to the list of listeners
+     *
      * @param listener the listener to be added
      */
-    public void registerListener (GameListener listener) {
+    public void registerListener(GameListener listener) {
         this.listeners.add(listener);
     }
 
     /**
      * Connects two dots on the board, which counts as a move.
      * This method keeps track of the current state of the game.
+     *
      * @param dotStart starting point
-     * @param dotEnd ending point
+     * @param dotEnd   ending point
+     * @return if the move was valid or not
      */
     public boolean makeAMove(int dotStart, int dotEnd, Player player) {
-        // you cannot make a move on an existing line
         if (gameTree.hasEdge(dotStart, dotEnd))
             return false;
 
@@ -152,7 +145,7 @@ public class Game {
 
             case PLAYER2_TURN:
                 takeTurnPlayer2(dotStart, dotEnd);
-                break;
+                return true;
 
             case END:
 
@@ -163,22 +156,6 @@ public class Game {
     }
 
     /**
-     * The getter for the board object
-     * @return the current board on which the game is played
-     */
-    public Board getBoard() {
-        return board;
-    }
-
-    /**
-     * Getter fot the next player to move
-     * @return the player that is next to move
-     */
-    public Player getNext () {
-        return nextToMove;
-    }
-
-    /**
      * A move will be executed with Player1 being active
      */
     private void takeTurnPlayer1(int dotStart, int dotEnd) {
@@ -186,10 +163,6 @@ public class Game {
         boolean boxCompleted = board.setLineForDots(dotStart, dotEnd, Player.PLAYER1);
 
         if (boxCompleted) {
-
-            if (shouldVibrate)
-                vibrator.vibrate(125);
-
             // calculate the score
             int player1Score = board.getScore(Player.PLAYER1);
             int player2Score = board.getScore(Player.PLAYER2);
@@ -199,11 +172,9 @@ public class Game {
             if (player1Score + player2Score == maxScore) {
                 if (player1Score == player2Score) {
                     notifyGameEnd(Player.NONE);
-                }
-                else if (player1Score > player2Score) {
+                } else if (player1Score > player2Score) {
                     notifyGameEnd(Player.PLAYER1);
-                }
-                else {
+                } else {
                     notifyGameEnd(Player.PLAYER2);
                 }
 
@@ -233,13 +204,12 @@ public class Game {
             if (player1Score + player2Score == maxScore) {
                 if (player1Score == player2Score) {
                     notifyGameEnd(Player.NONE);
-                }
-                else if (player1Score > player2Score) {
+                } else if (player1Score > player2Score) {
                     notifyGameEnd(Player.PLAYER1);
-                }
-                else {
+                } else {
                     notifyGameEnd(Player.PLAYER2);
                 }
+
 
                 gameState = State.END;
             }
@@ -252,6 +222,7 @@ public class Game {
 
     /**
      * Notifies the listeners for a turn change
+     *
      * @param nextPlayer the player who is going the take the next turn
      */
     private void notifyTurnChange(Player nextPlayer) {
@@ -262,8 +233,9 @@ public class Game {
 
     /**
      * Notifies the listeners for a score change
+     *
      * @param player the player who's score is changing
-     * @param score the player's score
+     * @param score  the player's score
      */
     private void notifyScoreChange(Player player, int score) {
         for (GameListener listener : listeners)
@@ -273,6 +245,7 @@ public class Game {
 
     /**
      * Notify the end of the game
+     *
      * @param winner the winner of the game
      */
     private void notifyGameEnd(Player winner) {

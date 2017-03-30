@@ -37,7 +37,9 @@
 
                     <ImageView
                         android:id="@+id/player1_image"
-                        style="@style/PlayerImage" />
+                        style="@style/PlayerImage"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_db_player_1" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -74,7 +76,9 @@
 
                     <ImageView
                         android:id="@+id/player2_image"
-                        style="@style/PlayerImage" />
+                        style="@style/PlayerImage"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_db_player_2" />
 
                 </FrameLayout>
             </LinearLayout>

@@ -16,10 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -146,7 +143,7 @@ public class MainActivity extends AppCompatActivity
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
     }
-    
+
     @Override
     public void onPause() {
         super.onPause();
@@ -299,7 +296,7 @@ public class MainActivity extends AppCompatActivity
     public void onLayoutChosen(Bundle args, int rows, int columns) {
         args.putInt("rows", rows);
         args.putInt("columns", columns);
-        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
+       // args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
 
         Intent intent = new Intent (this, GameActivity.class);
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);

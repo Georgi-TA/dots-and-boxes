@@ -3,25 +3,29 @@ package com.touchawesome.dotsandboxes.fragments;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.touchawesome.dotsandboxes.R;
 import com.squareup.picasso.Picasso;
+import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
-import com.touchawesome.dotsandboxes.utils.CircleTransform;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
 import java.util.Locale;
+
+import static com.google.android.gms.internal.zzt.TAG;
 
 public class GameLocalFragment extends Fragment implements Game.GameListener, View.OnTouchListener {
     public static final int FRAGMENT_ID = 6164;
@@ -39,9 +43,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private Game game;         // game state object and controller
     private PlayerBot bot;     // the bot to play in CPU mode
 
-    private int rows = 3;
-    private int columns = 3;
-
     private TransitionDrawable tdPlayer1;
     private TransitionDrawable tdPlayer2;
 
@@ -49,6 +50,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private TextView scorePlayer2;
 
     private TextView turnText;
+    private ProgressBar progressBar;
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -57,6 +59,45 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     }
 
     public GameLocalFragment() {
+    }
+
+    private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
+
+        protected void onPreExecute () {
+            blockBoard();
+        }
+
+        protected Edge doInBackground(Void... params) {
+            return bot.getNextMove();
+        }
+
+        protected void onProgressUpdate(Integer... progress) { }
+
+        protected void onPostExecute(Edge result) {
+            Log.d(TAG, "onPostExecute: " + result.getKey());
+            takeTurnFromBot(result);
+        }
+    }
+
+    private void takeTurnFromBot(Edge move) {
+        boolean moveValid = game.makeAMove(move.getDotStart(), move.getDotEnd(), Game.Player.PLAYER2);
+        if (!moveValid) {
+            new BotMoveAsyncTask().execute();
+        }
+        else {
+            boardView.invalidate();
+            unblockBoard();
+        }
+    }
+
+    private void blockBoard() {
+        boardView.disableInteraction();
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void unblockBoard() {
+        boardView.enableInteraction();
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -73,15 +114,21 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
             mode = Game.Mode.PLAYER;
         }
 
-        rows = getArguments().getInt("rows", 3);
-        columns = getArguments().getInt("columns", 3);
+        int rows = getArguments().getInt("rows", 3);
+        int columns = getArguments().getInt("columns", 3);
+
+        game = new Game(rows, columns);
+        game.registerListener(this);
+        bot = new PlayerBot(game);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game_local, container, false);
-        boardView = (BoardView) root.findViewById(R.id.boardView);
 
+        boardView = (BoardView) root.findViewById(R.id.boardView);
+        boardView.setGame(game);
+        progressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
         turnText = (TextView) root.findViewById(R.id.turnText);
         turnText.setTypeface(Globals.kgTrueColors);
         turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
@@ -89,6 +136,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         scorePlayer1.setTypeface(Globals.kgTrueColors);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
         scorePlayer2.setTypeface(Globals.kgTrueColors);
+
 
         ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
         ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
@@ -110,21 +158,15 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
 
-        int padding = getResources().getDimensionPixelSize(R.dimen.player_image_border);
-        Picasso.with(getContext())
-                .load(R.drawable.sol_image)
-                .resize(100, 100)
-                .into(imagePlayer1);
-
-        Picasso.with(getContext())
-                .load(R.drawable.ky_image)
-                .resize(100, 100)
-                .into(imagePlayer2);
-
-        bot = new PlayerBot();
-        game = new Game(getContext(), rows, columns);
-        game.registerListener(this);
-        boardView.setGame(game);
+//        Picasso.with(getContext())
+//                .load(R.drawable.ic_db_player_1)
+//                .resize(100, 100)
+//                .into(imagePlayer1);
+//
+//        Picasso.with(getContext())
+//                .load(R.drawable.ic_db_player_2)
+//                .resize(100, 100)
+//                .into(imagePlayer2);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(ARG_BOARD))
@@ -136,6 +178,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
             }
         }
 
+        unblockBoard();
         return root;
     }
 
@@ -165,20 +208,15 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     @Override
     public void onTurnChange(Game.Player nextToMove) {
-        if (mode == Game.Mode.CPU) {
-            if (nextToMove == Game.Player.PLAYER2) {
-                Edge nextMove = bot.getNextMove(game);
-                game.makeAMove(nextMove.getDotStart(), nextMove.getDotEnd(), Game.Player.PLAYER2);
-            }
+        if (mode == Game.Mode.CPU && nextToMove == Game.Player.PLAYER2) {
+            new BotMoveAsyncTask().execute();
         }
 
-        // UI player images border
         if (nextToMove == Game.Player.PLAYER2) {
             tdPlayer1.startTransition(100);
             tdPlayer2.startTransition(100);
             turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player2name)));
-        }
-        else {
+        } else {
             tdPlayer1.reverseTransition(100);
             tdPlayer2.reverseTransition(100);
             turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
@@ -206,13 +244,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
             args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER2));
         }
 
-
         mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return false; // block all user interaction
+        return false;
     }
 
     public interface OnFragmentInteractionListener {
@@ -222,7 +259,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ARG_BOARD, game.getBoard().toString());
-        outState.putBoolean(ARG_P1_NEXT, game.getNext() == Game.Player.PLAYER1);
+        outState.putBoolean(ARG_P1_NEXT, game.getState() == Game.State.PLAYER1_TURN);
         super.onSaveInstanceState(outState);
     }
 }

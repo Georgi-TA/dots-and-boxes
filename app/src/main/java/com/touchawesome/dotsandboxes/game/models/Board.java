@@ -11,11 +11,6 @@ public class Board {
 
     private int rows;        // the rows of the board
     private int columns;     // the columns of the board
-    private int minWinScore; // the minimum score needed to win
-
-    boolean isFinished() {
-        return getScore(Game.Player.PLAYER1) > minWinScore || getScore(Game.Player.PLAYER2) > minWinScore;
-    }
 
     /**
      * Wrapper class for the box byte model.
@@ -72,7 +67,6 @@ public class Board {
     public Board(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.minWinScore = (rows * columns / 2) + (rows * columns % 2);
 
         boxes = new byte[rows][];
         for (int i = 0; i < rows; i++)
@@ -154,7 +148,7 @@ public class Board {
      *
      * @return if the line completed a box
      */
-    public boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
+    private boolean setLineAtBox(int row, int column, Line line, Game.Player player) {
         switch (line){
             case TOP:
                 boxes[row][column] |= 1;

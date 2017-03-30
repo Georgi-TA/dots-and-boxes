@@ -4,10 +4,7 @@ import android.util.Log;
 
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-
 
 import static android.content.ContentValues.TAG;
 
@@ -17,34 +14,57 @@ import static android.content.ContentValues.TAG;
 public class PlayerBot {
 
     private Game.Player ID = Game.Player.PLAYER2;
-    private Graph gameTree;
+    private Game game;
+    private int maxResult;
 
-    public PlayerBot () {
-        gameTree = new Graph();
+    public PlayerBot(Game game) {
+        this.game = game;
     }
 
-    public Edge getNextMove(Game game) {
-        // get a reference to the game tree
-        gameTree = game.getGameTree();
-
+    public Edge getNextMove() {
         // get a copy of the game board
         Board board = game.getBoard();
+        maxResult = board.getColumns() * board.getRows();
         Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
         miniMaxBoard.loadBoard(board.toString());
 
+        Edge completionMove = getCompletionMove();
+        if (completionMove != null)
+            return completionMove;
+
+        Graph gameTree = game.getGameTree();
+
         // pre-generate the moves
-        ArrayList<Edge> availableMoves = getAvailableMoves(gameTree, board.getRows(), board.getColumns());
+        Collection<Edge> availableMoves = gameTree.getAvailableEdges();
+
         // assume the first to be the next one
-        Edge next = availableMoves.get(0);
+        Edge next = null;
+
         // worst case scenario for the outcome
         int value = Integer.MIN_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
+
         // try every move and see which one is best
         for (Edge move : availableMoves) {
-            int successorValue = minimax(0, miniMaxBoard, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            if (successorValue > value) {
+            if (next == null)
                 next = move;
-                value = successorValue;
+
+            // prefer the moves that will complete boxes
+            gameTree.addEdge(move);
+
+            value = Math.max(value, minimax(0, miniMaxBoard, false, alpha, beta));
+            miniMaxBoard.removeLineForDots(move.getDotStart(), move.getDotEnd());
+            alpha = Math.max(alpha, value);
+
+            if (beta <= alpha) {
+                Log.d(TAG, "getNextMove: " + next.getKey() + "  value: " + value);
+                gameTree.removeEdge(move);
+
+                return move;
             }
+
+            gameTree.removeEdge(move);
         }
 
         return next;
@@ -52,101 +72,81 @@ public class PlayerBot {
 
     /**
      * Serves as an utility function for the minimax algorithm
+     *
      * @param board the board which represents the current game state.
      * @return The integer value which is the maximum score that <b>Player 2</b> can make
      */
     private int getValue(Board board) {
-        int value = board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
-        Log.d(TAG, "getValue: " + value);
-        return value;
+        return maxResult + board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
     }
 
     private int minimax(int level, Board board, boolean isMaximizer, int alpha, int beta) {
+        Graph gameTree = game.getGameTree();
+
         // pre-generate the moves
-        ArrayList<Edge> availableMoves = getAvailableMoves(gameTree, board.getRows(), board.getColumns());
+        Collection<Edge> availableMoves = gameTree.getAvailableEdges();
 
         // don't go too deep into recursion
-        if (level >= 5 || availableMoves.size() == 0) {
+        if (level >= 3 || availableMoves.size() == 0) {
             return getValue(board);
         }
 
-        int result = isMaximizer ? alpha : beta;
-        for (Edge nextMove : availableMoves) {
-            Log.d(TAG, "minimax: nextmove: " + nextMove.getKey());
-            // make a move to continue with the depth first search
-            if (isMaximizer) { // maximizer
-
+        if (isMaximizer) { // maximizer
+            int result = Integer.MIN_VALUE;
+            for (Edge nextMove : availableMoves) {
                 // prefer the moves that will complete boxes
                 gameTree.addEdge(nextMove);
-                board.setLineForDots(nextMove.getDotStart(), nextMove.getDotEnd(), ID);
-                int successorValue = minimax(level + 1, board, false, alpha, beta);
-                board.removeLineForDots(nextMove.dot_start, nextMove.dot_end);
-                gameTree.removeEdge(nextMove);
 
-                result = Math.max(result, successorValue);
-                if (result >= beta)
-                    return result;
+                Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
+                miniMaxBoard.loadBoard(board.toString());
+                miniMaxBoard.setLineForDots(nextMove.getDotStart(), nextMove.getDotEnd(), ID);
 
+                result = Math.max(result, minimax(level + 1, miniMaxBoard, false, alpha, beta));
                 alpha = Math.max(alpha, result);
-            }
-            else { // minimizer
-                // prefer the moves that will complete boxes
-                gameTree.addEdge(nextMove);
-                board.setLineForDots(nextMove.getDotStart(), nextMove.getDotEnd(), ID);
-                int successorValue = minimax(level + 1, board, true, alpha, beta);
-                board.removeLineForDots(nextMove.dot_start, nextMove.dot_end);
+
+                if (beta <= alpha) {
+                    gameTree.removeEdge(nextMove);
+                    return alpha;
+                }
+
+                miniMaxBoard.removeLineForDots(nextMove.getDotStart(), nextMove.getDotEnd());
                 gameTree.removeEdge(nextMove);
+            }
 
-                result = Math.min(result, successorValue);
-                if (result <= alpha)
-                    return result;
+            return result;
+        } else { // minimizer
+            int result = Integer.MAX_VALUE;
+            for (Edge nextMove : availableMoves) {
+                gameTree.addEdge(nextMove);
 
+                Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
+                miniMaxBoard.loadBoard(board.toString());
+                miniMaxBoard.setLineForDots(nextMove.getDotStart(), nextMove.getDotEnd(), ID);
+
+                result = Math.min(result, minimax(level + 1, miniMaxBoard, true, alpha, beta));
                 beta = Math.min(beta, result);
+
+                if (beta <= alpha) {
+                    gameTree.removeEdge(nextMove);
+                    return beta;
+                }
+
+                miniMaxBoard.removeLineForDots(nextMove.getDotStart(), nextMove.getDotEnd());
+                gameTree.removeEdge(nextMove);
             }
+
+            return result;
         }
-
-        return result;
-    }
-
-    /**
-     * Gets all available moves for the minimizers and maximizers
-     * @return available moves
-     */
-
-    private ArrayList<Edge> getAvailableMoves(Graph gameTree, int boardRows, int boardColumns) {
-        ArrayList<Edge> availableMoves = new ArrayList<>();
-
-        int rows = boardRows + 1;
-        int columns = boardColumns + 1;
-        int allDotsCount = rows * columns;
-
-        for (int i = 0; i < allDotsCount; i++) {
-            // horizontal
-            if (i % columns != columns - 1) {
-                Edge edge = new Edge(i, i + 1);
-                if (!gameTree.hasEdge(edge.getDotStart(), edge.getDotEnd()))
-                    availableMoves.add(edge);
-            }
-
-            // vertical
-            if (i / rows != rows - 1) {
-                Edge edge = new Edge(i, i + columns);
-                if (!gameTree.hasEdge(edge.getDotStart(), edge.getDotEnd()))
-                    availableMoves.add(edge);
-            }
-        }
-
-        Collections.shuffle(availableMoves);
-        return availableMoves;
     }
 
     /**
      * The method searches by a greedy algorithm for a box with a fourth wall missing.
      * It will be right before completion.
-     * @param board
+     *
      * @return first found Edge that will complete a box
      */
-    private Edge getCompletionMove(Board board) {
+    private Edge getCompletionMove() {
+        Board board = game.getBoard();
         Edge completionEdge = null;
         int dots_rows = board.getRows();
         for (int i = 0; i < board.getRows(); i++) {

@@ -10,17 +10,16 @@
         android:layout_weight="1"
         android:background="@color/primary"
         android:orientation="horizontal"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
         android:weightSum="2">
 
         <LinearLayout
+            android:id="@+id/turn_layout_player_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
@@ -37,7 +36,9 @@
 
                 <ImageView
                     android:id="@+id/player1_image"
-                    style="@style/PlayerImage" />
+                    style="@style/PlayerImage"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_db_player_1" />
 
             </FrameLayout>
 
@@ -64,19 +65,32 @@
 
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/turnText"
+            android:layout_toRightOf="@+id/turn_layout_player_1"
+            android:layout_toLeftOf="@+id/turn_layout_player_2"
             android:background="@color/background"
             android:padding="32dp" />
 
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
         <LinearLayout
+            android:id="@+id/turn_layout_player_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
@@ -91,7 +105,9 @@
 
                 <ImageView
                     android:id="@+id/player2_image"
-                    style="@style/PlayerImage" />
+                    style="@style/PlayerImage"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_db_player_2" />
 
             </FrameLayout>
 

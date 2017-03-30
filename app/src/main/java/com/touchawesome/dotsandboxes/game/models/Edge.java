@@ -7,9 +7,29 @@ import java.util.Locale;
  */
 
 public class Edge {
-    int dot_start;
-    int dot_end;
-    String key;
+    private int dot_start;
+    private int dot_end;
+    private String key;
+
+    public Node from;
+
+    public Node getFrom() {
+        return from;
+    }
+
+    public void setFrom(Node from) {
+        this.from = from;
+    }
+
+    public Node getTo() {
+        return to;
+    }
+
+    public void setTo(Node to) {
+        this.to = to;
+    }
+
+    public Node to;
 
     public String getKey() {
         return key;
@@ -19,7 +39,7 @@ public class Edge {
         this.key = generateKey(dot_start, dot_end);
     }
 
-    public static String generateKey(int dot_start, int dot_end) {
+    static String generateKey(int dot_start, int dot_end) {
         return String.format(Locale.US, "%d_%d", dot_start, dot_end);
     }
 
