@@ -24,12 +24,16 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
         Picasso.with(getContext()).load(player.getIconImageUri()).into(avatar);
     }
 
+    public static Fragment newInstance(Bundle args) {
+        ChooseLayoutFragment fragment = new ChooseLayoutFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public interface Listener {
-        public void onStartGameRequested();
-        public void onShowAchievementsRequested();
-        public void onShowLeaderboardsRequested();
-        public void onSignInButtonClicked();
-        public void onSignOutButtonClicked();
+        void onStartGameRequested();
+        void onSignInButtonClicked();
+        void onSignOutButtonClicked();
     }
 
     Listener mListener = null;
@@ -50,10 +54,6 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
 
         avatar = (ImageView) v.findViewById(R.id.db_logo);
         return v;
-    }
-
-    public void setListener(Listener l) {
-        mListener = l;
     }
 
     @Override

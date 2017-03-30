@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/box_player_inactive"
+        android:gravity="center"
+        android:top="8dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:bottom="8dp"/>
+
+    <item android:drawable="@drawable/dot_player_inactive"
+        android:gravity="bottom|left"/>
+
+    <item android:drawable="@drawable/dot_player_inactive"
+        android:gravity="bottom|right"/>
+
+    <item android:drawable="@drawable/dot_player_inactive"
+        android:gravity="top|left"/>
+
+    <item android:drawable="@drawable/dot_player_inactive"
+        android:gravity="top|right"/>
+
+</layer-list>

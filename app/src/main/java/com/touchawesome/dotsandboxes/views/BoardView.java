@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,15 +15,12 @@ import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-
+import static com.google.android.gms.internal.zzt.TAG;
 
 /**
  * Class responsible for displaying and interacting with the board
  */
 public class BoardView extends View {
-
-    private Vibrator vibrator;
 
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
@@ -53,6 +50,7 @@ public class BoardView extends View {
     // temp coordinates for calculations
     private float x1temp, y1temp, x2temp, y2temp;
     private boolean drawTemp = false;
+    private boolean touchable = false;
 
     public BoardView(Context context) {
         super(context);
@@ -91,8 +89,6 @@ public class BoardView extends View {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
-
-        vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
     }
 
     /**
@@ -223,18 +219,52 @@ public class BoardView extends View {
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int desiredWidth = 400;
+        int desiredHeight = 400;
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int width;
+        int height;
+
+
+        //Measure Width
+        if (widthMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            width = widthSize;
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            width = Math.min(desiredWidth, widthSize);
+        } else {
+            //Be whatever you want
+            width = desiredWidth;
+        }
+
+        //Measure Height
+        if (heightMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            height = Math.min(desiredHeight, heightSize);
+        } else {
+            //Be whatever you want
+            height = desiredHeight;
+        }
+
+        //MUST CALL THIS
+        setMeasuredDimension(width, height);
 
         int size;
         if (width < height) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-            height = width;
             size = width - getPaddingLeft() - getPaddingRight();
         }
         else {
             super.onMeasure(heightMeasureSpec, heightMeasureSpec);
-            width = height;
             size = height - getPaddingTop() - getPaddingBottom();
         }
 
@@ -255,6 +285,9 @@ public class BoardView extends View {
         this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+    boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+
     /**
      * Using the native {@link View} method to service the touch events
      * @param motionEvent the motion event to be processed
@@ -262,21 +295,20 @@ public class BoardView extends View {
      */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        // block user interaction
+        if (!touchable)
+            return true;
+
+        // don't proceed without a game object present
         if (game == null)
             return false;
 
         Board board = game.getBoard();
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-                boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
-                boolean shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
 
                 if (shouldMakeASound)
                     performClick();
-                
-                if (shouldVibrate)
-                    vibrator.vibrate(125);
                 
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur
@@ -357,8 +389,8 @@ public class BoardView extends View {
 
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
-                int numberDotEnd = ((int) y2temp) * (board.getRows() + 1) + (int) x2temp;
-                game.takeATurn(numberDotStart, numberDotEnd);
+                int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
+                game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {
@@ -372,5 +404,13 @@ public class BoardView extends View {
             }
         }
         return false;
+    }
+
+    public void enableInteraction() {
+        touchable = true;
+    }
+    
+    public void disableInteraction() {
+        touchable = false;
     }
 }

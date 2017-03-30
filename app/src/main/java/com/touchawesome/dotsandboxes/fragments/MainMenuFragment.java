@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class MainMenuFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
@@ -35,7 +36,7 @@ public class MainMenuFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
         Button friendPlayButton = (Button) root.findViewById(R.id.buttonPlayFriend);
         Button computerPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
-        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
+//        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
 
         friendPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +46,7 @@ public class MainMenuFragment extends Fragment {
                 }
             }
         });
+        friendPlayButton.setTypeface(Globals.kgTrueColors);
 
         computerPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,15 +56,16 @@ public class MainMenuFragment extends Fragment {
                 }
             }
         });
+        computerPlayButton.setTypeface(Globals.kgTrueColors);
 
-        networkPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onNetworkPlaySelected();
-                }
-            }
-        });
+//        networkPlayButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (mListener != null) {
+//                    mListener.onNetworkPlaySelected();
+//                }
+//            }
+//        });
 
         return root;
     }

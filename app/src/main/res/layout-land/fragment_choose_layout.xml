@@ -5,55 +5,26 @@
     android:layout_height="match_parent"
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
-    <LinearLayout
-        android:id="@+id/heading"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:dividerPadding="16dp"
-        android:layout_marginTop="32dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="128dp"
-            android:src="@drawable/db_logo"
-            android:padding="16dp"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/choose_board_layout"
-            android:layout_gravity="center_horizontal"
-            android:textSize="20sp"
-            android:textColor="@color/textColorPrimaryDark"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true">
 
+            <Button
+                android:text="@string/three_by_three"
+                android:id="@+id/buttonPlayThreeByThree"
+                style="@style/MenuLayoutButton" />
 
-    </LinearLayout>
+            <Button
+                android:text="@string/four_by_four"
+                android:id="@+id/buttonPlayFourByFour"
+                style="@style/MenuLayoutButton"/>
 
-    <LinearLayout
-        android:layout_below="@id/heading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true">
-
-        <Button
-            android:text="@string/three_by_three"
-            android:id="@+id/buttonPlayThreeByThree"
-            style="@style/MenuLayoutButton" />
-
-        <Button
-            android:text="@string/four_by_four"
-            android:id="@+id/buttonPlayFourByFour"
-            style="@style/MenuLayoutButton"/>
-
-        <Button
-            android:text="@string/five_by_five"
-            android:id="@+id/buttonPlayFiveByFive"
-            style="@style/MenuLayoutButton" />
-
-
+            <Button
+                android:text="@string/five_by_five"
+                android:id="@+id/buttonPlayFiveByFive"
+                style="@style/MenuLayoutButton" />
     </LinearLayout>
 </RelativeLayout>

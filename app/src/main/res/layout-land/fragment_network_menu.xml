@@ -28,8 +28,7 @@
         android:padding="20dp">
 
         <ImageView
-            android:layout_below="@id/toolbar"
-            android:id="@+id/logo"
+            android:id="@+id/db_logo"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:src="@drawable/db_logo"

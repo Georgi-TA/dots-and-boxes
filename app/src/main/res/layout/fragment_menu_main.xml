@@ -3,36 +3,32 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true"
-        android:dividerPadding="16dp"
-        android:layout_marginTop="32dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/db_logo"
-            android:padding="16dp"/>
-
-        <Button
-            android:text="@string/menu_option_play_local_cpu"
-            android:id="@+id/buttonPlayLocalComputer"
-            style="@style/MenuButton" />
+        android:clipChildren="false"
+        android:paddingBottom="16dp"
+        android:showDividers="middle"
+        android:divider="@drawable/list_divider">
 
         <Button
             android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayFriend"
-            style="@style/MenuButton" />
+            style="@style/MenuLayoutButton" />
 
         <Button
-            android:text="@string/menu_option_play_network"
-            android:id="@+id/buttonPlayNetwork"
-            style="@style/MenuButton"/>
+            android:id="@+id/buttonPlayLocalComputer"
+            style="@style/MenuLayoutButton"
+            android:text="@string/menu_option_play_local_cpu" />
+
+        <!--<Button-->
+            <!--android:text="@string/menu_option_play_network"-->
+            <!--android:id="@+id/buttonPlayNetwork"-->
+            <!--style="@style/MenuButton"/>-->
     </LinearLayout>
 
 </RelativeLayout>

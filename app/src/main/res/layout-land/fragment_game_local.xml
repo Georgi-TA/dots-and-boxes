@@ -10,17 +10,16 @@
         android:layout_weight="1"
         android:background="@color/primary"
         android:orientation="horizontal"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
         android:weightSum="2">
 
         <LinearLayout
+            android:id="@+id/turn_layout_player_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
@@ -33,22 +32,15 @@
 
                 <ImageView
                     android:id="@+id/player1_border"
-                    style="@style/PlayerImageBorder"
-                    android:background="@drawable/bg_player_image" />
+                    style="@style/PlayerImageBorder"/>
 
                 <ImageView
                     android:id="@+id/player1_image"
-                    style="@style/PlayerImage" />
+                    style="@style/PlayerImage"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_db_player_1" />
 
             </FrameLayout>
-            <TextView
-                android:id="@+id/player1_name"
-                style="@style/PlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="You" />
-
 
             <TextView
                 android:id="@+id/player1_score"
@@ -58,22 +50,49 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/turnText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="You win"
+            android:textSize="24sp"
+            android:background="@color/primary"
+            android:textColor="@color/textColorPrimary"
+            android:layout_alignParentTop="true"/>
+
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/turnText"
+            android:layout_toRightOf="@+id/turn_layout_player_1"
+            android:layout_toLeftOf="@+id/turn_layout_player_2"
             android:background="@color/background"
-            android:padding="64dp" />
+            android:padding="32dp" />
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
 
         <LinearLayout
+            android:id="@+id/turn_layout_player_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <FrameLayout
@@ -82,22 +101,15 @@
 
                 <ImageView
                     android:id="@+id/player2_border"
-                    style="@style/PlayerImageBorder"
-                    android:background="@drawable/bg_player_image" />
+                    style="@style/PlayerImageBorder" />
 
                 <ImageView
                     android:id="@+id/player2_image"
-                    style="@style/PlayerImage" />
+                    style="@style/PlayerImage"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_db_player_2" />
 
             </FrameLayout>
-
-            <TextView
-                android:id="@+id/player2_name"
-                style="@style/PlayerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="P2" />
 
             <TextView
                 android:id="@+id/player2_score"
