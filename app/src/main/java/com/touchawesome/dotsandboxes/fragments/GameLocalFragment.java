@@ -35,6 +35,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     public static final String ARG_STATUS = "com.touchawesome.args.status";
     public static final String ARG_WINNER_NAME = "com.touchawesome.args.winner.name";
     public static final String ARG_WINNER_SCORE = "com.touchawesome.args.winner.points";
+    public static final String ARG_WINNER_PLAYER = "com.touchawesome.args.winner.player";
 
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
@@ -61,6 +62,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     }
 
     public GameLocalFragment() {
+
     }
 
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
@@ -82,8 +84,9 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     }
 
     private void takeTurnFromBot(Edge move) {
-        boolean moveValid = game.makeAMove(move.getDotStart(), move.getDotEnd(), Game.Player.PLAYER2);
-        if (!moveValid) {
+        int boxesCompleted = game.makeAMove(move.getDotStart(), move.getDotEnd(), Game.Player.PLAYER2);
+
+        if (boxesCompleted > 0 && game.getState() != Game.State.END) {
             botMoveTask = new BotMoveAsyncTask();
             botMoveTask.execute();
         }
@@ -118,7 +121,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
             args = new Bundle();
             args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
 
-
             mode = Game.Mode.CPU;
         }
 
@@ -146,9 +148,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         scorePlayer2.setTypeface(Globals.kgTrueColors);
 
 
-        ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
-        ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
-
         ImageView imagePlayer1Border = (ImageView) root.findViewById(R.id.player1_border);
         ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
 
@@ -166,6 +165,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
 
+//        ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
+//        ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
 //        Picasso.with(getContext())
 //                .load(R.drawable.ic_db_player_1)
 //                .resize(100, 100)
@@ -243,6 +244,10 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     public void onGameEnd(Game.Player winner) {
         boardView.setOnTouchListener(this);
         Bundle args = getArguments();
+
+        if (args == null)
+            args = new Bundle();
+
         args.putString(ARG_STATUS, winner.name());
 
         int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
@@ -250,14 +255,18 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         if (mode == Game.Mode.CPU) {
             args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
+            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
+            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
         }
         else if (player1Score > player2Score){
             args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
             args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
+            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
         }
         else {
             args.putString(ARG_WINNER_NAME, getString(R.string.player2name));
             args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER2));
+            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER2);
         }
 
         mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);

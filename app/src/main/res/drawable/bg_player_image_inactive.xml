@@ -3,10 +3,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/box_player_inactive"
         android:gravity="center"
-        android:top="8dp"
-        android:left="8dp"
-        android:right="8dp"
-        android:bottom="8dp"/>
+        android:top="4dp"
+        android:left="4dp"
+        android:right="4dp"
+        android:bottom="4dp"/>
 
     <item android:drawable="@drawable/dot_player_inactive"
         android:gravity="bottom|left"/>

@@ -35,12 +35,12 @@ public class Graph {
         this.edges = new HashMap<>();
     }
 
-    public ArrayList<Edge> getAvailableEdges() {
+    ArrayList<Edge> getAvailableEdges() {
         ArrayList<Edge> availableEdges = new ArrayList<>();
 
         int rows_dots = rows + 1;
         int columns_dots = columns + 1;
-        int allDotsCount = rows * columns;
+        int allDotsCount = rows_dots * columns_dots;
 
         for (int i = 0; i < allDotsCount; i++) {
             // horizontal
