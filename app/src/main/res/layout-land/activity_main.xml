@@ -12,7 +12,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:src="@drawable/db_logo"
             android:padding="8dp"/>
 
@@ -30,22 +30,23 @@
         <ImageButton
             android:id="@+id/button_about"
             style="@style/BottomBarButton"
-            app:srcCompat="@drawable/ic_info" />
+            android:src="@drawable/ic_button_aboutus"/>
 
         <ImageButton
             android:id="@+id/button_achievements"
             style="@style/BottomBarButton"
-            app:srcCompat="@drawable/ic_medal" />
+            android:src="@drawable/ic_button_medal"/>
 
         <ImageButton
             android:id="@+id/button_settings"
-            style="@style/BottomBarButton"
-            app:srcCompat="@drawable/ic_settings_black_24dp" />
+            android:src="@drawable/ic_button_settings"
+            style="@style/BottomBarButton" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/content"
         android:layout_above="@id/buttonPanel"
+        android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

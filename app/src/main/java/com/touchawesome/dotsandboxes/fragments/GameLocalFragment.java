@@ -52,6 +52,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private TextView turnText;
     private ProgressBar progressBar;
 
+    private BotMoveAsyncTask botMoveTask;
+
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
         fragment.setArguments(args);
@@ -82,7 +84,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     private void takeTurnFromBot(Edge move) {
         boolean moveValid = game.makeAMove(move.getDotStart(), move.getDotEnd(), Game.Player.PLAYER2);
         if (!moveValid) {
-            new BotMoveAsyncTask().execute();
+            botMoveTask = new BotMoveAsyncTask();
+            botMoveTask.execute();
         }
         else {
             boardView.invalidate();
@@ -199,6 +202,13 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (botMoveTask != null && !botMoveTask.isCancelled())
+            botMoveTask.cancel(true);
+    }
+
+    @Override
     public void onScoreChange(Game.Player player, int score) {
         if (player == Game.Player.PLAYER1)
             scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
@@ -209,7 +219,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     @Override
     public void onTurnChange(Game.Player nextToMove) {
         if (mode == Game.Mode.CPU && nextToMove == Game.Player.PLAYER2) {
-            new BotMoveAsyncTask().execute();
+            botMoveTask = new BotMoveAsyncTask();
+            botMoveTask.execute();
         }
 
         if (nextToMove == Game.Player.PLAYER2) {
