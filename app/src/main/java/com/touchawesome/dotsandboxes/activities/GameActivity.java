@@ -94,6 +94,9 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
     @Override
     public void onReplayRequested(Bundle arguments) {
+        gameFragment = new GameLocalFragment();
+        gameFragment.setArguments(arguments);
+
         loadGameFragment();
     }
 
