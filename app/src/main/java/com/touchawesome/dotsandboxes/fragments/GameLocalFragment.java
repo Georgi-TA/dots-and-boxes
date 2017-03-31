@@ -32,10 +32,9 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     public static final String ARG_MODE = "com.touchawesome.args.mode";
     private static final String ARG_BOARD = "com.touchawesome.args.board";
     private static final String ARG_P1_NEXT = "com.touchawesome.args.scoreView.p1_next";
-    public static final String ARG_STATUS = "com.touchawesome.args.status";
-    public static final String ARG_WINNER_NAME = "com.touchawesome.args.winner.name";
-    public static final String ARG_WINNER_SCORE = "com.touchawesome.args.winner.points";
-    public static final String ARG_WINNER_PLAYER = "com.touchawesome.args.winner.player";
+
+    public static final String ARG_PLAYER1_SCORE = "com.touchawesome.args.score.player1";
+    public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
 
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
@@ -248,26 +247,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         if (args == null)
             args = new Bundle();
 
-        args.putString(ARG_STATUS, winner.name());
-
         int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
         int player2Score = game.getBoard().getScore(Game.Player.PLAYER2);
 
-        if (mode == Game.Mode.CPU) {
-            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
-        }
-        else if (player1Score > player2Score){
-            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
-        }
-        else {
-            args.putString(ARG_WINNER_NAME, getString(R.string.player2name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER2));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER2);
-        }
+        args.putInt(ARG_PLAYER1_SCORE, player1Score);
+        args.putInt(ARG_PLAYER2_SCORE, player2Score);
+
 
         mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
     }

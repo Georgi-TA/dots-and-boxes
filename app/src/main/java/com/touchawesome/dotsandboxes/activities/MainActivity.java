@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundMusicService = true;
 
-            // This is called when taw service object.
             mService = new MusicIntentService(service);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

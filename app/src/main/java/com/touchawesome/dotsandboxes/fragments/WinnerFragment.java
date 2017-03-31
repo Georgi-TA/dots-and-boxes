@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +23,14 @@ import java.util.Locale;
  * Created by scelus on 16.03.17
  */
 public class WinnerFragment extends DialogFragment {
-    public static final Uri replay = Uri.fromParts("dotsandboxes", "action", "replay");
-    public static final Uri mainMenu = Uri.fromParts("dotsandboxes", "action", "mainmenu");
-    public static final Uri achievements = Uri.fromParts("dotsandboxes", "action", "achievements");
-
     public static final int FRAGMENT_ID = 31783;
     String winnerName;
     int winnerScore;
     Game.Player winner;
 
     private WinnerFragment.OnFragmentInteractionListener mListener;
+    private int player1Score;
+    private int player2Score;
 
     public interface OnFragmentInteractionListener {
         void onReplayRequested(Bundle arguments);
@@ -50,9 +49,20 @@ public class WinnerFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        winner = (Game.Player) getArguments().getSerializable(GameLocalFragment.ARG_WINNER_PLAYER);
-        winnerName = getArguments().getString(GameLocalFragment.ARG_WINNER_NAME);
-        winnerScore = getArguments().getInt(GameLocalFragment.ARG_WINNER_SCORE);
+        player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
+        player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
+
+        if (player1Score > player2Score) {
+            winner = Game.Player.PLAYER1;
+            winnerName = getString(R.string.player1name);
+        }
+        else if (player1Score < player2Score) {
+            winner = Game.Player.PLAYER2;
+            winnerName = getString(R.string.player2name);
+        }
+        else {
+            winner = Game.Player.NONE;
+        }
     }
 
     @Override
@@ -64,36 +74,37 @@ public class WinnerFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView title = (TextView) view.findViewById(R.id.winner_title);
+        TextView title = (TextView) view.findViewById(R.id.result_state);
         title.setTypeface(Globals.kgTrueColors);
 
-        ImageView winnerImage = (ImageView) view.findViewById(R.id.winner_image);
+        title.setText(R.string.wins);
 
-        switch (winner) {
-            case PLAYER1:
-                title.setText(R.string.you_win);
-                winnerImage.setVisibility(View.VISIBLE);
-                break;
-            case NONE:
-                title.setText(R.string.draw);
-                winnerImage.setVisibility(View.VISIBLE);
-                break;
-            case PLAYER2:
-                title.setText(R.string.you_lose);
-                winnerImage.setVisibility(View.INVISIBLE);
-                break;
-            default:
-                title.setText(R.string.you_win);
-                winnerImage.setVisibility(View.VISIBLE);
-        }
+        ImageView winnerImage = (ImageView) view.findViewById(R.id.winner_image);
 
         TextView name = (TextView) view.findViewById(R.id.winner_name);
         name.setTypeface(Globals.kgTrueColors);
         name.setText(winnerName);
 
-        TextView score = (TextView) view.findViewById(R.id.winner_score);
+        switch (winner) {
+            case PLAYER1:
+                name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer1));
+                break;
+            case NONE:
+                name.setTextColor(ContextCompat.getColor(getContext(), R.color.textColorPrimaryDark));
+                title.setText(getString(R.string.draw));
+                break;
+            case PLAYER2:
+                name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer2));
+                break;
+            default:
+        }
+
+        TextView resultLabel = (TextView) view.findViewById(R.id.result_label);
+        resultLabel.setTypeface(Globals.kgTrueColors);
+
+        TextView score = (TextView) view.findViewById(R.id.result_score);
         score.setTypeface(Globals.kgTrueColors);
-        score.setText(String.format(Locale.getDefault(), getString(R.string.winner_points), winnerScore));
+        score.setText(String.format(Locale.getDefault(), getString(R.string.winner_points), player1Score, player2Score));
 
         ImageButton replayButton = (ImageButton) view.findViewById(R.id.replay_button);
         replayButton.setOnClickListener(new View.OnClickListener() {

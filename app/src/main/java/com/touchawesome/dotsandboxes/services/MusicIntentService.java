@@ -16,10 +16,6 @@ import java.io.IOException;
  * a service on a separate handler thread.
  */
 public class MusicIntentService extends Service implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
-    public static final int MSG_REGISTER_CLIENT = 1;
-    public static final int MSG_SET_VALUE = 2;
-    public static final int MSG_UNREGISTER_CLIENT = 3;
-
     private MediaPlayer mPlayer;
 
     public static final String ACTION_START_MUSIC = "com.touchawesome.dotsandboxes.services.action.START";
@@ -28,11 +24,13 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
     public static final String ACTION_SET_VOLUME = "com.touchawesome.dotsandboxes.services.action.VOLUME";
     public static final String ACTION_STOP_MUSIC = "com.touchawesome.dotsandboxes.services.action.STOP";
 
-    public MusicIntentService() {
 
-    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    public MusicIntentService(IBinder service) {
+        if (mPlayer == null)
+            createMediaPlayer();
     }
 
     @Override

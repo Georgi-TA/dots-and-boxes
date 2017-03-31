@@ -15,10 +15,10 @@
 
     <!-- Winner fragment -->
     <string name="winner">Winner</string>
-    <string name="winner_points">%d points</string>
+    <string name="winner_points" formatted="false">%d : %d</string>
 
     <string name="you_win">You Win!</string>
-    <string name="draw">It\'s a Draw</string>
+    <string name="draw">Draw</string>
     <string name="you_lose">You lose.</string>
 
     <!-- SettingsActivity screen -->
@@ -54,17 +54,20 @@
     <string name="your_progress_will_be_uploaded">Your progress will be uploaded</string>
     <string name="signed_out_greeting">See you soon</string>
     <string name="network_menu_play_local">Play</string>
-    <string name="three_by_three">3x3</string>
-    <string name="choose_board_size">Board size</string>
-    <string name="five_by_five">5x5</string>
-    <string name="seven_by_seven">7x7</string>
-    <string name="four_by_four">4x4</string>
 
-    <string name="player1name">Player 1</string>
-    <string name="player2name">Player 2</string>
+
+    <string name="choose_board_size">Board size</string>
+    <string name="three_by_three">3x3</string>
+    <string name="four_by_four">4x4</string>
+    <string name="five_by_five">5x5</string>
+
+    <string name="player1name">Blue player</string>
+    <string name="player2name">Red player</string>
 
     <string name="info_text">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</string>
     <string name="title_about">About</string>
 
     <string name="turn_text">%s\'s turn</string>
+    <string name="wins">WINS</string>
+    <string name="result">Result</string>
 </resources>

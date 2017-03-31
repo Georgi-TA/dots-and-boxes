@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -51,6 +54,7 @@ public class BoardView extends View {
     private float x1temp, y1temp, x2temp, y2temp;
     private boolean drawTemp = false;
     private boolean touchable = false;
+    private boolean soundLoaded;
 
     public BoardView(Context context) {
         super(context);
@@ -66,6 +70,8 @@ public class BoardView extends View {
         super(context, attrs, defStyleAttr);
         init();
     }
+
+    private SoundPool sounds;
 
     /**
      * Initialize all paints required to draw on a {@link Canvas}
@@ -89,6 +95,15 @@ public class BoardView extends View {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
+
+        sounds = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                sounds.play(R.raw.click, 1, 1, 1, 0, 1);
+                soundLoaded = true;
+            }
+        });
     }
 
     /**
@@ -307,8 +322,10 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (shouldMakeASound)
-                    performClick();
+            if (shouldMakeASound && soundLoaded) {
+                sounds.play(R.raw.click, 1, 1, 1, 0, 1);
+            }
+
                 
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur

@@ -15,7 +15,7 @@
         android:paddingTop="8dp"
         android:text="@string/achievement"
         android:textColor="@color/textColorPrimary"
-        android:textSize="20sp" />
+        android:textSize="30sp" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         <include
             layout="@layout/score_layout"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:id="@+id/scoreLayout"
             tools:layout_constraintTop_creator="1"
             tools:layout_constraintRight_creator="1"

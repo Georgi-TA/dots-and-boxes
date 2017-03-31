@@ -124,9 +124,9 @@
     </style>
 
     <style name="WinnerMenuButton" parent="Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">54dp</item>
-        <item name="android:layout_height">54dp</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_margin">8dp</item>
         <item name="android:tint">@color/primary</item>
         <item name="android:background">@drawable/bg_bottom_bar_button</item>
     </style>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.touchawesome.dotsandboxes.R;
@@ -36,6 +37,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         getPreferenceScreen().findPreference(getString(R.string.pref_key_music))
                              .setOnPreferenceChangeListener(this);
+
+        getPreferenceScreen().findPreference(getString(R.string.pref_key_music)).setPersistent(true);
     }
 
     @Override
