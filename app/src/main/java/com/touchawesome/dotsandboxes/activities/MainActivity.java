@@ -1,18 +1,12 @@
 package com.touchawesome.dotsandboxes.activities;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,21 +29,19 @@ import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class MainActivity extends AppCompatActivity
-                          implements MainMenuFragment.OnFragmentInteractionListener,
-                                     FragmentManager.OnBackStackChangedListener,
-                                     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-                                     NetworkMenuFragment.Listener,
-                                     ChooseLayoutFragment.OnFragmentInteractionListener {
+public class MainActivity extends MusicEnabledActivity
+        implements MainMenuFragment.OnFragmentInteractionListener,
+        FragmentManager.OnBackStackChangedListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        NetworkMenuFragment.Listener,
+        ChooseLayoutFragment.OnFragmentInteractionListener {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
-    private static final String TAG = MainActivity.class.getName();
-    private MusicIntentService mService;
-    private boolean mBoundMusicService = false;
+
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -66,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     // request codes we use when invoking an external activity
     private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
+    private String TAG = MainActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +82,7 @@ public class MainActivity extends AppCompatActivity
                 while (getSupportFragmentManager().getBackStackEntryCount() > 0)
                     getSupportFragmentManager().popBackStackImmediate();
             }
-        }
-        else {
+        } else {
             loadFragment(MainMenuFragment.FRAGMENT_ID, null);
         }
 
@@ -134,70 +126,23 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean playMusic = prefs.getBoolean(getString(R.string.pref_key_music), false);
-
-        if (mBoundMusicService && playMusic)
-            mService.send(new Intent(MusicIntentService.ACTION_START_MUSIC));
-
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (mService != null)
-            mService.send(new Intent(MusicIntentService.ACTION_PAUSE_MUSIC));
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
-        // Bind to LocalService
-        Intent intent = new Intent(this, MusicIntentService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
         mGoogleApiClient.connect();
-    }
+}
 
     @Override
     protected void onStop() {
         super.onStop();
-        // Unbind from the service
-        if (mBoundMusicService) {
-            unbindService(mConnection);
-            mBoundMusicService = false;
-        }
-
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
-
-    /**
-     * Class for interacting with the main interface of the service.
-     */
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mBoundMusicService = true;
-
-            mService = new MusicIntentService(service);
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            boolean playMusic = prefs.getBoolean(getString(R.string.pref_key_music), false);
-
-            if (mBoundMusicService && playMusic)
-                mService.send(new Intent(MusicIntentService.ACTION_START_MUSIC));
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            mBoundMusicService = false;
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            mService = null;
-        }
-    };
 
     private void loadFragment(int fragmentId, Bundle args) {
         Fragment fragment;
@@ -235,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                                        R.anim.enter_from_left, R.anim.exit_to_right);
+                R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();
@@ -295,9 +240,9 @@ public class MainActivity extends AppCompatActivity
     public void onLayoutChosen(Bundle args, int rows, int columns) {
         args.putInt("rows", rows);
         args.putInt("columns", columns);
-       // args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
+        // args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
 
-        Intent intent = new Intent (this, GameActivity.class);
+        Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);
         startActivity(intent);
     }
@@ -324,7 +269,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (mResolvingConnectionFailure) {
             return;
         }
@@ -332,10 +277,7 @@ public class MainActivity extends AppCompatActivity
         if (mSignInClicked || mAutoStartSignInFlow) {
             mAutoStartSignInFlow = false;
             mSignInClicked = false;
-            mResolvingConnectionFailure = true;
-            if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error))) {
-                mResolvingConnectionFailure = false;
-            }
+            mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
         }
     }
 

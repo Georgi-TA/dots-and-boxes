@@ -14,7 +14,7 @@ import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
 import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends MusicEnabledActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,9 @@ public class InfoActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
