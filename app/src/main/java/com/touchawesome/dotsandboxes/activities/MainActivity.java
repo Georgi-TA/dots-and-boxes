@@ -38,9 +38,9 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
-
     private String TAG = MainActivity.class.getName();
+
+    private static final String ARG_GAME_IN_PROGRESS = "com.touchawesome.args.gameinprogress";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

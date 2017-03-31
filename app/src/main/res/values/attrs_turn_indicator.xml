@@ -1,6 +1,0 @@
-<resources>
-    <declare-styleable name="TurnIndicator">
-        <attr name="colorP2" format="color" />
-        <attr name="colorP1" format="color" />
-    </declare-styleable>
-</resources>

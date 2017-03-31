@@ -19,4 +19,7 @@
     <dimen name="splash_padding_landscape">64dp</dimen>
     <dimen name="dot_size_player">16dp</dimen>
     <dimen name="box_player_size">222dp</dimen>
+
+    <dimen name="default_box_size">80dp</dimen>
+    <dimen name="default_snap_length">16dp</dimen>
 </resources>

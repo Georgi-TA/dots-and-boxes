@@ -47,6 +47,7 @@
     <string name="signin_failure">Failed to Sign-In</string>
     <string name="signin_other_error">Something went wrong</string>
 
+    <!-- Network play -->
     <string name="sign_in_why">Sign in with Google Play Games</string>
     <string name="you_are_signed_in">You are signed in</string>
     <string name="sign_out">Sign Out</string>
@@ -60,21 +61,23 @@
     <string name="signed_out_greeting">See you soon</string>
     <string name="network_menu_play_local">Play</string>
 
-
+    <!-- Choose layout fragment -->
     <string name="choose_board_size">Board size</string>
     <string name="three_by_three">3x3</string>
     <string name="four_by_four">4x4</string>
     <string name="five_by_five">5x5</string>
 
+    <!-- Game screen -->
     <string name="player1name">Blue player</string>
     <string name="player2name">Red player</string>
 
-
+    <!-- About screen -->
     <string name="title_about">About</string>
     <string name="info_text_section_1">Dots And Boxes is a game in which you create boxes by placing lines that connect dots on a board.</string>
     <string name="info_text_section_2">The gameplay is simple. You select against who you want to play with - either a friend on the same device or a robot. After that you choose the size of the board and the game starts. Lines are placed by touching the board.</string>
     <string name="info_text_section_3">Created with care by <b>TouchAwesome</b></string>
 
+    <!-- Final screen -->
     <string name="turn_text">%s\'s turn</string>
     <string name="wins">WINS</string>
     <string name="result">Result</string>

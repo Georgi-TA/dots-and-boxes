@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Game colors -->
     <color name="line">#FF222222</color>
     <color name="line_temp">#30000000</color>
     <color name="boxPlayer1">#21C3E0</color>
@@ -8,15 +9,16 @@
     <color name="scorePlayer1">#21C3E0</color>
     <color name="scorePlayer2">#FC6470</color>
 
+    <!-- Material colors -->
+    <color name="colorAccent">#a31720</color>
+    <color name="primaryDark">#232323</color>
+    <color name="primaryLight">#9ca9c1</color>
+    <color name="primary">#414040</color>
     <color name="background">#FEFEFE</color>
     <color name="backgroundDarker">#CCCCCC</color>
     <color name="textColorPrimary">#FEFEFE</color>
     <color name="textColorPrimaryDark">#404040</color>
 
-    <color name="colorAccent">#a31720</color>
-    <color name="primaryDark">#232323</color>
-    <color name="primaryLight">#9ca9c1</color>
-    <color name="primary">#414040</color>
 
     <!-- Settings -->
     <color name="settings_icons">#757575</color>

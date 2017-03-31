@@ -1,18 +1,10 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
-import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
-import com.touchawesome.dotsandboxes.utils.Constants;
-import com.touchawesome.dotsandboxes.utils.Globals;
 
 public class InfoActivity extends MusicEnabledActivity {
 

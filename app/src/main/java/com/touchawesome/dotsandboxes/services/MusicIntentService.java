@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.touchawesome.dotsandboxes.R;
 
-public class MusicIntentService extends Service implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+public class MusicIntentService extends Service implements MediaPlayer.OnErrorListener {
     private static final String TAG = "MusicService";
     private final IBinder mBinder = new MusicBinder();
     private MediaPlayer mMusicPlayer;
@@ -19,9 +19,6 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
     public static final String ACTION_START_MUSIC = "com.touchawesome.dotsandboxes.services.action.START_MUSIC";
     public static final String ACTION_STOP_MUSIC = "com.touchawesome.dotsandboxes.services.action.STOP_MUSIC";
     public static final String ACTION_PLAY_SOUND = "com.touchawesome.dotsandboxes.services.action.PLAY_SOUND";
-
-    private boolean musicPlayerPrepared = false;
-    private boolean soundPlayerPrepared = false;
 
     public MusicIntentService() {
         super();
@@ -48,15 +45,12 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
                 if (mMusicPlayer == null)
                     createMediaPlayer();
 
-                Log.d(TAG, "service play");
                 handleActionPlayMusic();
             }
             else if (ACTION_STOP_MUSIC.equals(action)) {
-                Log.d(TAG, "service stop");
                 handleActionStopMusic();
             }
             else if (ACTION_PLAY_SOUND.equals(action)) {
-                Log.d(TAG, "service play");
                 if (mSoundPlayer == null)
                     createSoundPlayer();
 
@@ -83,22 +77,11 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         return mBinder;
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        if (mp.equals(mMusicPlayer)) {
-            musicPlayerPrepared = true;
-        }
-        else if (mp.equals(mSoundPlayer)) {
-            soundPlayerPrepared = true;
-        }
-    }
-
     private void createMediaPlayer() {
         mMusicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hey_ho);
         if (mMusicPlayer != null) {
             mMusicPlayer.setLooping(true);
             mMusicPlayer.setVolume(100, 100);
-            mMusicPlayer.setOnPreparedListener(this);
         }
     }
 
@@ -107,7 +90,6 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         if (mSoundPlayer != null) {
             mSoundPlayer.setLooping(false);
             mSoundPlayer.setVolume(100, 100);
-            mSoundPlayer.setOnPreparedListener(this);
         }
     }
 
