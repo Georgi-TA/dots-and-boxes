@@ -27,6 +27,7 @@ public class BoardView extends View {
 
     public interface OnBoardInteraction {
         void onBoardTouchDown();
+        void onSquareCompleted();
     }
 
     private OnBoardInteraction mBoardInteractionListener;
@@ -64,7 +65,9 @@ public class BoardView extends View {
     private float x1temp, y1temp, x2temp, y2temp;
     private boolean drawTemp = false;
     private boolean touchable = false;
-    private boolean soundLoaded;
+
+    private boolean shouldMakeASound;
+    private boolean shouldVibrate;
 
     public BoardView(Context context) {
         super(context);
@@ -106,6 +109,7 @@ public class BoardView extends View {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+        shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
     }
 
     /**
@@ -302,9 +306,6 @@ public class BoardView extends View {
         this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
-
-    boolean shouldMakeASound;
-
     /**
      * Using the native {@link View} method to service the touch events
      * @param motionEvent the motion event to be processed
@@ -409,7 +410,14 @@ public class BoardView extends View {
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
-                game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
+                int boxesMade = game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
+
+                if (boxesMade > 0) {
+                    if (mBoardInteractionListener != null && shouldVibrate) {
+                        mBoardInteractionListener.onSquareCompleted();
+                    }
+                }
+
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {

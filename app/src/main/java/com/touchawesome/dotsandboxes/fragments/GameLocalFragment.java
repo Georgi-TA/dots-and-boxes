@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +16,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
-import com.touchawesome.dotsandboxes.game.models.Board;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
@@ -57,6 +56,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
     private BotMoveAsyncTask botMoveTask;
 
+    private Vibrator vibrator;
+
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
         fragment.setArguments(args);
@@ -72,6 +73,11 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         if (mListener != null) {
             mListener.onSoundRequested();
         }
+    }
+
+    @Override
+    public void onSquareCompleted() {
+        vibrator.vibrate(getResources().getInteger(R.integer.vibrate_duration));
     }
 
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
@@ -118,27 +124,29 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int rows = getResources().getInteger(R.integer.default_rows);
+        int columns = getResources().getInteger(R.integer.default_columns);
+
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_MODE))
                 mode = (Game.Mode) getArguments().getSerializable(ARG_MODE);
             else
                 mode = Game.Mode.PLAYER;
+
+            rows = args.getInt("rows", 3);
+            columns = args.getInt("columns", 3);
         }
         else {
-            // TODO: 30.03.17 REMOVE
-            args = new Bundle();
-            args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
-
             mode = Game.Mode.CPU;
         }
-
-        int rows = args.getInt("rows", 3);
-        int columns = args.getInt("columns", 3);
 
         game = new Game(rows, columns);
         game.registerListener(this);
         bot = new PlayerBot(game);
+
+        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
