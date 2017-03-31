@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="320dp"
+    android:minWidth="320dp"
+    android:background="@drawable/box"
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/winner_image"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-18dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_button_medal" />
+
+        <TextView
+            android:id="@+id/winner_name"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/player2name"
+            android:textColor="@color/boxPlayer2"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/result_state"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/wins"
+            android:textSize="54sp" />
+
+        <TextView
+            android:id="@+id/result_label"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/result"
+            android:textColor="@color/grey_result"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/result_score"
+            style="@style/ScreenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/winner_points"
+            android:textSize="38sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+
+            <ImageButton
+                android:id="@+id/replay_button"
+                style="@style/BottomBarButton"
+                android:padding="8dp"
+                android:background="@drawable/bg_bottom_bar_button"
+                android:src="@drawable/ic_icon_rematch" />
+
+            <ImageButton
+                android:id="@+id/winner_menu_button"
+                style="@style/BottomBarButton"
+                android:padding="8dp"
+                android:src="@drawable/ic_icon_menu" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
