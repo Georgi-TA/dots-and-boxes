@@ -25,6 +25,16 @@ import static com.google.android.gms.internal.zzt.TAG;
  */
 public class BoardView extends View {
 
+    public interface OnBoardInteraction {
+        void onBoardTouchDown();
+    }
+
+    private OnBoardInteraction mBoardInteractionListener;
+
+    public void setBoardInteractionListener (OnBoardInteraction listener) {
+        this.mBoardInteractionListener = listener;
+    }
+
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
     private int verticalOffset;     // Offset at the top and bottom to display the dots grid
@@ -71,8 +81,6 @@ public class BoardView extends View {
         init();
     }
 
-    private SoundPool sounds;
-
     /**
      * Initialize all paints required to draw on a {@link Canvas}
      */
@@ -96,14 +104,8 @@ public class BoardView extends View {
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
 
-        sounds = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-        sounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                sounds.play(R.raw.click, 1, 1, 1, 0, 1);
-                soundLoaded = true;
-            }
-        });
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
     }
 
     /**
@@ -300,8 +302,8 @@ public class BoardView extends View {
         this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-    boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+
+    boolean shouldMakeASound;
 
     /**
      * Using the native {@link View} method to service the touch events
@@ -322,8 +324,8 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-            if (shouldMakeASound && soundLoaded) {
-                sounds.play(R.raw.click, 1, 1, 1, 0, 1);
+            if (shouldMakeASound) {
+                mBoardInteractionListener.onBoardTouchDown();
             }
 
                 

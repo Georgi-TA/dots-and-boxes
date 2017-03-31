@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
@@ -18,7 +17,7 @@ import com.touchawesome.dotsandboxes.services.MusicIntentService;
 
 public class MusicEnabledActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
-    private MusicIntentService mService;
+    public MusicIntentService mService;
     private boolean mBoundMusicService = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -27,7 +26,7 @@ public class MusicEnabledActivity extends AppCompatActivity {
 
             // start playing music if the user specified so in the settings screen
             boolean playMusic = PreferenceManager.getDefaultSharedPreferences(MusicEnabledActivity.this).getBoolean(getString(R.string.pref_key_music), false);
-            Log.d(TAG, "onStart: " + playMusic);
+
             if (playMusic) {
                 mService.sendCommand(new Intent(MusicIntentService.ACTION_START_MUSIC));
             }

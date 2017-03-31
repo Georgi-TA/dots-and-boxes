@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Board;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
@@ -27,7 +28,9 @@ import java.util.Locale;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class GameLocalFragment extends Fragment implements Game.GameListener, View.OnTouchListener {
+public class GameLocalFragment extends Fragment implements Game.GameListener,
+                                                           View.OnTouchListener,
+                                                           BoardView.OnBoardInteraction {
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "com.touchawesome.args.mode";
     private static final String ARG_BOARD = "com.touchawesome.args.board";
@@ -62,6 +65,13 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     public GameLocalFragment() {
 
+    }
+
+    @Override
+    public void onBoardTouchDown() {
+        if (mListener != null) {
+            mListener.onSoundRequested();
+        }
     }
 
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
@@ -137,6 +147,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         boardView = (BoardView) root.findViewById(R.id.boardView);
         boardView.setGame(game);
+        boardView.setBoardInteractionListener(this);
+
         progressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
         turnText = (TextView) root.findViewById(R.id.turnText);
         turnText.setTypeface(Globals.kgTrueColors);
@@ -163,18 +175,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
                 getResources().getDrawable(R.drawable.bg_player2_image_active)
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
-
-//        ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
-//        ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
-//        Picasso.with(getContext())
-//                .load(R.drawable.ic_db_player_1)
-//                .resize(100, 100)
-//                .into(imagePlayer1);
-//
-//        Picasso.with(getContext())
-//                .load(R.drawable.ic_db_player_2)
-//                .resize(100, 100)
-//                .into(imagePlayer2);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(ARG_BOARD))
@@ -264,6 +264,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     public interface OnFragmentInteractionListener {
         void onGameLocalFragmentInteraction(int fragmentId, Bundle args);
+        void onSoundRequested();
     }
 
     @Override

@@ -3,14 +3,12 @@ package com.touchawesome.dotsandboxes.services;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.os.Binder;
 
 import com.touchawesome.dotsandboxes.R;
-
-import java.io.IOException;
 
 public class MusicIntentService extends Service implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
     private static final String TAG = "MusicService";
@@ -73,8 +71,12 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         if (intent != null) {
             Log.d(TAG, "onBind: " + intent.toString());
             if (intent.getAction() != null && intent.getAction().equals(ACTION_START_MUSIC)) {
-                Log.d(TAG, "onBind action: " + intent.getAction());
+                Log.d(TAG, "onBind action music: " + intent.getAction());
                 handleActionPlayMusic();
+            }
+            else if (intent.getAction() != null && intent.getAction().equals(ACTION_PLAY_SOUND)) {
+                Log.d(TAG, "onBind action sound: " + intent.getAction());
+                handleActionPlaySound();
             }
         }
 
@@ -103,7 +105,7 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
     private void createSoundPlayer() {
         mSoundPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
         if (mSoundPlayer != null) {
-            mSoundPlayer.setLooping(true);
+            mSoundPlayer.setLooping(false);
             mSoundPlayer.setVolume(100, 100);
             mSoundPlayer.setOnPreparedListener(this);
         }
@@ -115,6 +117,26 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         }
         else {
             mMusicPlayer.start();
+        }
+    }
+
+    private void handleActionPlaySound() {
+        if (mSoundPlayer == null) {
+            createSoundPlayer();
+        }
+        else {
+            mSoundPlayer.start();
+        }
+    }
+
+    private void handleActionStopMusic() {
+        if (mMusicPlayer != null) {
+            try {
+                mMusicPlayer.stop();
+                mMusicPlayer.release();
+            } finally {
+                mMusicPlayer = null;
+            }
         }
     }
 
@@ -141,8 +163,6 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
             }
         }
     }
-
-
 
     public class MusicBinder extends Binder {
         public MusicIntentService getService() {
@@ -174,25 +194,5 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         }
 
         return false;
-    }
-    private void handleActionStopMusic() {
-        if (mMusicPlayer != null) {
-            try {
-                mMusicPlayer.stop();
-                mMusicPlayer.release();
-            } finally {
-                mMusicPlayer = null;
-            }
-        }
-    }
-
-    private void handleActionPlaySound() {
-        if (mSoundPlayer != null && !mSoundPlayer.isPlaying())
-            try {
-                mSoundPlayer.prepare();
-                mSoundPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
     }
 }
