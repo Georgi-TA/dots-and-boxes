@@ -124,9 +124,9 @@
     </style>
 
     <style name="WinnerMenuButton" parent="Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">54dp</item>
-        <item name="android:layout_height">54dp</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_margin">8dp</item>
         <item name="android:tint">@color/primary</item>
         <item name="android:background">@drawable/bg_bottom_bar_button</item>
     </style>
@@ -144,6 +144,15 @@
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="InfoText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textColor">@color/textColorPrimaryDark</item>
     </style>
 
 </resources>

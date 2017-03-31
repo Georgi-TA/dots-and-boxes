@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
@@ -27,15 +27,16 @@ import java.util.Locale;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class GameLocalFragment extends Fragment implements Game.GameListener, View.OnTouchListener {
+public class GameLocalFragment extends Fragment implements Game.GameListener,
+                                                           View.OnTouchListener,
+                                                           BoardView.OnBoardInteraction {
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "com.touchawesome.args.mode";
     private static final String ARG_BOARD = "com.touchawesome.args.board";
     private static final String ARG_P1_NEXT = "com.touchawesome.args.scoreView.p1_next";
-    public static final String ARG_STATUS = "com.touchawesome.args.status";
-    public static final String ARG_WINNER_NAME = "com.touchawesome.args.winner.name";
-    public static final String ARG_WINNER_SCORE = "com.touchawesome.args.winner.points";
-    public static final String ARG_WINNER_PLAYER = "com.touchawesome.args.winner.player";
+
+    public static final String ARG_PLAYER1_SCORE = "com.touchawesome.args.score.player1";
+    public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
 
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
@@ -55,6 +56,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     private BotMoveAsyncTask botMoveTask;
 
+    private Vibrator vibrator;
+
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
         fragment.setArguments(args);
@@ -63,6 +66,18 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     public GameLocalFragment() {
 
+    }
+
+    @Override
+    public void onBoardTouchDown() {
+        if (mListener != null) {
+            mListener.onSoundRequested();
+        }
+    }
+
+    @Override
+    public void onSquareCompleted() {
+        vibrator.vibrate(getResources().getInteger(R.integer.vibrate_duration));
     }
 
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
@@ -109,27 +124,29 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int rows = getResources().getInteger(R.integer.default_rows);
+        int columns = getResources().getInteger(R.integer.default_columns);
+
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_MODE))
                 mode = (Game.Mode) getArguments().getSerializable(ARG_MODE);
             else
                 mode = Game.Mode.PLAYER;
+
+            rows = args.getInt("rows", 3);
+            columns = args.getInt("columns", 3);
         }
         else {
-            // TODO: 30.03.17 REMOVE
-            args = new Bundle();
-            args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
-
             mode = Game.Mode.CPU;
         }
-
-        int rows = args.getInt("rows", 3);
-        int columns = args.getInt("columns", 3);
 
         game = new Game(rows, columns);
         game.registerListener(this);
         bot = new PlayerBot(game);
+
+        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -138,6 +155,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
         boardView = (BoardView) root.findViewById(R.id.boardView);
         boardView.setGame(game);
+        boardView.setBoardInteractionListener(this);
+
         progressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
         turnText = (TextView) root.findViewById(R.id.turnText);
         turnText.setTypeface(Globals.kgTrueColors);
@@ -164,18 +183,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
                 getResources().getDrawable(R.drawable.bg_player2_image_active)
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
-
-//        ImageView imagePlayer1 = (ImageView) root.findViewById(R.id.player1_image);
-//        ImageView imagePlayer2 = (ImageView) root.findViewById(R.id.player2_image);
-//        Picasso.with(getContext())
-//                .load(R.drawable.ic_db_player_1)
-//                .resize(100, 100)
-//                .into(imagePlayer1);
-//
-//        Picasso.with(getContext())
-//                .load(R.drawable.ic_db_player_2)
-//                .resize(100, 100)
-//                .into(imagePlayer2);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(ARG_BOARD))
@@ -248,26 +255,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
         if (args == null)
             args = new Bundle();
 
-        args.putString(ARG_STATUS, winner.name());
-
         int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
         int player2Score = game.getBoard().getScore(Game.Player.PLAYER2);
 
-        if (mode == Game.Mode.CPU) {
-            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
-        }
-        else if (player1Score > player2Score){
-            args.putString(ARG_WINNER_NAME, getString(R.string.player1name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER1));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER1);
-        }
-        else {
-            args.putString(ARG_WINNER_NAME, getString(R.string.player2name));
-            args.putInt(ARG_WINNER_SCORE, game.getBoard().getScore(Game.Player.PLAYER2));
-            args.putSerializable(ARG_WINNER_PLAYER, Game.Player.PLAYER2);
-        }
+        args.putInt(ARG_PLAYER1_SCORE, player1Score);
+        args.putInt(ARG_PLAYER2_SCORE, player2Score);
+
 
         mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
     }
@@ -279,6 +272,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener, Vi
 
     public interface OnFragmentInteractionListener {
         void onGameLocalFragmentInteraction(int fragmentId, Bundle args);
+        void onSoundRequested();
     }
 
     @Override

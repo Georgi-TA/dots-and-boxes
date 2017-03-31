@@ -25,17 +25,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private boolean mBound = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         setPreferencesFromResource(R.xml.pref_settings, rootKey);
 
-        getPreferenceScreen().findPreference(getString(R.string.pref_key_music))
-                             .setOnPreferenceChangeListener(this);
+        getPreferenceScreen().findPreference(getString(R.string.pref_key_music)).setOnPreferenceChangeListener(this);
+
+        getPreferenceScreen().findPreference(getString(R.string.pref_key_music)).setPersistent(true);
     }
 
     @Override
@@ -44,10 +40,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         if (preference.getKey().equals(getString(R.string.pref_key_music))) {
             if ((boolean) newValue) {
-                mService.send(new Intent(MusicIntentService.ACTION_PLAY_MUSIC));
+                Intent intent = new Intent(getContext(), MusicIntentService.class);
+                intent.setAction(MusicIntentService.ACTION_START_MUSIC);
+                mService.sendCommand(intent);
             }
             else {
-                mService.send(new Intent(MusicIntentService.ACTION_PAUSE_MUSIC));
+                Intent intent = new Intent(getContext(), MusicIntentService.class);
+                intent.setAction(MusicIntentService.ACTION_STOP_MUSIC);
+                mService.sendCommand(intent);
             }
         }
 
@@ -67,16 +67,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     void doBindService() {
-        // Establish a connection with the service.  We use an explicit
-        // class name because there is no reason to be able to let other
-        // applications replace our component.
-        getContext().bindService(new Intent(getContext(), MusicIntentService.class), mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(getContext(), MusicIntentService.class);
+
+        // start playing music if the user specified so in the settings screen
+        boolean playMusic = android.preference.PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(getString(R.string.pref_key_music), false);
+        if (playMusic) {
+            intent.setAction(MusicIntentService.ACTION_START_MUSIC);
+        }
+
+        getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         mBound = true;
     }
 
     void doUnbindService() {
         if (mBound) {
-            // Detach our existing connection.
             getContext().unbindService(mConnection);
             mBound = false;
         }
@@ -87,15 +91,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
      */
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when taw service object.
-            mService = ((MusicIntentService.LocalBinder) service).getService();
+            mService = ((MusicIntentService.MusicBinder) service).getService();
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
             mService = null;
         }
     };
-
 }

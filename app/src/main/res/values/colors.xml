@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="line">#FF222222</color>
-    <color name="line_temp">#7F000000</color>
+    <color name="line_temp">#30000000</color>
     <color name="boxPlayer1">#21C3E0</color>
     <color name="boxPlayer2">#FC6470</color>
 
@@ -27,5 +27,6 @@
     <color name="menu_icons">#FF000000</color>
     <color name="player_image_inactive">#FF232323</color>
     <color name="button_selected">#F4F4F4</color>
+    <color name="grey_result">#999999</color>
 
 </resources>

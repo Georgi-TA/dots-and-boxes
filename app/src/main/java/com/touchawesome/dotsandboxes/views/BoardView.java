@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -21,6 +24,17 @@ import static com.google.android.gms.internal.zzt.TAG;
  * Class responsible for displaying and interacting with the board
  */
 public class BoardView extends View {
+
+    public interface OnBoardInteraction {
+        void onBoardTouchDown();
+        void onSquareCompleted();
+    }
+
+    private OnBoardInteraction mBoardInteractionListener;
+
+    public void setBoardInteractionListener (OnBoardInteraction listener) {
+        this.mBoardInteractionListener = listener;
+    }
 
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
@@ -51,6 +65,9 @@ public class BoardView extends View {
     private float x1temp, y1temp, x2temp, y2temp;
     private boolean drawTemp = false;
     private boolean touchable = false;
+
+    private boolean shouldMakeASound;
+    private boolean shouldVibrate;
 
     public BoardView(Context context) {
         super(context);
@@ -89,6 +106,10 @@ public class BoardView extends View {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
+        shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
     }
 
     /**
@@ -285,9 +306,6 @@ public class BoardView extends View {
         this.touchHeight = game.getBoard().getRows() * boxSide + snapLength;
     }
 
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-    boolean shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
-
     /**
      * Using the native {@link View} method to service the touch events
      * @param motionEvent the motion event to be processed
@@ -307,8 +325,10 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (shouldMakeASound)
-                    performClick();
+            if (shouldMakeASound) {
+                mBoardInteractionListener.onBoardTouchDown();
+            }
+
                 
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur
@@ -390,7 +410,14 @@ public class BoardView extends View {
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
-                game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
+                int boxesMade = game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
+
+                if (boxesMade > 0) {
+                    if (mBoardInteractionListener != null && shouldVibrate) {
+                        mBoardInteractionListener.onSquareCompleted();
+                    }
+                }
+
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {
