@@ -10,10 +10,11 @@ import android.view.MenuItem;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
+import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class GameActivity extends MusicEnabledActivity implements GameLocalFragment.OnFragmentInteractionListener,
+public class GameActivity extends GoogleGamesActivity implements GameLocalFragment.OnFragmentInteractionListener,
                                                                     WinnerFragment.OnFragmentInteractionListener,
                                                                     FragmentManager.OnBackStackChangedListener {
 
@@ -47,6 +48,19 @@ public class GameActivity extends MusicEnabledActivity implements GameLocalFragm
     @Override
     public void onGameLocalFragmentInteraction(int fragmentId, Bundle args) {
         if (fragmentId == WinnerFragment.FRAGMENT_ID) {
+            int scorePlayer1 = args.getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
+            int scorePlayer2 = args.getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
+            Game.Mode mode = (Game.Mode) args.getSerializable(GameLocalFragment.ARG_MODE);
+
+            // unlock first achievement
+            unlockAchievement(R.string.achievement_started_up_id, getString(R.string.achievement_started_up_unlocked));
+
+            // check for achievements
+            checkForAchievements(scorePlayer1, scorePlayer2, mode);
+
+            // push those accomplishments to the cloud, if signed in
+            pushAccomplishments();
+
             WinnerFragment dialog = WinnerFragment.newInstance(args);
             dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
@@ -86,5 +100,4 @@ public class GameActivity extends MusicEnabledActivity implements GameLocalFragm
 
         return super.onOptionsItemSelected(item);
     }
-
 }

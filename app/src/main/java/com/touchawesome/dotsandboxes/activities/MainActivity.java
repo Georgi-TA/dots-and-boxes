@@ -29,12 +29,10 @@ import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class MainActivity extends MusicEnabledActivity
-        implements MainMenuFragment.OnFragmentInteractionListener,
-        FragmentManager.OnBackStackChangedListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        NetworkMenuFragment.Listener,
-        ChooseLayoutFragment.OnFragmentInteractionListener {
+public class MainActivity extends GoogleGamesActivity implements MainMenuFragment.OnFragmentInteractionListener,
+                                                                 FragmentManager.OnBackStackChangedListener,
+                                                                 ChooseLayoutFragment.OnFragmentInteractionListener,
+                                                                 NetworkMenuFragment.Listener {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -42,22 +40,6 @@ public class MainActivity extends MusicEnabledActivity
 
     private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
 
-
-    // Client used to interact with Google APIs
-    private GoogleApiClient mGoogleApiClient;
-
-    // Are we currently resolving a connection failure?
-    private boolean mResolvingConnectionFailure = false;
-
-    // Has the user clicked the sign-in button?
-    private boolean mSignInClicked = false;
-
-    // Automatically start the sign-in flow when the Activity starts
-    private boolean mAutoStartSignInFlow = true;
-
-    // request codes we use when invoking an external activity
-    private static final int RC_UNUSED = 5001;
-    private static final int RC_SIGN_IN = 9001;
     private String TAG = MainActivity.class.getName();
 
     @Override
@@ -67,14 +49,6 @@ public class MainActivity extends MusicEnabledActivity
 
         // add the toolbar
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        // Create the Google API Client with access to Games
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API)
-                .addScope(Games.SCOPE_GAMES)
-                .build();
 
         if (savedInstanceState != null) {
             // clear the backstack if the game is not in progress
@@ -98,7 +72,7 @@ public class MainActivity extends MusicEnabledActivity
         findViewById(R.id.button_achievements).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onShowAchievementsRequested();
+               showAchievementsPage();
             }
         });
 
@@ -108,6 +82,10 @@ public class MainActivity extends MusicEnabledActivity
                 startActivity(new Intent(v.getContext(), InfoActivity.class));
             }
         });
+    }
+
+    private void showAchievementsPage() {
+        onShowAchievementsRequested();
     }
 
     @Override
@@ -128,20 +106,6 @@ public class MainActivity extends MusicEnabledActivity
 
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-}
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
     }
 
     private void loadFragment(int fragmentId, Bundle args) {
@@ -248,37 +212,8 @@ public class MainActivity extends MusicEnabledActivity
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
+    public void onStartGameRequested() {
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected(): connected to Google APIs");
-
-        // Set the greeting appropriately on main menu
-        Player p = Games.Players.getCurrentPlayer(mGoogleApiClient);
-//        mMainMenuFragment.setPlayer(p);
-
-//        if we have accomplishments to push, push them
-//        if (!mOutbox.isEmpty()) {
-//            pushAccomplishments();
-//            Toast.makeText(this, getString(R.string.your_progress_will_be_uploaded),
-//                    Toast.LENGTH_LONG).show();
-//        }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        if (mResolvingConnectionFailure) {
-            return;
-        }
-
-        if (mSignInClicked || mAutoStartSignInFlow) {
-            mAutoStartSignInFlow = false;
-            mSignInClicked = false;
-            mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
-        }
     }
 
     @Override
@@ -290,61 +225,5 @@ public class MainActivity extends MusicEnabledActivity
     @Override
     public void onSignOutButtonClicked() {
 
-    }
-
-    private boolean isSignedIn() {
-        return (mGoogleApiClient != null && mGoogleApiClient.isConnected());
-    }
-
-    @Override
-    public void onStartGameRequested() {
-
-    }
-
-    public void onShowAchievementsRequested() {
-        if (isSignedIn()) {
-            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), RC_UNUSED);
-        } else {
-            BaseGameUtils.makeSimpleDialog(this, getString(R.string.achievements_not_available)).show();
-        }
-    }
-
-    public void onShowLeaderboardsRequested() {
-        if (isSignedIn()) {
-            startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), RC_UNUSED);
-        } else {
-            BaseGameUtils.makeSimpleDialog(this, getString(R.string.leaderboards_not_available)).show();
-        }
-    }
-
-    void unlockAchievement(int achievementId, String fallbackString) {
-        if (isSignedIn()) {
-            Games.Achievements.unlock(mGoogleApiClient, getString(achievementId));
-        } else {
-            Toast.makeText(this, getString(R.string.achievement) + ": " + fallbackString,
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-    void achievementToast(String achievement) {
-        // Only show toast if not signed in. If signed in, the standard Google Play
-        // toasts will appear, so we don't need to show our own.
-        if (!isSignedIn()) {
-            Toast.makeText(this, getString(R.string.achievement) + ": " + achievement, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == RC_SIGN_IN) {
-            mSignInClicked = false;
-            mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
-                mGoogleApiClient.connect();
-            } else {
-                BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.signin_other_error);
-            }
-        }
     }
 }
