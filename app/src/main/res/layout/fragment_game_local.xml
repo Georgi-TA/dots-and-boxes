@@ -13,7 +13,6 @@
         android:background="@color/primary"
         android:gravity="top|center_horizontal"
         android:paddingTop="8dp"
-        android:text="@string/achievement"
         android:textColor="@color/textColorPrimary"
         android:textSize="30sp" />
 

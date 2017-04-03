@@ -68,8 +68,9 @@
     <string name="five_by_five">5x5</string>
 
     <!-- Game screen -->
-    <string name="player1name">Blue player</string>
-    <string name="player2name">Red player</string>
+    <string name="player1name">Player one</string>
+    <string name="player2name">Player two</string>
+    <string name="robot_name">Robot</string>
 
     <!-- About screen -->
     <string name="title_about">About</string>

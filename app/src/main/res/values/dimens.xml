@@ -9,7 +9,7 @@
     <dimen name="menu_box_width">222dp</dimen>
     <dimen name="menu_box_height">54dp</dimen>
 
-    <dimen name="dot_size">4dp</dimen>
+    <dimen name="dot_size">3dp</dimen>
     <dimen name="line_size">4dp</dimen>
 
     <dimen name="player_image_size">72dp</dimen>
