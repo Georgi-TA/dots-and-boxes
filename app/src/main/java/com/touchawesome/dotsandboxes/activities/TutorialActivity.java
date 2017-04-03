@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
@@ -37,10 +38,13 @@ public class TutorialActivity extends AppCompatActivity {
 
         textSection1 = (TextView) findViewById(R.id.instructions_part_1);
         boardView = (BoardView) findViewById(R.id.tutorial_board);
+
         section2 = (LinearLayout) findViewById(R.id.instructions_part_2);
         section2.setAlpha(0);
         section2.setVisibility(View.GONE);
+
         buttonCompleteTutorial = (Button) findViewById(R.id.buttonCompleteTutorial);
+        buttonCompleteTutorial.setTypeface(Globals.kgTrueColors);
         buttonCompleteTutorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +61,7 @@ public class TutorialActivity extends AppCompatActivity {
         tutorialGame.getGameTree().addEdge(3, 4);
         tutorialGame.getGameTree().addEdge(6, 7);
         tutorialGame.getGameTree().addEdge(7, 8);
-        
+
         // add vertical edges
         tutorialGame.getGameTree().addEdge(0, 3);
         tutorialGame.getGameTree().addEdge(1, 4);

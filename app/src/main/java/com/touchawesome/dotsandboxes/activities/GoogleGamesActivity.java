@@ -3,6 +3,7 @@ package com.touchawesome.dotsandboxes.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,12 +12,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.Player;
+import com.google.android.gms.games.achievement.Achievement;
+import com.google.android.gms.games.achievement.AchievementBuffer;
+import com.google.android.gms.games.achievement.Achievements;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.utils.Constants;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by scelus on 31.03.17
@@ -46,6 +54,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     // achievements and scores we're pending to push to the cloud
     // (waiting for the user to sign in, for instance)
     AccomplishmentsOutbox mOutbox = new AccomplishmentsOutbox();
+    boolean achievementsChecked = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +68,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
                 .addScope(Games.SCOPE_GAMES)
                 .build();
 
-        mOutbox.loadLocal();
+
     }
 
 
@@ -220,4 +229,57 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
         }
     }
 
+    class CheckForUnlockedAchievementsTask extends AsyncTask<Object, Object, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            loadUnlockedAchievements();
+            achievementsChecked = true;
+            return null;
+        }
+    }
+
+    private void loadUnlockedAchievements() {
+        boolean fullLoad = false;  // set to 'true' to reload all achievements (ignoring cache)
+        long waitTime = 60;    // seconds to wait for achievements to load before timing out
+
+        // load achievements
+        PendingResult pendingResult = Games.Achievements.load( mGoogleApiClient, fullLoad );
+        Achievements.LoadAchievementsResult result = (Achievements.LoadAchievementsResult) pendingResult.await(waitTime, TimeUnit.SECONDS );
+        int status = result.getStatus().getStatusCode();
+        if ( status != GamesStatusCodes.STATUS_OK )  {
+            result.release();
+            return;
+        }
+
+        // cache the loaded achievements
+        AchievementBuffer buf = result.getAchievements();
+        int bufSize = buf.getCount();
+        for ( int i = 0; i < bufSize; i++ )  {
+            Achievement ach = buf.get( i );
+
+            // here you now have access to the achievement's data
+            String id = ach.getAchievementId();  // the achievement ID string
+            boolean unlocked = ach.getState() == Achievement.STATE_UNLOCKED;  // is unlocked
+
+            SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE);
+            if (unlocked) {
+                if (id.equals(getString(R.string.achievement_started_up_id))) {
+                    prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_STARTED_UP, true).apply();
+                }
+                else if (id.equals(getString(R.string.achievement_started_up_id))) {
+                    prefs.edit().putInt(Constants.PREFS_ACHIEVEMENT_WIN_COUNT, ach.getCurrentSteps()).apply();
+                    if (ach.getCurrentSteps() == ach.getTotalSteps()) {
+                        prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_WINNER_WINNER, true).apply();
+                    }
+                }
+                // TODO: 03.04.17 add three more achievements
+            }
+        }
+
+        buf.release();
+        result.release();
+
+        mOutbox.loadLocal();
+    }
 }

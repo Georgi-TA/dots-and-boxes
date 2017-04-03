@@ -1,12 +1,19 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.achievement.Achievement;
+import com.google.android.gms.games.achievement.AchievementBuffer;
+import com.google.android.gms.games.achievement.Achievements;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
@@ -14,11 +21,13 @@ import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
+import java.util.concurrent.TimeUnit;
+
 public class GameActivity extends GoogleGamesActivity implements GameLocalFragment.OnFragmentInteractionListener,
                                                                     WinnerFragment.OnFragmentInteractionListener,
                                                                     FragmentManager.OnBackStackChangedListener {
 
-    GameLocalFragment gameFragment;
+    private GameLocalFragment gameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,8 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
         loadGameFragment();
     }
+
+
 
     private void loadGameFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

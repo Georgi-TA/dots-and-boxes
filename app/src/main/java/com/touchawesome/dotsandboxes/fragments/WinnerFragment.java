@@ -25,7 +25,6 @@ import java.util.Locale;
 public class WinnerFragment extends DialogFragment {
     public static final int FRAGMENT_ID = 31783;
     String winnerName;
-    int winnerScore;
     Game.Player winner;
 
     private WinnerFragment.OnFragmentInteractionListener mListener;
@@ -51,6 +50,7 @@ public class WinnerFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
         player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
+        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameLocalFragment.ARG_GAME_MODE);
 
         if (player1Score > player2Score) {
             winner = Game.Player.PLAYER1;
@@ -58,7 +58,12 @@ public class WinnerFragment extends DialogFragment {
         }
         else if (player1Score < player2Score) {
             winner = Game.Player.PLAYER2;
-            winnerName = getString(R.string.player2name);
+            if (mode == Game.Mode.CPU) {
+                winnerName = getString(R.string.robot_name);
+            }
+            else {
+                winnerName = getString(R.string.player2name);
+            }
         }
         else {
             winner = Game.Player.NONE;
@@ -78,8 +83,6 @@ public class WinnerFragment extends DialogFragment {
         title.setTypeface(Globals.kgTrueColors);
 
         title.setText(R.string.wins);
-
-        ImageView winnerImage = (ImageView) view.findViewById(R.id.winner_image);
 
         TextView name = (TextView) view.findViewById(R.id.winner_name);
         name.setTypeface(Globals.kgTrueColors);

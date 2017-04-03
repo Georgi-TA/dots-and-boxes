@@ -41,7 +41,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
     public static final String ARG_PLAYER1_SCORE = "com.touchawesome.args.score.player1";
     public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
-    private static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
+    public static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
 
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
