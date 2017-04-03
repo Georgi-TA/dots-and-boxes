@@ -3,10 +3,12 @@ package com.touchawesome.dotsandboxes.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.games.Games;
@@ -81,6 +83,7 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
             pushAccomplishments();
 
             WinnerFragment dialog = WinnerFragment.newInstance(args);
+            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
             dialog.setCancelable(false);

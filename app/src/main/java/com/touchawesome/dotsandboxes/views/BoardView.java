@@ -328,7 +328,7 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-            if (shouldMakeASound) {
+            if (shouldMakeASound && mBoardInteractionListener != null) {
                 mBoardInteractionListener.onBoardTouchDown();
             }
 

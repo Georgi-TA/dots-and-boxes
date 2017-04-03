@@ -27,6 +27,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleInstance" />
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"

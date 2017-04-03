@@ -98,7 +98,6 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
 //      Set the greeting appropriately on main menu
         Player p = Games.Players.getCurrentPlayer(mGoogleApiClient);
 //        mMainMenuFragment.setPlayer(p);
-
 //        if we have accomplishments to push, push them
 //        if (!mOutbox.isEmpty()) {
 //            pushAccomplishments();

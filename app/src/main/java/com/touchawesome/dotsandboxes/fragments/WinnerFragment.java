@@ -1,16 +1,15 @@
 package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
@@ -48,6 +47,8 @@ public class WinnerFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
         player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
         Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameLocalFragment.ARG_GAME_MODE);
