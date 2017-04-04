@@ -39,6 +39,10 @@ public class PlayerBot {
         Collections.shuffle(availableMoves);
         return availableMoves.get(0);
     }
+
+    /**
+     * Previous version of the method above
+     */
 //        Graph gameTree = game.getGameTree();
 //
 //        // pre-generate the moves
@@ -85,6 +89,9 @@ public class PlayerBot {
         return maxResult + board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
     }
 
+    /**
+     *  Partially implemented minimax algorithm
+     */
 //    private int minimax(int level, Board board, boolean isMaximizer, int alpha, int beta) {
 //        Graph gameTree = game.getGameTree();
 //
@@ -151,7 +158,11 @@ public class PlayerBot {
      * @return first found Edge that will complete a box
      */
     private ArrayList<Edge> getCompletionMoves() {
-//
+
+
+        /**
+         * Previous imlpementation of this method
+         */
 //        Board board = game.getBoard();
 //        int dots_rows = board.getRows();
 //

@@ -2,29 +2,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+
+        android:orientation="vertical">
 
         <Button
-            android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayFriend"
-            style="@style/MenuLayoutButton" />
+            style="@style/MenuLayoutButton"
+            android:text="@string/menu_option_play_local_player" />
 
         <Button
-            android:text="@string/menu_option_play_local_cpu"
             android:id="@+id/buttonPlayLocalComputer"
-            style="@style/MenuLayoutButton" />
+            style="@style/MenuLayoutButton"
+            android:text="@string/menu_option_play_local_cpu" />
 
         <!--<Button-->
-            <!--android:text="@string/menu_option_play_network"-->
-            <!--android:id="@+id/buttonPlayNetwork"-->
-            <!--style="@style/MenuButton"/>-->
+        <!--android:text="@string/menu_option_play_network"-->
+        <!--android:id="@+id/buttonPlayNetwork"-->
+        <!--style="@style/MenuButton"/>-->
 
     </LinearLayout>
 </RelativeLayout>

@@ -5,10 +5,9 @@ import java.util.ArrayList;
 /**
  * Created by scelus on 28.03.17
  */
-
-public class Node {
-    public String board;           // name used for hashing
-    public ArrayList<Edge> links; // the links to child nodes
+class Node {
+    private String board;           // name used for hashing
+    private ArrayList<Edge> links; // the links to child nodes
 
     public int getValue() {
         return value;
@@ -18,7 +17,7 @@ public class Node {
         this.value = value;
     }
 
-    public int value;             // the score value of the node
+    private int value;             // the score value of the node
 
     public Node(String board, int value) {
         this.links = new ArrayList<>();

@@ -2,22 +2,14 @@ package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
-import com.google.android.gms.games.Player;
-import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
@@ -26,7 +18,6 @@ import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
 public class MainActivity extends GoogleGamesActivity implements MainMenuFragment.OnFragmentInteractionListener,
@@ -38,9 +29,9 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private static final String ARG_GAME_IN_PROGRESS = "info.scelus.args.gameinprogress";
-
     private String TAG = MainActivity.class.getName();
+
+    private static final String ARG_GAME_IN_PROGRESS = "com.touchawesome.args.gameinprogress";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +73,18 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
                 startActivity(new Intent(v.getContext(), InfoActivity.class));
             }
         });
+
+        if (!achievementsChecked)
+            new CheckForUnlockedAchievementsTask().execute();
     }
 
     private void showAchievementsPage() {
-        onShowAchievementsRequested();
+        if (mGoogleApiClient != null && isSignedIn()) {
+            onShowAchievementsRequested();
+        }
+        else {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
@@ -226,4 +225,6 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     public void onSignOutButtonClicked() {
 
     }
+
+
 }

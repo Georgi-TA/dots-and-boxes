@@ -41,10 +41,9 @@ public class BoardView extends View {
     private int verticalOffset;     // Offset at the top and bottom to display the dots grid
     private int[][] boxesAlpha;     // array containing the alpha value of each box
 
-    // TODO: load them from XML resource
-    private int boxSide = 80;       // default size for the box
-    private int snapLength = 16;    // default distance for a touch to "snap" to a line
-    private int dotRadius = 8;      // the radius of the dots
+    private int boxSide;       // default size for the box
+    private int snapLength;    // default distance for a touch to "snap" to a line
+    private int dotRadius;      // the radius of the dots
 
     private Paint linePaint;
     private Paint lineTempPaint;
@@ -106,6 +105,10 @@ public class BoardView extends View {
 
         boxPaint = new Paint();
         boxPaint.setAntiAlias(true);
+
+        boxSide = getResources().getDimensionPixelSize(R.dimen.default_box_size);
+        snapLength = getResources().getDimensionPixelSize(R.dimen.default_snap_length);
+        dotRadius = getResources().getDimensionPixelSize(R.dimen.dot_size);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
@@ -325,7 +328,7 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-            if (shouldMakeASound) {
+            if (shouldMakeASound && mBoardInteractionListener != null) {
                 mBoardInteractionListener.onBoardTouchDown();
             }
 

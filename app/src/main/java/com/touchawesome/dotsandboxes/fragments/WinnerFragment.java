@@ -1,16 +1,15 @@
 package com.touchawesome.dotsandboxes.fragments;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
@@ -25,7 +24,6 @@ import java.util.Locale;
 public class WinnerFragment extends DialogFragment {
     public static final int FRAGMENT_ID = 31783;
     String winnerName;
-    int winnerScore;
     Game.Player winner;
 
     private WinnerFragment.OnFragmentInteractionListener mListener;
@@ -49,8 +47,11 @@ public class WinnerFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
         player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
+        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameLocalFragment.ARG_GAME_MODE);
 
         if (player1Score > player2Score) {
             winner = Game.Player.PLAYER1;
@@ -58,7 +59,12 @@ public class WinnerFragment extends DialogFragment {
         }
         else if (player1Score < player2Score) {
             winner = Game.Player.PLAYER2;
-            winnerName = getString(R.string.player2name);
+            if (mode == Game.Mode.CPU) {
+                winnerName = getString(R.string.robot_name);
+            }
+            else {
+                winnerName = getString(R.string.player2name);
+            }
         }
         else {
             winner = Game.Player.NONE;
@@ -78,8 +84,6 @@ public class WinnerFragment extends DialogFragment {
         title.setTypeface(Globals.kgTrueColors);
 
         title.setText(R.string.wins);
-
-        ImageView winnerImage = (ImageView) view.findViewById(R.id.winner_image);
 
         TextView name = (TextView) view.findViewById(R.id.winner_name);
         name.setTypeface(Globals.kgTrueColors);
@@ -132,8 +136,7 @@ public class WinnerFragment extends DialogFragment {
             mListener = (WinnerFragment.OnFragmentInteractionListener) context;
         }
         catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 

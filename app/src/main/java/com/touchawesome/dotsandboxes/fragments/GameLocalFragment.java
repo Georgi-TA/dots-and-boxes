@@ -5,8 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,7 +42,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
     public static final String ARG_PLAYER1_SCORE = "com.touchawesome.args.score.player1";
     public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
-    private static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
+    public static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
 
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
@@ -58,6 +63,18 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
     private BotMoveAsyncTask botMoveTask;
 
     private Vibrator vibrator;
+
+    private CountDownTimer progressTimer = new CountDownTimer(400, 4) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            progressBar.setProgress((int) ((float) millisUntilFinished / 4f));
+        }
+
+        @Override
+        public void onFinish() {
+            progressBar.setProgress(0);
+        }
+    };
 
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
@@ -81,21 +98,61 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         vibrator.vibrate(getResources().getInteger(R.integer.vibrate_duration));
     }
 
+    public void setTurnText(Game.Player player) {
+        Spannable turnString;
+        String playerName;
+        if (player == Game.Player.PLAYER1) {
+            playerName = getString(R.string.player1name);
+            turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+        else {
+            if (mode == Game.Mode.CPU) {
+                playerName = getString(R.string.robot_name);
+            }
+            else {
+                playerName = getString(R.string.player2name);
+            }
+
+            turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+        turnText.setText(turnString);
+    }
+
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
 
         protected void onPreExecute () {
-            blockBoard();
+            boardView.disableInteraction();
+            progressBar.setProgress(100);
+            progressTimer.start();
         }
 
         protected Edge doInBackground(Void... params) {
-            return bot.getNextMove();
+            Edge edge = bot.getNextMove();
+            try {
+                Thread.sleep(400);
+            }
+            catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            return edge;
         }
 
-        protected void onProgressUpdate(Integer... progress) { }
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
 
         protected void onPostExecute(Edge result) {
             Log.d(TAG, "onPostExecute: " + result.getKey());
+
             takeTurnFromBot(result);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressTimer.cancel();
         }
     }
 
@@ -108,18 +165,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         }
         else {
             boardView.invalidate();
-            unblockBoard();
+            boardView.enableInteraction();
         }
-    }
-
-    private void blockBoard() {
-        boardView.disableInteraction();
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void unblockBoard() {
-        boardView.enableInteraction();
-        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -159,34 +206,35 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         boardView.setBoardInteractionListener(this);
 
         progressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
+
         turnText = (TextView) root.findViewById(R.id.turnText);
         turnText.setTypeface(Globals.kgTrueColors);
-        turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
+        setTurnText(Game.Player.PLAYER1);
+
         scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer1.setTypeface(Globals.kgTrueColors);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
         scorePlayer2.setTypeface(Globals.kgTrueColors);
 
-
         ImageView imagePlayer1Border = (ImageView) root.findViewById(R.id.player1_border);
         ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
 
         // set transition drawable to player 1 border
-        tdPlayer1 = new TransitionDrawable( new Drawable[] {
+        tdPlayer1 = new TransitionDrawable(new Drawable[]{
                 getResources().getDrawable(R.drawable.bg_player1_image_active),
                 getResources().getDrawable(R.drawable.bg_player_image_inactive)
         });
         imagePlayer1Border.setImageDrawable(tdPlayer1);
 
         // set transition drawable to player 2 border
-        tdPlayer2 = new TransitionDrawable( new Drawable[] {
+        tdPlayer2 = new TransitionDrawable(new Drawable[]{
                 getResources().getDrawable(R.drawable.bg_player_image_inactive),
                 getResources().getDrawable(R.drawable.bg_player2_image_active)
         });
         imagePlayer2Border.setImageDrawable(tdPlayer2);
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(ARG_BOARD))
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(ARG_BOARD))
                 game.getBoard().loadBoard(savedInstanceState.getString(ARG_BOARD));
 
             if (savedInstanceState.containsKey(ARG_P1_NEXT)) {
@@ -195,7 +243,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
             }
         }
 
-        unblockBoard();
+        boardView.enableInteraction();
         return root;
     }
 
@@ -224,10 +272,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
     @Override
     public void onScoreChange(Game.Player player, int score) {
-        if (player == Game.Player.PLAYER1)
+        if (player == Game.Player.PLAYER1) {
             scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
-        else
+        }
+        else {
             scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
+        }
     }
 
     @Override
@@ -240,11 +290,11 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         if (nextToMove == Game.Player.PLAYER2) {
             tdPlayer1.startTransition(100);
             tdPlayer2.startTransition(100);
-            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player2name)));
+            setTurnText(Game.Player.PLAYER2);
         } else {
             tdPlayer1.reverseTransition(100);
             tdPlayer2.reverseTransition(100);
-            turnText.setText(String.format(Locale.getDefault(), getString(R.string.turn_text), getString(R.string.player1name)));
+            setTurnText(Game.Player.PLAYER1);
         }
     }
 
@@ -263,8 +313,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         args.putInt(ARG_PLAYER2_SCORE, player2Score);
         args.putSerializable(ARG_GAME_MODE, mode);
 
-
-        mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
+        if (mListener != null)
+            mListener.onWinFragmentLoad(WinnerFragment.FRAGMENT_ID, args);
     }
 
     @Override
@@ -273,7 +323,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
     }
 
     public interface OnFragmentInteractionListener {
-        void onGameLocalFragmentInteraction(int fragmentId, Bundle args);
+        void onWinFragmentLoad(int fragmentId, Bundle args);
         void onSoundRequested();
     }
 

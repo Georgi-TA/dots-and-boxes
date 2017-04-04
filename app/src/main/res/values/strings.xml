@@ -39,14 +39,18 @@
     <string name="pref_key_vibrate">pref_vibrate</string>
 
     <!-- Achievements -->
-    <string name="achievement_started_up_unlocked">Started up!</string>
+    <string name="achievement_started_up_unlocked">Started up</string>
     <string name="achievement_winner_winner_unlocked">Winner, winner!</string>
+    <string name="achievement_fired_up_unlocked">Fired up</string>
+    <string name="achievement_in_no_time_unlocked">In no time</string>
+    <string name="achievement_flawless_unlocked">Flawless</string>
 
     <string name="remote_service_disconnected">Remove service disconnected.</string>
     <string name="remote_service_connected">Remote service connected</string>
     <string name="signin_failure">Failed to Sign-In</string>
     <string name="signin_other_error">Something went wrong</string>
 
+    <!-- Network play -->
     <string name="sign_in_why">Sign in with Google Play Games</string>
     <string name="you_are_signed_in">You are signed in</string>
     <string name="sign_out">Sign Out</string>
@@ -60,22 +64,31 @@
     <string name="signed_out_greeting">See you soon</string>
     <string name="network_menu_play_local">Play</string>
 
-
+    <!-- Choose layout fragment -->
     <string name="choose_board_size">Board size</string>
     <string name="three_by_three">3x3</string>
     <string name="four_by_four">4x4</string>
     <string name="five_by_five">5x5</string>
 
-    <string name="player1name">Blue player</string>
-    <string name="player2name">Red player</string>
+    <!-- Game screen -->
+    <string name="player1name">Player one</string>
+    <string name="player2name">Player two</string>
+    <string name="robot_name">Robot</string>
 
-
+    <!-- About screen -->
     <string name="title_about">About</string>
     <string name="info_text_section_1">Dots And Boxes is a game in which you create boxes by placing lines that connect dots on a board.</string>
     <string name="info_text_section_2">The gameplay is simple. You select against who you want to play with - either a friend on the same device or a robot. After that you choose the size of the board and the game starts. Lines are placed by touching the board.</string>
     <string name="info_text_section_3">Created with care by <b>TouchAwesome</b></string>
 
+    <!-- Final screen -->
     <string name="turn_text">%s\'s turn</string>
     <string name="wins">WINS</string>
     <string name="result">Result</string>
+    <string name="title_activity_tutorial">How to play</string>
+
+    <!-- Tutorial screen -->
+    <string name="tutorial_part_1">Touch the board to place a line</string>
+    <string name="tutorial_part_2">By connecting dots you fill boxes.\nThe player with more boxes in the end wins.</string>
+    <string name="complete_tutorial">Play</string>
 </resources>

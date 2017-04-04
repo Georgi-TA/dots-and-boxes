@@ -24,16 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.MainActivity"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleInstance" />
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/SettingsTheme">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.touchawesome.dotsandboxes.activities.MainActivity" />
@@ -44,15 +42,21 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activities.GameActivity"
-            android:label=""
+        <activity
+            android:name=".activities.GameActivity"
             android:exported="true"
-            android:theme="@style/GameTheme"/>
+            android:label=""
+            android:theme="@style/GameTheme" />
 
-        <activity android:name=".activities.InfoActivity"
-            android:theme="@style/SettingsTheme"
-            android:label="@string/title_about"/>
+        <activity
+            android:name=".activities.InfoActivity"
+            android:label="@string/title_about"
+            android:theme="@style/SettingsTheme" />
 
+        <activity
+            android:name=".activities.TutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:theme="@style/SettingsTheme"/>
     </application>
 
 </manifest>

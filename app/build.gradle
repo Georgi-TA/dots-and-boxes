@@ -4,8 +4,8 @@ android {
     signingConfigs {
         config {
             keyAlias 'touchawesome'
-            keyPassword 'B25Cww8uPH66'
-            storeFile file('/home/scelus/Desktop/Dots And Boxes keys/touch-awesome.jks')
+            keyPassword 'nDuSu6A4GoV5'
+            storeFile file('/home/scelus/Desktop/DotsAndBoxesKeys/dots-and-boxes.jks')
             storePassword 'y6d8PmxJqPQ7'
         }
     }
@@ -13,7 +13,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.touchawesome.dotsandboxes"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
