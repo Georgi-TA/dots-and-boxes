@@ -1,29 +1,15 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.games.Games;
-import com.google.android.gms.games.GamesStatusCodes;
-import com.google.android.gms.games.Player;
-import com.google.android.gms.games.achievement.Achievement;
-import com.google.android.gms.games.achievement.AchievementBuffer;
-import com.google.android.gms.games.achievement.Achievements;
-import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
@@ -32,10 +18,7 @@ import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
 import com.touchawesome.dotsandboxes.utils.Constants;
-
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends GoogleGamesActivity implements MainMenuFragment.OnFragmentInteractionListener,
                                                                  FragmentManager.OnBackStackChangedListener,
@@ -96,8 +79,12 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     }
 
     private void showAchievementsPage() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+        if (mGoogleApiClient != null && isSignedIn()) {
             onShowAchievementsRequested();
+        }
+        else {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override

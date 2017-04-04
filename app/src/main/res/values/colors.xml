@@ -8,7 +8,8 @@
 
     <color name="scorePlayer1">#21C3E0</color>
     <color name="scorePlayer2">#FC6470</color>
-    <color name="progress_bar">#DFDFDF</color>
+    <color name="progress_bar">#FEFEFE</color>
+    <color name="progress_bar_secondary">#CDCDCD</color>
 
     <!-- Material colors -->
     <color name="colorAccent">#a31720</color>

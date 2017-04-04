@@ -71,7 +71,11 @@
             android:progress="0"
             android:max="100"
             android:layout_below="@+id/turnText"
-            android:progressDrawable="@drawable/turn_progress_bar" />
+            android:progressDrawable="@drawable/turn_progress_bar"
+            android:layout_alignLeft="@+id/boardView"
+            android:layout_alignStart="@+id/boardView"
+            android:layout_alignRight="@+id/boardView"
+            android:layout_alignEnd="@+id/boardView" />
 
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"

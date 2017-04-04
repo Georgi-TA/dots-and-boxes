@@ -67,8 +67,6 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
                 .addApi(Games.API)
                 .addScope(Games.SCOPE_GAMES)
                 .build();
-
-
     }
 
 
@@ -115,6 +113,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (mResolvingConnectionFailure) {
+            Log.d(TAG, "onConnectionFailed() ignoring connection failure; already resolving.");
             return;
         }
 
@@ -123,9 +122,11 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
             mSignInClicked = false;
             mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
         }
+
+        mGoogleApiClient.connect();
     }
 
-    private boolean isSignedIn() {
+    public boolean isSignedIn() {
         return (mGoogleApiClient != null && mGoogleApiClient.isConnected());
     }
 
@@ -145,29 +146,26 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
         }
     }
 
-    void achievementToast(String achievement) {
-        if (!isSignedIn()) {
-            Toast.makeText(this, getString(R.string.achievement) + ": " + achievement, Toast.LENGTH_LONG).show();
-        }
-    }
-
     void checkForAchievements(int player1Score, int player2Score, long time, Game.Mode mode) {
         // Check if each condition is met; if so, unlock the corresponding
         // achievement.
-        if (mode == Game.Mode.CPU && player1Score > player2Score) {
+        if (!mOutbox.mStartedUpAchievement) {
             unlockAchievement(R.string.achievement_started_up_id, getString(R.string.achievement_started_up_unlocked));
         }
 
         if (player1Score > player2Score) {
             mOutbox.wins++;
             mOutbox.consecutiveWins++;
-            Log.d(TAG, "checkForAchievements: " + mOutbox.wins);
+
+            Games.Achievements.increment(mGoogleApiClient, getString(R.string.achievement_winner_winner_id), 1);
 
             if (mOutbox.wins >= 10 && !mOutbox.mWinnerWinnerAchievement)
                 unlockAchievement(R.string.achievement_winner_winner_id, getString(R.string.achievement_winner_winner_unlocked));
 
             if (mOutbox.consecutiveWins >= 10 && !mOutbox.mFiredUpAchievement)
                 unlockAchievement(R.string.achievement_fired_up_id, getString(R.string.achievement_fired_up_unlocked));
+
+            Log.d(TAG, "checkForAchievements: " + mOutbox.wins);
         }
         else {
             mOutbox.consecutiveWins = 0;
@@ -225,7 +223,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
         void loadLocal() {
             SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, Context.MODE_PRIVATE);
 
-            // get the achivements
+            // get the achievements
             mStartedUpAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_STARTED_UP, false);
             mWinnerWinnerAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_WINNER_WINNER, false);
             mInNoTimeAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_IN_NO_TIME, false);
