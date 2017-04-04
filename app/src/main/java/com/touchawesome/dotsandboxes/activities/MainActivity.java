@@ -96,7 +96,8 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     }
 
     private void showAchievementsPage() {
-        onShowAchievementsRequested();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+            onShowAchievementsRequested();
     }
 
     @Override

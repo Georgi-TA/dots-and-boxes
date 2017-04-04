@@ -106,22 +106,9 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
 //        }
     }
 
-    void pushAccomplishments() {
-        if (!isSignedIn()) {
-            // can't push to the cloud, so save locally
-            mOutbox.saveLocal();
-            return;
-        }
-
-        if (mOutbox.mStartedUpAchievement) {
-            Games.Achievements.unlock(mGoogleApiClient, getString(R.string.achievement_started_up_id));
-            mOutbox.mStartedUpAchievement = false;
-        }
-
-        if (mOutbox.wins > 0) {
-            Games.Achievements.increment(mGoogleApiClient, getString(R.string.achievement_winner_winner_id), mOutbox.wins);
-        }
-
+    @Override
+    protected void onPause() {
+        super.onPause();
         mOutbox.saveLocal();
     }
 
@@ -150,14 +137,6 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
         }
     }
 
-//    public void onShowLeaderboardsRequested() {
-//        if (isSignedIn()) {
-//            startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(mGoogleApiClient), RC_UNUSED);
-//        } else {
-//            BaseGameUtils.makeSimpleDialog(this, getString(R.string.leaderboards_not_available)).show();
-//        }
-//    }
-
     void unlockAchievement(int achievementId, String fallbackString) {
         if (isSignedIn()) {
             Games.Achievements.unlock(mGoogleApiClient, getString(achievementId));
@@ -167,26 +146,43 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     }
 
     void achievementToast(String achievement) {
-        // Only show toast if not signed in. If signed in, the standard Google Play
-        // toasts will appear, so we don't need to show our own.
         if (!isSignedIn()) {
             Toast.makeText(this, getString(R.string.achievement) + ": " + achievement, Toast.LENGTH_LONG).show();
         }
     }
 
-    void checkForAchievements(int player1Score, int player2Score, Game.Mode mode) {
+    void checkForAchievements(int player1Score, int player2Score, long time, Game.Mode mode) {
         // Check if each condition is met; if so, unlock the corresponding
         // achievement.
         if (mode == Game.Mode.CPU && player1Score > player2Score) {
-            unlockAchievement(R.string.achievement_started_up_id, "none");
-            achievementToast(getString(R.string.achievement_started_up_unlocked));
+            unlockAchievement(R.string.achievement_started_up_id, getString(R.string.achievement_started_up_unlocked));
         }
 
-        if (mode == Game.Mode.CPU && player1Score > player2Score) {
+        if (player1Score > player2Score) {
             mOutbox.wins++;
+            mOutbox.consecutiveWins++;
             Log.d(TAG, "checkForAchievements: " + mOutbox.wins);
-            achievementToast(getString(R.string.achievement_winner_winner_unlocked));
+
+            if (mOutbox.wins >= 10 && !mOutbox.mWinnerWinnerAchievement)
+                unlockAchievement(R.string.achievement_winner_winner_id, getString(R.string.achievement_winner_winner_unlocked));
+
+            if (mOutbox.consecutiveWins >= 10 && !mOutbox.mFiredUpAchievement)
+                unlockAchievement(R.string.achievement_fired_up_id, getString(R.string.achievement_fired_up_unlocked));
         }
+        else {
+            mOutbox.consecutiveWins = 0;
+        }
+
+        if (player2Score == 0 && !mOutbox.mFlawlessAchievement) {
+            unlockAchievement(R.string.achievement_flawless_id, getString(R.string.achievement_flawless_unlocked));
+        }
+
+        if (time < 30000 && !mOutbox.mInNoTimeAchievement) {
+            unlockAchievement(R.string.achievement_in_no_time_id, getString(R.string.achievement_in_no_time_unlocked));
+        }
+
+        Log.d(TAG, "checkForAchievements: consecutive wins " + mOutbox.consecutiveWins);
+        Log.d(TAG, "checkForAchievements: wins " + mOutbox.wins);
     }
 
     @Override
@@ -196,6 +192,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
             mSignInClicked = false;
             mResolvingConnectionFailure = false;
             if (resultCode == RESULT_OK) {
+                Log.d(TAG, "checkForAchievements: logging in");
                 mGoogleApiClient.connect();
             } else {
                 BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.signin_other_error);
@@ -206,25 +203,38 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     private class AccomplishmentsOutbox {
         boolean mStartedUpAchievement = false;
         boolean mWinnerWinnerAchievement = false;
-        int wins = 0;
+        boolean mFiredUpAchievement = false;
+        boolean mInNoTimeAchievement = false;
+        boolean mFlawlessAchievement = false;
 
-        boolean isEmpty() {
-            return !mStartedUpAchievement && !mWinnerWinnerAchievement;
-        }
+        int wins = 0;
+        int consecutiveWins = 0;
 
         void saveLocal() {
             SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, Context.MODE_PRIVATE);
             prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_STARTED_UP, mStartedUpAchievement)
                         .putBoolean(Constants.PREFS_ACHIEVEMENT_WINNER_WINNER, mWinnerWinnerAchievement)
+                        .putBoolean(Constants.PREFS_ACHIEVEMENT_FIRED_UP, mFiredUpAchievement)
+                        .putBoolean(Constants.PREFS_ACHIEVEMENT_IN_NO_TIME, mInNoTimeAchievement)
+                        .putBoolean(Constants.PREFS_ACHIEVEMENT_FLAWLESS, mFlawlessAchievement)
                         .putInt(Constants.PREFS_ACHIEVEMENT_WIN_COUNT, wins)
+                        .putInt(Constants.PREFS_ACHIEVEMENT_CONSECUTIVE_WIN_COUNT, consecutiveWins)
                         .apply();
         }
 
         void loadLocal() {
             SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, Context.MODE_PRIVATE);
+
+            // get the achivements
             mStartedUpAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_STARTED_UP, false);
             mWinnerWinnerAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_WINNER_WINNER, false);
-            int wins = prefs.getInt(Constants.PREFS_ACHIEVEMENT_WIN_COUNT, 0);
+            mInNoTimeAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_IN_NO_TIME, false);
+            mFiredUpAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_FIRED_UP, false);
+            mFlawlessAchievement = prefs.getBoolean(Constants.PREFS_ACHIEVEMENT_FLAWLESS, false);
+
+            //retrieve the win counts
+            wins = prefs.getInt(Constants.PREFS_ACHIEVEMENT_WIN_COUNT, 0);
+            consecutiveWins = prefs.getInt(Constants.PREFS_ACHIEVEMENT_CONSECUTIVE_WIN_COUNT, 0);
         }
     }
 
@@ -261,18 +271,33 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
             String id = ach.getAchievementId();  // the achievement ID string
             boolean unlocked = ach.getState() == Achievement.STATE_UNLOCKED;  // is unlocked
 
+            Log.i(TAG, "loadUnlockedAchievements: " + id + "   " + ach.getName() + "  " + ach.getState());;
+
             SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE);
             if (unlocked) {
                 if (id.equals(getString(R.string.achievement_started_up_id))) {
                     prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_STARTED_UP, true).apply();
+                    mOutbox.mStartedUpAchievement = true;
                 }
                 else if (id.equals(getString(R.string.achievement_started_up_id))) {
                     prefs.edit().putInt(Constants.PREFS_ACHIEVEMENT_WIN_COUNT, ach.getCurrentSteps()).apply();
                     if (ach.getCurrentSteps() == ach.getTotalSteps()) {
                         prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_WINNER_WINNER, true).apply();
+                        mOutbox.mWinnerWinnerAchievement = true;
                     }
                 }
-                // TODO: 03.04.17 add three more achievements
+                else if (id.equals(getString(R.string.achievement_fired_up_id))) {
+                    prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_FIRED_UP, true).apply();
+                    mOutbox.mFiredUpAchievement= true;
+                }
+                else if (id.equals(getString(R.string.achievement_in_no_time_id))) {
+                    prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_IN_NO_TIME, true).apply();
+                    mOutbox.mInNoTimeAchievement = true;
+                }
+                else if (id.equals(getString(R.string.achievement_flawless_id))) {
+                    prefs.edit().putBoolean(Constants.PREFS_ACHIEVEMENT_FLAWLESS, true).apply();
+                    mOutbox.mFlawlessAchievement = true;
+                }
             }
         }
 

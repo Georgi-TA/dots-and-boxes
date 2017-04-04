@@ -8,6 +8,7 @@
 
     <color name="scorePlayer1">#21C3E0</color>
     <color name="scorePlayer2">#FC6470</color>
+    <color name="progress_bar">#DFDFDF</color>
 
     <!-- Material colors -->
     <color name="colorAccent">#a31720</color>
@@ -18,7 +19,6 @@
     <color name="backgroundDarker">#CCCCCC</color>
     <color name="textColorPrimary">#FEFEFE</color>
     <color name="textColorPrimaryDark">#404040</color>
-
 
     <!-- Settings -->
     <color name="settings_icons">#757575</color>

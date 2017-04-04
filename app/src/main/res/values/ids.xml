@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_id">733740911732</string>
+
     <string name="achievement_started_up_id">CgkI9Jj3sq0VEAIQAg</string>
     <string name="achievement_winner_winner_id">CgkI9Jj3sq0VEAIQAw</string>
+    <string name="achievement_fired_up_id">CgkI9Jj3sq0VEAIQBA</string>
+    <string name="achievement_in_no_time_id">CgkI9Jj3sq0VEAIQBQ</string>
+    <string name="achievement_flawless_id">CgkI9Jj3sq0VEAIQBg</string>
+
 </resources>

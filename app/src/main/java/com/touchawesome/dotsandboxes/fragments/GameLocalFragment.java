@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -63,6 +64,18 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
     private Vibrator vibrator;
 
+    private CountDownTimer progressTimer = new CountDownTimer(400, 4) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            progressBar.setProgress((int) ((float) millisUntilFinished / 4f));
+        }
+
+        @Override
+        public void onFinish() {
+            progressBar.setProgress(0);
+        }
+    };
+
     public static GameLocalFragment newInstance(Bundle args) {
         GameLocalFragment fragment = new GameLocalFragment();
         fragment.setArguments(args);
@@ -110,26 +123,36 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
 
         protected void onPreExecute () {
-            blockBoard();
+            boardView.disableInteraction();
+            progressBar.setProgress(100);
+            progressTimer.start();
         }
 
         protected Edge doInBackground(Void... params) {
             Edge edge = bot.getNextMove();
             try {
-                Thread.sleep(350);
+                Thread.sleep(400);
             }
-            catch (InterruptedException e) {
+            catch(InterruptedException e){
                 e.printStackTrace();
             }
             return edge;
         }
 
-        protected void onProgressUpdate(Integer... progress) { }
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
 
         protected void onPostExecute(Edge result) {
             Log.d(TAG, "onPostExecute: " + result.getKey());
 
             takeTurnFromBot(result);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressTimer.cancel();
         }
     }
 
@@ -142,18 +165,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         }
         else {
             boardView.invalidate();
-            unblockBoard();
+            boardView.enableInteraction();
         }
-    }
-
-    private void blockBoard() {
-        boardView.disableInteraction();
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void unblockBoard() {
-        boardView.enableInteraction();
-        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -203,7 +216,6 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
         scorePlayer2.setTypeface(Globals.kgTrueColors);
 
-
         ImageView imagePlayer1Border = (ImageView) root.findViewById(R.id.player1_border);
         ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
 
@@ -231,7 +243,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
             }
         }
 
-        unblockBoard();
+        boardView.enableInteraction();
         return root;
     }
 
@@ -301,8 +313,8 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         args.putInt(ARG_PLAYER2_SCORE, player2Score);
         args.putSerializable(ARG_GAME_MODE, mode);
 
-
-        mListener.onGameLocalFragmentInteraction(WinnerFragment.FRAGMENT_ID, args);
+        if (mListener != null)
+            mListener.onWinFragmentLoad(WinnerFragment.FRAGMENT_ID, args);
     }
 
     @Override
@@ -311,7 +323,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
     }
 
     public interface OnFragmentInteractionListener {
-        void onGameLocalFragmentInteraction(int fragmentId, Bundle args);
+        void onWinFragmentLoad(int fragmentId, Bundle args);
         void onSoundRequested();
     }
 

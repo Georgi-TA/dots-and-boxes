@@ -39,8 +39,11 @@
     <string name="pref_key_vibrate">pref_vibrate</string>
 
     <!-- Achievements -->
-    <string name="achievement_started_up_unlocked">Started up!</string>
+    <string name="achievement_started_up_unlocked">Started up</string>
     <string name="achievement_winner_winner_unlocked">Winner, winner!</string>
+    <string name="achievement_fired_up_unlocked">Fired up</string>
+    <string name="achievement_in_no_time_unlocked">In no time</string>
+    <string name="achievement_flawless_unlocked">Flawless</string>
 
     <string name="remote_service_disconnected">Remove service disconnected.</string>
     <string name="remote_service_connected">Remote service connected</string>

@@ -64,25 +64,25 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 //                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, gameFragment);
         transaction.commit();
+
+        // log the time of game start
+        SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE);
+        prefs.edit().putLong(Constants.PREFS_ACHIEVEMENT_START_TIME, System.currentTimeMillis()).apply();
     }
 
     @Override
-    public void onGameLocalFragmentInteraction(int fragmentId, Bundle args) {
+    public void onWinFragmentLoad(int fragmentId, Bundle args) {
         if (fragmentId == WinnerFragment.FRAGMENT_ID) {
             int scorePlayer1 = args.getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
             int scorePlayer2 = args.getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
             Game.Mode mode = (Game.Mode) args.getSerializable(GameLocalFragment.ARG_MODE);
 
-            // unlock first achievement
-            unlockAchievement(R.string.achievement_started_up_id, getString(R.string.achievement_started_up_unlocked));
-
             // check for achievements
-            checkForAchievements(scorePlayer1, scorePlayer2, mode);
+            long startTimeInMillis = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE).getLong(Constants.PREFS_ACHIEVEMENT_START_TIME, System.currentTimeMillis());
+            long time = System.currentTimeMillis() - startTimeInMillis;
+            checkForAchievements(scorePlayer1, scorePlayer2, time, mode);
 
-            // push those accomplishments to the cloud, if signed in
-            pushAccomplishments();
-
-            WinnerFragment dialog = WinnerFragment.newInstance(args);
+           WinnerFragment dialog = WinnerFragment.newInstance(args);
             dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
