@@ -1,5 +1,6 @@
 package com.touchawesome.dotsandboxes.activities;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import com.touchawesome.dotsandboxes.utils.Constants;
 
 public class TutorialActivity extends AppCompatActivity {
 
+    private BoardView hintBoardView;
     private BoardView boardView;
     private TextView textSection1;
     private LinearLayout section2;
@@ -38,6 +41,7 @@ public class TutorialActivity extends AppCompatActivity {
 
         textSection1 = (TextView) findViewById(R.id.instructions_part_1);
         boardView = (BoardView) findViewById(R.id.tutorial_board);
+        hintBoardView = (BoardView) findViewById(R.id.tutorial_board_hint);
 
         section2 = (LinearLayout) findViewById(R.id.instructions_part_2);
         section2.setAlpha(0);
@@ -73,6 +77,46 @@ public class TutorialActivity extends AppCompatActivity {
 
         boardView.setGame(tutorialGame);
         boardView.enableInteraction();
+
+        Game tutorialHintGame = new Game(2, 2);
+        tutorialHintGame.getBoard().loadBoard("0,4,0,1");
+        hintBoardView.setGame(tutorialHintGame);
+        hintBoardView.disableInteraction();
+        hintBoardView.setAlpha(0);
+        findViewById(R.id.tutorial_screen_layout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hintBoardView.setAlpha(0);
+                hintBoardView.setVisibility(View.VISIBLE);
+
+                hintBoardView.animate().alpha(1).setDuration(getResources().getInteger(R.integer.slide_duration)).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        hintBoardView.animate().alpha(0).setDuration(getResources().getInteger(R.integer.slide_duration));
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+
+                return true;
+            }
+        });
+
+
         tutorialGame.registerListener(new Game.GameListener() {
             @Override
             public void onScoreChange(Game.Player player, int score) {
@@ -95,7 +139,7 @@ public class TutorialActivity extends AppCompatActivity {
 
     private void completeTutorial() {
         SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_GENERAL, Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(Constants.TUTORIAL_COMLETE, true).apply();
+        prefs.edit().putBoolean(Constants.TUTORIAL_COMPLETE, true).apply();
 
         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(mainActivity);

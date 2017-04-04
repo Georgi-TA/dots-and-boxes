@@ -16,6 +16,7 @@ import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.achievement.AchievementBuffer;
 import com.google.android.gms.games.achievement.Achievements;
+import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
@@ -110,6 +111,15 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
         gameFragment.setArguments(arguments);
 
         loadGameFragment();
+    }
+
+    @Override
+    public void onAchievementsRequested() {
+        if (isSignedIn()) {
+            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), RC_UNUSED);
+        } else {
+            BaseGameUtils.makeSimpleDialog(this, getString(R.string.achievements_not_available)).show();
+        }
     }
 
     @Override

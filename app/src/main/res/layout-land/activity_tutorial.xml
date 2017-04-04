@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/tutorial_screen_layout"
     tools:context="com.touchawesome.dotsandboxes.activities.TutorialActivity">
 
     <android.support.v7.widget.Toolbar
@@ -37,16 +38,29 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
-    <com.touchawesome.dotsandboxes.views.BoardView
-        android:id="@+id/tutorial_board"
+    <FrameLayout
+        android:id="@+id/tutorial_board_layout"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="16dp"
-        android:padding="4dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instructions_part_1" />
+        app:layout_constraintTop_toBottomOf="@+id/instructions_part_1" >
+
+        <com.touchawesome.dotsandboxes.views.BoardView
+            android:id="@+id/tutorial_board_hint"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:padding="4dp"/>
+
+        <com.touchawesome.dotsandboxes.views.BoardView
+            android:id="@+id/tutorial_board"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:padding="4dp"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/instructions_part_2"
@@ -58,7 +72,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tutorial_board"
+        app:layout_constraintTop_toBottomOf="@+id/tutorial_board_layout"
         android:showDividers="middle"
         android:dividerPadding="20dp"
         android:divider="@drawable/list_divider">
