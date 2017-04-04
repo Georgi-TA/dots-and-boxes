@@ -21,11 +21,10 @@ public class SplashActivity extends AppCompatActivity {
             Intent nextActivity;
             SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME_GENERAL, Context.MODE_PRIVATE);
 
-            // TODO: 03.04.17 uncomment to not show the tutorial every time
-//            if (prefs.getBoolean(Constants.TUTORIAL_COMLETE, false))
+            if (!prefs.getBoolean(Constants.TUTORIAL_COMPLETE, false))
                 nextActivity = new Intent(getApplicationContext(), TutorialActivity.class);
-//            else
-//                nextActivity = new Intent(getApplicationContext(), MainActivity.class);
+            else
+                nextActivity = new Intent(getApplicationContext(), MainActivity.class);
 
             startActivity(nextActivity);
             finish();

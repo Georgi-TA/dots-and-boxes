@@ -48,7 +48,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     private boolean mAutoStartSignInFlow = true;
 
     // request codes we use when invoking an external activity
-    private static final int RC_UNUSED = 5001;
+    protected static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
 
     // achievements and scores we're pending to push to the cloud
