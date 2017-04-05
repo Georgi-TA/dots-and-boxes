@@ -21,5 +21,5 @@ public class Constants {
 
     public static final String PREFS_NAME_GENERAL = PACKAGE_NAME + "general.name";
 
-    public static final String TUTORIAL_COMPLETE = PACKAGE_NAME + "tutorial.comlete";
+    public static final String TUTORIAL_COMPLETE = PACKAGE_NAME + "tutorial.complete";
 }
