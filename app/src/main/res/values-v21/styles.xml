@@ -132,8 +132,8 @@
     </style>
 
     <style name="BottomBarButton" parent="Widget.AppCompat.ImageButton">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_width">@dimen/bottom_bar_button_size</item>
+        <item name="android:layout_height">@dimen/bottom_bar_button_size</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@drawable/bg_bottom_bar_button</item>
