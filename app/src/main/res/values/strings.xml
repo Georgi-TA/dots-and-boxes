@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="coming_soon">Coming soon&#8230;</string>
+    <string name="cd_menu_button">Menu Button</string>
 
     <!-- Main menu -->
     <string name="menu_title">Dots &amp; Boxes</string>

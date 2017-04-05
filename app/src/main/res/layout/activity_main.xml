@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background">
 
     <android.support.v7.widget.Toolbar
@@ -13,16 +14,16 @@
         android:id="@+id/title"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
-
         android:layout_marginTop="32dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/db_logo"
-            android:padding="32dp"/>
+            android:padding="4dp"/>
 
     </LinearLayout>
 
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp">
 
         <ImageButton
@@ -57,6 +59,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/buttonPanel"
         android:layout_below="@id/title"
+        android:layout_marginTop="64dp"
         android:clipChildren="false"/>
 
 </RelativeLayout>

@@ -155,9 +155,11 @@ public class Game {
             if (player1Score + player2Score == maxScore) {
                 if (player1Score == player2Score) {
                     notifyGameEnd(Player.NONE);
-                } else if (player1Score > player2Score) {
+                }
+                else if (player1Score > player2Score) {
                     notifyGameEnd(Player.PLAYER1);
-                } else {
+                }
+                else {
                     notifyGameEnd(Player.PLAYER2);
                 }
 

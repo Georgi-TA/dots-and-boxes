@@ -1,15 +1,10 @@
 package com.touchawesome.dotsandboxes.game.models;
 
-import android.util.Log;
-
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by scelus on 15.03.17
@@ -32,6 +27,7 @@ public class PlayerBot {
         miniMaxBoard.loadBoard(board.toString());
 
         ArrayList<Edge> completionMoves = getCompletionMoves();
+        Collections.shuffle(completionMoves);
         if (completionMoves.size() > 0)
             return completionMoves.get(0);
 
@@ -40,9 +36,9 @@ public class PlayerBot {
         return availableMoves.get(0);
     }
 
-    /**
-     * Previous version of the method above
-     */
+//    /**
+//     * Previous version of the method above
+//     */
 //        Graph gameTree = game.getGameTree();
 //
 //        // pre-generate the moves
@@ -78,20 +74,20 @@ public class PlayerBot {
 //            gameTree.removeEdge(move);
 //        }
 
+//
+//    /**
+//     * Serves as an utility function for the minimax algorithm
+//     *
+//     * @param board the board which represents the current game state.
+//     * @return The integer value which is the maximum score that <b>Player 2</b> can make
+//     */
+//    private int getValue(Board board) {
+//        return maxResult + board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
+//    }
 
-    /**
-     * Serves as an utility function for the minimax algorithm
-     *
-     * @param board the board which represents the current game state.
-     * @return The integer value which is the maximum score that <b>Player 2</b> can make
-     */
-    private int getValue(Board board) {
-        return maxResult + board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
-    }
-
-    /**
-     *  Partially implemented minimax algorithm
-     */
+//    /**
+//     *  Partially implemented minimax algorithm
+//     */
 //    private int minimax(int level, Board board, boolean isMaximizer, int alpha, int beta) {
 //        Graph gameTree = game.getGameTree();
 //
@@ -159,10 +155,10 @@ public class PlayerBot {
      */
     private ArrayList<Edge> getCompletionMoves() {
 
-
-        /**
-         * Previous imlpementation of this method
-         */
+//
+//        /**
+//         * Previous imlpementation of this method
+//         */
 //        Board board = game.getBoard();
 //        int dots_rows = board.getRows();
 //

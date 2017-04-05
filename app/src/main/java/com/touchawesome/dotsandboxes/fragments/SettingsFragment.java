@@ -11,7 +11,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
+import com.touchawesome.dotsandboxes.services.MusicService;
 
 import static android.content.ContentValues.TAG;
 
@@ -21,16 +21,14 @@ import static android.content.ContentValues.TAG;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
 
-    private MusicIntentService mService;
+    private MusicService mService;
     private boolean mBound = false;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         setPreferencesFromResource(R.xml.pref_settings, rootKey);
-
         getPreferenceScreen().findPreference(getString(R.string.pref_key_music)).setOnPreferenceChangeListener(this);
-
         getPreferenceScreen().findPreference(getString(R.string.pref_key_music)).setPersistent(true);
     }
 
@@ -40,13 +38,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         if (preference.getKey().equals(getString(R.string.pref_key_music))) {
             if ((boolean) newValue) {
-                Intent intent = new Intent(getContext(), MusicIntentService.class);
-                intent.setAction(MusicIntentService.ACTION_START_MUSIC);
+                Intent intent = new Intent(getContext(), MusicService.class);
+                intent.setAction(MusicService.ACTION_START_MUSIC);
                 mService.sendCommand(intent);
             }
             else {
-                Intent intent = new Intent(getContext(), MusicIntentService.class);
-                intent.setAction(MusicIntentService.ACTION_STOP_MUSIC);
+                Intent intent = new Intent(getContext(), MusicService.class);
+                intent.setAction(MusicService.ACTION_STOP_MUSIC);
                 mService.sendCommand(intent);
             }
         }
@@ -62,17 +60,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @Override
     public void onStop() {
-        super.onStop();
         doUnbindService();
+        super.onStop();
     }
 
     void doBindService() {
-        Intent intent = new Intent(getContext(), MusicIntentService.class);
+        Intent intent = new Intent(getContext(), MusicService.class);
 
         // start playing music if the user specified so in the settings screen
         boolean playMusic = android.preference.PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(getString(R.string.pref_key_music), false);
         if (playMusic) {
-            intent.setAction(MusicIntentService.ACTION_START_MUSIC);
+            intent.setAction(MusicService.ACTION_START_MUSIC);
         }
 
         getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -91,7 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
      */
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = ((MusicIntentService.MusicBinder) service).getService();
+            mService = ((MusicService.MusicBinder) service).getService();
         }
 
         public void onServiceDisconnected(ComponentName className) {

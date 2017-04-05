@@ -84,8 +84,6 @@ public class WinnerFragment extends DialogFragment {
         TextView title = (TextView) view.findViewById(R.id.result_state);
         title.setTypeface(Globals.kgTrueColors);
 
-        title.setText(R.string.wins);
-
         TextView name = (TextView) view.findViewById(R.id.winner_name);
         name.setTypeface(Globals.kgTrueColors);
         name.setText(winnerName);
@@ -93,6 +91,7 @@ public class WinnerFragment extends DialogFragment {
         switch (winner) {
             case PLAYER1:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer1));
+                title.setText(R.string.wins);
                 break;
             case NONE:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.textColorPrimaryDark));
@@ -100,6 +99,7 @@ public class WinnerFragment extends DialogFragment {
                 break;
             case PLAYER2:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer2));
+                title.setText(R.string.wins);
                 break;
             default:
         }

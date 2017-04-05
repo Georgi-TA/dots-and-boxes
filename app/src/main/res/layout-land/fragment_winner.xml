@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:paddingBottom="16dp"
@@ -33,7 +33,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/player2name"
             android:textColor="@color/boxPlayer2"
-            android:textSize="24sp" />
+            android:textSize="@dimen/subtitle_text_size" />
 
         <TextView
             android:id="@+id/result_state"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/wins"
-            android:textSize="54sp" />
+            android:textSize="@dimen/title_text_size" />
 
         <TextView
             android:id="@+id/result_label"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/winner_points"
-            android:textSize="38sp" />
+            android:textSize="@dimen/subtitle_text_size" />
 
         <LinearLayout
             android:layout_width="wrap_content"

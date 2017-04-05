@@ -178,13 +178,15 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
 
         Bundle args = getArguments();
         if (args != null) {
-            if (args.containsKey(ARG_MODE))
+            if (args.containsKey(ARG_MODE)) {
                 mode = (Game.Mode) getArguments().getSerializable(ARG_MODE);
-            else
+            }
+            else {
                 mode = Game.Mode.PLAYER;
+            }
 
-            rows = args.getInt("rows", 3);
-            columns = args.getInt("columns", 3);
+            rows = args.getInt("rows", rows);
+            columns = args.getInt("columns", columns);
         }
         else {
             mode = Game.Mode.CPU;

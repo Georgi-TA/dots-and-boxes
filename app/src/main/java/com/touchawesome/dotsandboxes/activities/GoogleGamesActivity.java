@@ -114,6 +114,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         if (mResolvingConnectionFailure) {
             Log.d(TAG, "onConnectionFailed() ignoring connection failure; already resolving.");
+            Log.e(TAG, "Error number " + connectionResult.getErrorMessage() + "  code: " +  connectionResult.getErrorCode());
             return;
         }
 
@@ -160,7 +161,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
             Games.Achievements.increment(mGoogleApiClient, getString(R.string.achievement_winner_winner_id), 1);
 
             if (mOutbox.wins >= 10 && !mOutbox.mWinnerWinnerAchievement)
-                unlockAchievement(R.string.achievement_winner_winner_id, getString(R.string.achievement_winner_winner_unlocked));
+                Games.Achievements.increment(mGoogleApiClient, getString(R.string.achievement_winner_winner_id), 1);
 
             if (mOutbox.consecutiveWins >= 10 && !mOutbox.mFiredUpAchievement)
                 unlockAchievement(R.string.achievement_fired_up_id, getString(R.string.achievement_fired_up_unlocked));

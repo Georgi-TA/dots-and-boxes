@@ -9,8 +9,9 @@
         android:layout_height="wrap_content"
         android:text="@string/coming_soon"
         android:id="@+id/comingSoonText"
+        android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:textColor="@color/textColorPrimaryDark"
-        android:textSize="50dp" />
+        android:textSize="50sp" />
 </RelativeLayout>

@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.touchawesome.dotsandboxes.R;
 
-public class MusicIntentService extends Service implements MediaPlayer.OnErrorListener {
+public class MusicService extends Service implements MediaPlayer.OnErrorListener {
     private static final String TAG = "MusicService";
     private final IBinder mBinder = new MusicBinder();
     private MediaPlayer mMusicPlayer;
@@ -20,7 +20,7 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
     public static final String ACTION_STOP_MUSIC = "com.touchawesome.dotsandboxes.services.action.STOP_MUSIC";
     public static final String ACTION_PLAY_SOUND = "com.touchawesome.dotsandboxes.services.action.PLAY_SOUND";
 
-    public MusicIntentService() {
+    public MusicService() {
         super();
     }
 
@@ -115,6 +115,7 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
         if (mMusicPlayer != null) {
             try {
                 mMusicPlayer.stop();
+                mMusicPlayer.reset();
                 mMusicPlayer.release();
             } finally {
                 mMusicPlayer = null;
@@ -147,8 +148,8 @@ public class MusicIntentService extends Service implements MediaPlayer.OnErrorLi
     }
 
     public class MusicBinder extends Binder {
-        public MusicIntentService getService() {
-            return MusicIntentService.this;
+        public MusicService getService() {
+            return MusicService.this;
         }
     }
 

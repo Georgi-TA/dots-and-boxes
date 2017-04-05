@@ -24,7 +24,6 @@ public class TutorialActivity extends AppCompatActivity {
 
     private BoardView hintBoardView;
     private BoardView boardView;
-    private TextView textSection1;
     private LinearLayout section2;
     private Button buttonCompleteTutorial;
     private Game tutorialGame;
@@ -36,10 +35,10 @@ public class TutorialActivity extends AppCompatActivity {
 
         // add the toolbar
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        textSection1 = (TextView) findViewById(R.id.instructions_part_1);
         boardView = (BoardView) findViewById(R.id.tutorial_board);
         hintBoardView = (BoardView) findViewById(R.id.tutorial_board_hint);
 

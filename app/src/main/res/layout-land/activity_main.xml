@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
     <LinearLayout
         android:id="@+id/title"
@@ -25,12 +26,12 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/buttonPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:gravity="center_horizontal">
 
@@ -46,8 +47,8 @@
 
         <ImageButton
             android:id="@+id/button_settings"
-            android:src="@drawable/ic_button_settings"
-            style="@style/BottomBarButton" />
+            style="@style/BottomBarButton"
+            android:src="@drawable/ic_button_settings"/>
     </LinearLayout>
 
     <FrameLayout

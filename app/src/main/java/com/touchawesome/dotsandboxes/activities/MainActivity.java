@@ -29,10 +29,6 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private String TAG = MainActivity.class.getName();
-
-    private static final String ARG_GAME_IN_PROGRESS = "com.touchawesome.args.gameinprogress";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +36,6 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
 
         // add the toolbar
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        if (savedInstanceState != null) {
-            // clear the backstack if the game is not in progress
-            if (savedInstanceState.containsKey(ARG_GAME_IN_PROGRESS) && !savedInstanceState.getBoolean(ARG_GAME_IN_PROGRESS)) {
-                while (getSupportFragmentManager().getBackStackEntryCount() > 0)
-                    getSupportFragmentManager().popBackStackImmediate();
-            }
-        } else {
-            loadFragment(MainMenuFragment.FRAGMENT_ID, null);
-        }
-
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         findViewById(R.id.button_settings).setOnClickListener(new View.OnClickListener() {
@@ -76,14 +61,17 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
 
         if (!achievementsChecked)
             new CheckForUnlockedAchievementsTask().execute();
+
+        loadFragment(MainMenuFragment.FRAGMENT_ID, new Bundle());
     }
 
     private void showAchievementsPage() {
-        if (mGoogleApiClient != null && isSignedIn()) {
-            onShowAchievementsRequested();
-        }
-        else {
-            mGoogleApiClient.connect();
+        if (mGoogleApiClient != null) {
+            if (isSignedIn()) {
+                onShowAchievementsRequested();
+            } else {
+                mGoogleApiClient.connect();
+            }
         }
     }
 
@@ -92,8 +80,10 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
 
-        if (backStackCount >= 1)
+        // remove fragments when navigating back
+        if (backStackCount >= 1) {
             fragmentManager.popBackStack();
+        }
 
         return super.onSupportNavigateUp();
 
@@ -103,8 +93,10 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     public void onResume() {
         super.onResume();
 
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+        // return the user to the begin
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     private void loadFragment(int fragmentId, Bundle args) {
@@ -149,19 +141,9 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         transaction.commit();
     }
 
-    private void startNetworkPlay() {
-        loadFragment(NetworkMenuFragment.FRAGMENT_ID, new Bundle());
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // check if game is in progress
-        FragmentManager manager = getSupportFragmentManager();
-        if (manager.getBackStackEntryAt(manager.getBackStackEntryCount() - 1).getName().equals(GameLocalFragment.class.getName()))
-            outState.putBoolean(ARG_GAME_IN_PROGRESS, true);
-        super.onSaveInstanceState(outState);
-    }
-
+    /**
+     * Control the behaviour of the app bar and finish the activity when there are no more fragments left
+     */
     @Override
     public void onBackStackChanged() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -196,15 +178,11 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
 
     @Override
     public void onNetworkPlaySelected() {
-        startNetworkPlay();
+        loadFragment(NetworkMenuFragment.FRAGMENT_ID, new Bundle());
     }
 
     @Override
-    public void onLayoutChosen(Bundle args, int rows, int columns) {
-        args.putInt("rows", rows);
-        args.putInt("columns", columns);
-        // args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
-
+    public void onLayoutChosen(Bundle args) {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);
         startActivity(intent);

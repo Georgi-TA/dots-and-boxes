@@ -20,7 +20,9 @@ public class SettingsActivity extends AppCompatActivity {
         // Load the toolbar as a support appbar
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Display the fragment as the main content.
         getSupportFragmentManager().beginTransaction()

@@ -8,23 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.Window;
 
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.GamesStatusCodes;
-import com.google.android.gms.games.achievement.Achievement;
-import com.google.android.gms.games.achievement.AchievementBuffer;
-import com.google.android.gms.games.achievement.Achievements;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
 import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
+import com.touchawesome.dotsandboxes.services.MusicService;
 import com.touchawesome.dotsandboxes.utils.Constants;
-
-import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends GoogleGamesActivity implements GameLocalFragment.OnFragmentInteractionListener,
                                                                     WinnerFragment.OnFragmentInteractionListener,
@@ -61,8 +53,6 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
     private void loadGameFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-//                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, gameFragment);
         transaction.commit();
 
@@ -79,11 +69,14 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
             Game.Mode mode = (Game.Mode) args.getSerializable(GameLocalFragment.ARG_MODE);
 
             // check for achievements
-            long startTimeInMillis = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE).getLong(Constants.PREFS_ACHIEVEMENT_START_TIME, System.currentTimeMillis());
-            long time = System.currentTimeMillis() - startTimeInMillis;
-            checkForAchievements(scorePlayer1, scorePlayer2, time, mode);
+            if (isSignedIn()) {
+                long startTimeInMillis = getSharedPreferences(Constants.PREFS_NAME_ACHIEVEMENTS, MODE_PRIVATE)
+                        .getLong(Constants.PREFS_ACHIEVEMENT_START_TIME, System.currentTimeMillis());
+                long time = System.currentTimeMillis() - startTimeInMillis;
+                checkForAchievements(scorePlayer1, scorePlayer2, time, mode);
+            }
 
-           WinnerFragment dialog = WinnerFragment.newInstance(args);
+            WinnerFragment dialog = WinnerFragment.newInstance(args);
             dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
@@ -93,7 +86,7 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
     @Override
     public void onSoundRequested() {
-        mService.sendCommand(new Intent(MusicIntentService.ACTION_PLAY_SOUND));
+        mService.sendCommand(new Intent(MusicService.ACTION_PLAY_SOUND));
     }
 
     @Override

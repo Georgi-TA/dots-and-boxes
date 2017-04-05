@@ -9,31 +9,31 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.services.MusicIntentService;
+import com.touchawesome.dotsandboxes.services.MusicService;
 
 /**
  * Created by scelus on 31.03.17
  */
 
 public class MusicEnabledActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getName();
-    public MusicIntentService mService;
+
+    public MusicService mService;
     private boolean mBoundMusicService = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = ((MusicIntentService.MusicBinder) service).getService();
+            mService = ((MusicService.MusicBinder) service).getService();
 
             // start playing music if the user specified so in the settings screen
             boolean playMusic = PreferenceManager.getDefaultSharedPreferences(MusicEnabledActivity.this).getBoolean(getString(R.string.pref_key_music), false);
 
             if (playMusic) {
-                mService.sendCommand(new Intent(MusicIntentService.ACTION_START_MUSIC));
+                mService.sendCommand(new Intent(MusicService.ACTION_START_MUSIC));
             }
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            mService.sendCommand(new Intent(MusicIntentService.ACTION_STOP_MUSIC));
+            mService.sendCommand(new Intent(MusicService.ACTION_STOP_MUSIC));
             mService = null;
         }
     };
@@ -41,7 +41,7 @@ public class MusicEnabledActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, MusicIntentService.class);
+        Intent intent = new Intent(this, MusicService.class);
 
         if (!mBoundMusicService) {
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
