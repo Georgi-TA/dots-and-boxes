@@ -4,21 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
-
-import static com.google.android.gms.internal.zzt.TAG;
 
 /**
  * Class responsible for displaying and interacting with the board
@@ -261,7 +255,7 @@ public class BoardView extends View {
             width = widthSize;
         } else if (widthMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
-            width = Math.min(desiredWidth, widthSize);
+            width = Math.max(desiredWidth, widthSize);
         } else {
             //Be whatever you want
             width = desiredWidth;
@@ -273,7 +267,7 @@ public class BoardView extends View {
             height = heightSize;
         } else if (heightMode == MeasureSpec.AT_MOST) {
             //Can't be bigger than...
-            height = Math.min(desiredHeight, heightSize);
+            height = Math.max(desiredHeight, heightSize);
         } else {
             //Be whatever you want
             height = desiredHeight;

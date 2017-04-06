@@ -38,16 +38,19 @@
         <ImageButton
             android:id="@+id/button_about"
             style="@style/BottomBarButton"
-            android:src="@drawable/ic_button_aboutus"/>
+            android:padding="8dp"
+            android:src="@drawable/ic_about"/>
 
         <ImageButton
             android:id="@+id/button_achievements"
             style="@style/BottomBarButton"
-            android:src="@drawable/ic_button_medal"/>
+            android:padding="8dp"
+            android:src="@drawable/ic_medal"/>
 
         <ImageButton
             android:id="@+id/button_settings"
-            android:src="@drawable/ic_button_settings"
+            android:padding="8dp"
+            android:src="@drawable/ic_settings"
             style="@style/BottomBarButton" />
 
     </LinearLayout>

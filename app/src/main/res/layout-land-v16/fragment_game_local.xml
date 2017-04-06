@@ -1,10 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.touchawesome.dotsandboxes.fragments.GameLocalFragment">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -16,14 +17,14 @@
             android:id="@+id/turn_layout_player_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:layout_constraintTop_creator="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="16dp">
 
 
             <FrameLayout
@@ -32,7 +33,7 @@
 
                 <ImageView
                     android:id="@+id/player1_border"
-                    style="@style/PlayerImageBorder"/>
+                    style="@style/PlayerImageBorder" />
 
                 <ImageView
                     android:id="@+id/player1_image"
@@ -52,54 +53,76 @@
 
         <TextView
             android:id="@+id/turnText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:paddingTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="You win"
             android:textSize="24sp"
             android:background="@color/primary"
             android:textColor="@color/textColorPrimary"
-            android:layout_alignParentTop="true"/>
+            tools:layout_constraintRight_creator="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="parent"
+            tools:layout_constraintBaseline_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:progress="0"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
             android:max="100"
-            android:layout_below="@+id/turnText"
+            android:progress="0"
             android:progressDrawable="@drawable/turn_progress_bar"
-            android:layout_alignLeft="@+id/boardView"
-            android:layout_alignStart="@+id/boardView"
-            android:layout_alignRight="@+id/boardView"
-            android:layout_alignEnd="@+id/boardView" />
+            app:layout_constraintLeft_toLeftOf="@+id/boardView"
+            app:layout_constraintRight_toRightOf="@+id/boardView"
+            app:layout_constraintTop_toBottomOf="@+id/turnText"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"
-            android:layout_width="320dp"
-            android:layout_height="320dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/progress_bar"
-            android:layout_toRightOf="@+id/turn_layout_player_1"
-            android:layout_toLeftOf="@+id/turn_layout_player_2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:background="@color/background"
-            android:padding="32dp" />
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/turn_layout_player_1"
+            app:layout_constraintRight_toLeftOf="@+id/turn_layout_player_2"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_constraintBottom_creator="1"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
 
         <LinearLayout
             android:id="@+id/turn_layout_player_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:layout_constraintTop_creator="1"
+            tools:layout_constraintRight_creator="1"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="@+id/boardView"
+            android:layout_marginRight="16dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -124,5 +147,5 @@
                 android:text="0" />
 
         </LinearLayout>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

@@ -21,9 +21,9 @@
             android:layout_width="@dimen/winner_image_size"
             android:layout_height="@dimen/winner_image_size"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-18dp"
-            android:scaleType="fitStart"
-            android:src="@drawable/ic_button_medal" />
+            android:layout_marginTop="-8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_medal" />
 
         <TextView
             android:id="@+id/winner_name"
@@ -79,7 +79,8 @@
             <ImageButton
                 android:id="@+id/button_achievements"
                 style="@style/BottomBarButton"
-                android:src="@drawable/ic_button_medal"/>
+                android:padding="8dp"
+                android:src="@drawable/ic_icon_cup"/>
 
             <ImageButton
                 android:id="@+id/winner_menu_button"

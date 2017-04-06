@@ -79,7 +79,8 @@
             <ImageButton
                 android:id="@+id/button_achievements"
                 style="@style/BottomBarButton"
-                android:src="@drawable/ic_button_medal"/>
+                android:padding="8dp"
+                android:src="@drawable/ic_icon_cup"/>
 
             <ImageButton
                 android:id="@+id/winner_menu_button"

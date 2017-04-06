@@ -65,10 +65,12 @@
             android:layout_height="4dp"
             android:progress="0"
             android:max="100"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/boardView"
+            app:layout_constraintRight_toRightOf="@+id/boardView"
             app:layout_constraintTop_toBottomOf="@+id/scoreLayout"
-            android:progressDrawable="@drawable/turn_progress_bar"      />
+            android:progressDrawable="@drawable/turn_progress_bar"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp" />
 
     </android.support.constraint.ConstraintLayout>
 </RelativeLayout>
