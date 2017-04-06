@@ -25,7 +25,7 @@ public class MusicEnabledActivity extends AppCompatActivity {
             mService = ((MusicService.MusicBinder) service).getService();
 
             // start playing music if the user specified so in the settings screen
-            boolean playMusic = PreferenceManager.getDefaultSharedPreferences(MusicEnabledActivity.this).getBoolean(getString(R.string.pref_key_music), false);
+            boolean playMusic = PreferenceManager.getDefaultSharedPreferences(MusicEnabledActivity.this).getBoolean(getString(R.string.pref_key_music), true);
 
             if (playMusic) {
                 mService.sendCommand(new Intent(MusicService.ACTION_START_MUSIC));

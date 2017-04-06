@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minHeight="320dp"
+    android:minHeight="340dp"
     android:minWidth="320dp"
     android:background="@drawable/box"
     android:orientation="vertical">
@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_medal" />
+            android:src="@drawable/ic_icon_medal" />
 
         <TextView
             android:id="@+id/winner_name"
@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
             android:text="@string/player2name"
             android:textColor="@color/boxPlayer2"
             android:textSize="28sp" />
@@ -81,7 +82,7 @@
                 android:id="@+id/button_achievements"
                 style="@style/BottomBarButton"
                 android:padding="8dp"
-                android:src="@drawable/ic_medal"/>
+                android:src="@drawable/ic_icon_cup"/>
 
             <ImageButton
                 android:id="@+id/winner_menu_button"

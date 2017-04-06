@@ -78,7 +78,7 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
     }
 
     private void createMediaPlayer() {
-        mMusicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hey_ho);
+        mMusicPlayer = MediaPlayer.create(getApplicationContext(), R.raw.komiku);
         if (mMusicPlayer != null) {
             mMusicPlayer.setLooping(true);
             mMusicPlayer.setVolume(100, 100);

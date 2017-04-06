@@ -8,6 +8,6 @@
     <dimen name="winner_image_size">72dp</dimen>
 
     <dimen name="title_text_size">32sp</dimen>
-    <dimen name="bottom_bar_button_size">64dp</dimen>
+    <dimen name="bottom_bar_button_size">72dp</dimen>
     <dimen name="main_content_margin_top">32dp</dimen>
 </resources>

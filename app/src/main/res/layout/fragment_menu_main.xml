@@ -9,11 +9,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:clipChildren="false"
         android:paddingBottom="16dp"
         android:showDividers="middle"
+        android:layout_centerVertical="true"
         android:divider="@drawable/list_divider">
 
         <Button

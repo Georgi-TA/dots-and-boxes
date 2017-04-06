@@ -37,7 +37,7 @@
         <item name="colorSwitchThumbNormal">#f1f1f1</item>
         <item name="android:colorForeground">@color/settings_icons</item>
         <item name="android:colorPrimary">@color/background_settings</item>
-        <item name="android:colorPrimaryDark">@color/background_settings</item>
+        <item name="android:colorPrimaryDark">@android:color/black</item>
         <item name="android:listDivider">@null</item>
     </style>
 

@@ -13,7 +13,7 @@
         android:id="@+id/title"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="80dp"
+        android:layout_height="86dp"
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp">
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/db_logo"
-            android:padding="8dp"/>
+            android:padding="4dp"/>
 
     </LinearLayout>
 
@@ -45,7 +45,7 @@
             android:id="@+id/button_achievements"
             style="@style/BottomBarButton"
             android:padding="8dp"
-            android:src="@drawable/ic_medal"/>
+            android:src="@drawable/ic_icon_cup"/>
 
         <ImageButton
             android:id="@+id/button_settings"

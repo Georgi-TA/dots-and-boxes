@@ -3,7 +3,6 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
 
     <LinearLayout
@@ -13,7 +12,7 @@
         android:divider="@drawable/list_divider"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:rowCount="2"
+        android:layout_centerVertical="true"
         android:showDividers="middle">
 
         <Button

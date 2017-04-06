@@ -45,7 +45,7 @@
             android:id="@+id/button_achievements"
             style="@style/BottomBarButton"
             android:padding="8dp"
-            android:src="@drawable/ic_medal"/>
+            android:src="@drawable/ic_icon_cup"/>
 
         <ImageButton
             android:id="@+id/button_settings"

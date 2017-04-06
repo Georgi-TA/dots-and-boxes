@@ -13,6 +13,7 @@
         android:paddingBottom="16dp"
         android:clipChildren="false"
         android:showDividers="middle"
+        android:layout_centerVertical="true"
         android:divider="@drawable/list_divider">
 
         <Button
