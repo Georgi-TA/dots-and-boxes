@@ -113,7 +113,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 

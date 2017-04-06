@@ -7,15 +7,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/background_settings">
-
-        <TextView
-            android:id="@+id/mainLocalTitleText"
-            android:text="@string/settings_title"
-            android:textColor="@color/textColorPrimaryDark"
-            style="@style/MenuTitle" />
-
-    </android.support.v7.widget.Toolbar>
+        android:background="@color/background_settings"/>
 
     <FrameLayout
         android:id="@+id/content"
