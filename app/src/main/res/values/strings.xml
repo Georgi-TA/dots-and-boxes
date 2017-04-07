@@ -81,6 +81,7 @@
     <string name="info_text_section_1">Dots And Boxes is a game in which you create boxes by placing lines that connect dots on a board.</string>
     <string name="info_text_section_2">The gameplay is simple. You select against who you want to play with - either a friend on the same device or a robot. After that you choose the size of the board and the game starts. Lines are placed by touching the board.</string>
     <string name="info_text_section_3">Created with care by <b>TouchAwesome</b></string>
+    <string name="leave_feedback">Leave Feedback</string>
 
     <!-- Final screen -->
     <string name="turn_text">%s\'s turn</string>
@@ -92,4 +93,9 @@
     <string name="tutorial_part_1">Touch the board to place a line</string>
     <string name="tutorial_part_2">By connecting dots you fill boxes.\nThe player with the most boxes in the end wins.</string>
     <string name="complete_tutorial">Play</string>
+
+    <!-- Feedback -->
+    <string name="feedback_subject"><![CDATA[Feedback - Dots&Boxes Alpha]]></string>
+    <string name="feedback_email">georgi@touchawesome.com</string>
+
 </resources>

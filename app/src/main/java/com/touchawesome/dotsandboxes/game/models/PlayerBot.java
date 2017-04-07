@@ -214,7 +214,7 @@ public class PlayerBot {
                 tempBoard.setLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd(), Game.Player.PLAYER2);
                 int scoreAfter = tempBoard.getScore(Game.Player.PLAYER2);
 
-                if (scoreBefore != scoreAfter) {
+                if (scoreBefore < scoreAfter) {
                     completionMoves.add(moveToMake);
                 }
 
