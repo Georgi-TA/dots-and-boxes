@@ -90,6 +90,6 @@
 
     <!-- Tutorial screen -->
     <string name="tutorial_part_1">Touch the board to place a line</string>
-    <string name="tutorial_part_2">By connecting dots you fill boxes.\nThe player with more boxes in the end wins.</string>
+    <string name="tutorial_part_2">By connecting dots you fill boxes.\nThe player with the most boxes in the end wins.</string>
     <string name="complete_tutorial">Play</string>
 </resources>
