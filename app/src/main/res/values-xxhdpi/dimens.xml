@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="menu_button_width">224dp</dimen>
+    <dimen name="menu_button_width">204dp</dimen>
     <dimen name="menu_button_height">56dp</dimen>
 
-    <dimen name="menu_box_width">222dp</dimen>
+    <dimen name="menu_box_width">202dp</dimen>
     <dimen name="menu_box_height">54dp</dimen>
     <dimen name="winner_image_size">72dp</dimen>
 

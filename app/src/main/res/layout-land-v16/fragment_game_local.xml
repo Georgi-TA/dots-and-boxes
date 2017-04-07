@@ -8,10 +8,8 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:background="@color/primary"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/turn_layout_player_1"
@@ -20,11 +18,11 @@
             android:orientation="vertical"
             tools:layout_constraintTop_creator="1"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+            android:layout_marginTop="32dp"
             tools:layout_constraintLeft_creator="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="16dp">
+            android:layout_marginLeft="16dp"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar">
 
 
             <FrameLayout
@@ -47,7 +45,8 @@
                 android:id="@+id/player1_score"
                 style="@style/ScoreView"
                 android:layout_gravity="center_horizontal"
-                android:text="0" />
+                android:text="0"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -77,7 +76,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="16dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
             android:max="100"
@@ -92,7 +91,7 @@
 
         <com.touchawesome.dotsandboxes.views.BoardView
             android:id="@+id/boardView"
-            android:layout_width="27dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
@@ -109,7 +108,8 @@
             tools:layout_constraintBottom_creator="1"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintRight_creator="1"
-            tools:layout_constraintTop_creator="1" />
+            tools:layout_constraintTop_creator="1"
+            app:layout_constraintDimensionRatio="h,1:1" />
 
         <LinearLayout
             android:id="@+id/turn_layout_player_2"
@@ -121,7 +121,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="32dp"
-            app:layout_constraintTop_toTopOf="@+id/boardView"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar"
             android:layout_marginRight="16dp">
 
             <FrameLayout
@@ -136,7 +136,8 @@
                     android:id="@+id/player2_image"
                     style="@style/PlayerImage"
                     android:padding="4dp"
-                    android:src="@drawable/ic_db_player_2" />
+                    android:src="@drawable/ic_db_player_2"
+                    tools:ignore="ContentDescription" />
 
             </FrameLayout>
 
