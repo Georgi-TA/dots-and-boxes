@@ -72,9 +72,12 @@
     <string name="five_by_five">Large (long)</string>
 
     <!-- Game screen -->
-    <string name="player1name">Player one</string>
-    <string name="player2name">Player two</string>
-    <string name="robot_name">Robot</string>
+    <string name="player1name">You</string>
+    <string name="player2name">Opponent</string>
+
+    <string name="player1TurnName">Your</string>
+    <string name="player2TurnName">Opponent\'s</string>
+    <string name="turn_text">%s turn</string>
 
     <!-- About screen -->
     <string name="title_about">About</string>
@@ -84,7 +87,7 @@
     <string name="leave_feedback">Leave Feedback</string>
 
     <!-- Final screen -->
-    <string name="turn_text">%s\'s turn</string>
+
     <string name="wins">WINS</string>
     <string name="result">Result</string>
     <string name="title_activity_tutorial">How to play</string>
@@ -98,5 +101,6 @@
     <string name="feedback_subject"><![CDATA[Feedback - Dots&Boxes Alpha]]></string>
     <string name="feedback_email">georgi@touchawesome.com</string>
     <string name="play">Play</string>
+    <string name="win">WIN</string>
 
 </resources>

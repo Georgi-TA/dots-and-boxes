@@ -102,17 +102,12 @@ public class GameFragment extends Fragment implements Game.GameListener,
         Spannable turnString;
         String playerName;
         if (player == Game.Player.PLAYER1) {
-            playerName = getString(R.string.player1name);
+            playerName = getString(R.string.player1TurnName);
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
             turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         else {
-            if (mode == Game.Mode.CPU) {
-                playerName = getString(R.string.robot_name);
-            }
-            else {
-                playerName = getString(R.string.player2name);
-            }
+            playerName = getString(R.string.player2TurnName);
 
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
             turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);

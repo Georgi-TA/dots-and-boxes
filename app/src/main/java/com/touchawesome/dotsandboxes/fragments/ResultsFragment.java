@@ -60,7 +60,7 @@ public class ResultsFragment extends DialogFragment {
         else if (player1Score < player2Score) {
             winner = Game.Player.PLAYER2;
             if (mode == Game.Mode.CPU) {
-                winnerName = getString(R.string.robot_name);
+                winnerName = getString(R.string.player2name);
             }
             else {
                 winnerName = getString(R.string.player2name);
@@ -90,7 +90,7 @@ public class ResultsFragment extends DialogFragment {
         switch (winner) {
             case PLAYER1:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer1));
-                title.setText(R.string.wins);
+                title.setText(R.string.win);
                 break;
             case NONE:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.textColorPrimaryDark));
