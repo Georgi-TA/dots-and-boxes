@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import com.touchawesome.dotsandboxes.R;
 
-public class InfoActivity extends MusicEnabledActivity {
+public class AboutActivity extends MusicEnabledActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,18 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
+import com.touchawesome.dotsandboxes.fragments.ChooseBoardSizeFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
-import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
-import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
+import com.touchawesome.dotsandboxes.fragments.GameFragment;
+import com.touchawesome.dotsandboxes.fragments.ChooseModeFragment;
 import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
-import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
+import com.touchawesome.dotsandboxes.fragments.ResultsFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class MainActivity extends GoogleGamesActivity implements MainMenuFragment.OnFragmentInteractionListener,
+public class MainActivity extends GoogleGamesActivity implements ChooseModeFragment.OnFragmentInteractionListener,
                                                                  FragmentManager.OnBackStackChangedListener,
-                                                                 ChooseLayoutFragment.OnFragmentInteractionListener,
+                                                                 ChooseBoardSizeFragment.OnFragmentInteractionListener,
                                                                  NetworkMenuFragment.Listener {
 
     static {
@@ -55,14 +55,14 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         findViewById(R.id.button_about).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), InfoActivity.class));
+                startActivity(new Intent(v.getContext(), AboutActivity.class));
             }
         });
 
         if (!achievementsChecked)
             new CheckForUnlockedAchievementsTask().execute();
 
-        loadFragment(MainMenuFragment.FRAGMENT_ID, new Bundle());
+        loadFragment(ChooseModeFragment.FRAGMENT_ID, new Bundle());
     }
 
     private void showAchievementsPage() {
@@ -102,21 +102,21 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     private void loadFragment(int fragmentId, Bundle args) {
         Fragment fragment;
         switch (fragmentId) {
-            case MainMenuFragment.FRAGMENT_ID: {
-                fragment = MainMenuFragment.newInstance(args);
+            case ChooseModeFragment.FRAGMENT_ID: {
+                fragment = ChooseModeFragment.newInstance(args);
                 break;
             }
-            case GameLocalFragment.FRAGMENT_ID: {
-                fragment = GameLocalFragment.newInstance(args);
+            case GameFragment.FRAGMENT_ID: {
+                fragment = GameFragment.newInstance(args);
                 break;
             }
-            case WinnerFragment.FRAGMENT_ID: {
-                fragment = WinnerFragment.newInstance(args);
+            case ResultsFragment.FRAGMENT_ID: {
+                fragment = ResultsFragment.newInstance(args);
 
                 break;
             }
-            case ChooseLayoutFragment.FRAGMENT_ID: {
-                fragment = ChooseLayoutFragment.newInstance(args);
+            case ChooseBoardSizeFragment.FRAGMENT_ID: {
+                fragment = ChooseBoardSizeFragment.newInstance(args);
                 break;
             }
             case NetworkMenuFragment.FRAGMENT_ID: {
@@ -165,15 +165,15 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     @Override
     public void onComputerPlaySelected() {
         Bundle args = new Bundle();
-        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
-        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+        args.putSerializable(GameFragment.ARG_MODE, Game.Mode.CPU);
+        loadFragment(ChooseBoardSizeFragment.FRAGMENT_ID, args);
     }
 
     @Override
     public void onFriendPlaySelected() {
         Bundle args = new Bundle();
-        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
-        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+        args.putSerializable(GameFragment.ARG_MODE, Game.Mode.PLAYER);
+        loadFragment(ChooseBoardSizeFragment.FRAGMENT_ID, args);
     }
 
     @Override

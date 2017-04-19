@@ -52,7 +52,7 @@
             android:theme="@style/GameTheme" />
 
         <activity
-            android:name=".activities.InfoActivity"
+            android:name=".activities.AboutActivity"
             android:label="@string/title_about"
             android:theme="@style/SettingsTheme" />
 

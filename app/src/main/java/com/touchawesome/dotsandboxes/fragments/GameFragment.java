@@ -32,7 +32,7 @@ import java.util.Locale;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class GameLocalFragment extends Fragment implements Game.GameListener,
+public class GameFragment extends Fragment implements Game.GameListener,
                                                            View.OnTouchListener,
                                                            BoardView.OnBoardInteraction {
     public static final int FRAGMENT_ID = 6164;
@@ -76,13 +76,13 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         }
     };
 
-    public static GameLocalFragment newInstance(Bundle args) {
-        GameLocalFragment fragment = new GameLocalFragment();
+    public static GameFragment newInstance(Bundle args) {
+        GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public GameLocalFragment() {
+    public GameFragment() {
 
     }
 
@@ -316,7 +316,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         args.putSerializable(ARG_GAME_MODE, mode);
 
         if (mListener != null)
-            mListener.onWinFragmentLoad(WinnerFragment.FRAGMENT_ID, args);
+            mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
     }
 
     @Override

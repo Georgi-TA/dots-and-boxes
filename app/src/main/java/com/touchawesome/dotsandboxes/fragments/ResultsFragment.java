@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,12 +20,12 @@ import java.util.Locale;
 /**
  * Created by scelus on 16.03.17
  */
-public class WinnerFragment extends DialogFragment {
+public class ResultsFragment extends DialogFragment {
     public static final int FRAGMENT_ID = 31783;
     String winnerName;
     Game.Player winner;
 
-    private WinnerFragment.OnFragmentInteractionListener mListener;
+    private ResultsFragment.OnFragmentInteractionListener mListener;
     private int player1Score;
     private int player2Score;
 
@@ -36,8 +35,8 @@ public class WinnerFragment extends DialogFragment {
         void onMenuRequested();
     }
 
-    public static WinnerFragment newInstance(Bundle args) {
-        WinnerFragment f = new WinnerFragment();
+    public static ResultsFragment newInstance(Bundle args) {
+        ResultsFragment f = new ResultsFragment();
 
         if (args != null)
             f.setArguments(args);
@@ -50,9 +49,9 @@ public class WinnerFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
 
-        player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
-        player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
-        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameLocalFragment.ARG_GAME_MODE);
+        player1Score = getArguments().getInt(GameFragment.ARG_PLAYER1_SCORE);
+        player2Score = getArguments().getInt(GameFragment.ARG_PLAYER2_SCORE);
+        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameFragment.ARG_GAME_MODE);
 
         if (player1Score > player2Score) {
             winner = Game.Player.PLAYER1;
@@ -143,7 +142,7 @@ public class WinnerFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (WinnerFragment.OnFragmentInteractionListener) context;
+            mListener = (ResultsFragment.OnFragmentInteractionListener) context;
         }
         catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");

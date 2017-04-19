@@ -10,9 +10,9 @@
 
     <!-- Main menu -->
     <string name="menu_title">Dots &amp; Boxes</string>
-    <string name="menu_option_play_local_player">VS Friend</string>
-    <string name="menu_option_play_local_cpu">VS Robot</string>
-    <string name="menu_option_play_network">VS Network</string>
+    <string name="menu_option_play_local_player">With Friend</string>
+    <string name="menu_option_play_local_cpu">With Robot</string>
+    <string name="menu_option_play_network">Network</string>
 
     <!-- Winner fragment -->
     <string name="winner">Winner</string>
@@ -66,10 +66,10 @@
     <string name="network_menu_play_local">Play</string>
 
     <!-- Choose layout fragment -->
-    <string name="choose_board_size">Board size</string>
-    <string name="three_by_three">3x3</string>
-    <string name="four_by_four">4x4</string>
-    <string name="five_by_five">5x5</string>
+    <string name="choose_board_size">Choose Board Size</string>
+    <string name="three_by_three">Small (quick)</string>
+    <string name="four_by_four">Medium (standard)</string>
+    <string name="five_by_five">Large (long)</string>
 
     <!-- Game screen -->
     <string name="player1name">Player one</string>
@@ -97,5 +97,6 @@
     <!-- Feedback -->
     <string name="feedback_subject"><![CDATA[Feedback - Dots&Boxes Alpha]]></string>
     <string name="feedback_email">georgi@touchawesome.com</string>
+    <string name="play">Play</string>
 
 </resources>

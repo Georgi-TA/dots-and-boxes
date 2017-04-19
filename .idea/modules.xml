@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/libraries/BaseGameUtils/BaseGameUtils.iml" filepath="$PROJECT_DIR$/libraries/BaseGameUtils/BaseGameUtils.iml" />
-      <module fileurl="file://$PROJECT_DIR$/DotsAndBoxes.iml" filepath="$PROJECT_DIR$/DotsAndBoxes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DotsAndBoxesProject.iml" filepath="$PROJECT_DIR$/DotsAndBoxesProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

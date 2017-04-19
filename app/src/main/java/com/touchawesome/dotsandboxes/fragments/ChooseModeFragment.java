@@ -7,21 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
-public class MainMenuFragment extends Fragment {
+public class ChooseModeFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
     private OnFragmentInteractionListener mListener;
 
-    public static MainMenuFragment newInstance(Bundle args) {
-        MainMenuFragment fragment = new MainMenuFragment();
+    public static ChooseModeFragment newInstance(Bundle args) {
+        ChooseModeFragment fragment = new ChooseModeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MainMenuFragment() {
+    public ChooseModeFragment() {
     }
 
     @Override
@@ -37,6 +38,9 @@ public class MainMenuFragment extends Fragment {
         Button friendPlayButton = (Button) root.findViewById(R.id.buttonPlayFriend);
         Button computerPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
 //        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
+
+
+        ((TextView) root.findViewById(R.id.label_play)).setTypeface(Globals.kgTrueColors);
 
         friendPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override

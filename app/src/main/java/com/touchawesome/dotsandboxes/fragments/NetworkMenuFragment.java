@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
 import com.squareup.picasso.Picasso;
 import com.touchawesome.dotsandboxes.R;
@@ -25,7 +23,7 @@ public class NetworkMenuFragment extends Fragment implements View.OnClickListene
     }
 
     public static Fragment newInstance(Bundle args) {
-        ChooseLayoutFragment fragment = new ChooseLayoutFragment();
+        ChooseBoardSizeFragment fragment = new ChooseBoardSizeFragment();
         fragment.setArguments(args);
         return fragment;
     }
