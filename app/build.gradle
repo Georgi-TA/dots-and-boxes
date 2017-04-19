@@ -37,4 +37,9 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // analytics
+    compile 'com.google.android.gms:play-services-analytics:10.2.1'
 }
+
+apply plugin: 'com.google.gms.google-services'

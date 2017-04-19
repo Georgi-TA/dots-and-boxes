@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "733740911732",
+    "project_id": "dots-and-boxes-81920836"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733740911732:android:047e4dcf3d125c43",
+        "android_client_info": {
+          "package_name": "com.touchawesome.dotsandboxes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733740911732-4qcoufu3rn6a0i2dt2tscac00gdqi3te.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.touchawesome.dotsandboxes",
+            "certificate_hash": "d7c1d8a07dfe9c63680156aa3e50889a3dbdd141"
+          }
+        },
+        {
+          "client_id": "733740911732-giossa7l3si75d9n9lrqf05gmp2taujg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.touchawesome.dotsandboxes",
+            "certificate_hash": "c714e2418ff8143f330768dcea1be3a7a753ba25"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqLM67lRwX-QtNjq2TBcRZBBmyE3z87_s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97658506-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
