@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:background="@color/background"
-    tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
+    tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,15 +17,26 @@
         android:layout_centerVertical="true"
         android:divider="@drawable/list_divider">
 
-        <Button
-            android:text="@string/menu_option_play_local_player"
-            android:id="@+id/buttonPlayFriend"
-            style="@style/MenuLayoutButton" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_play"
+            android:textColor="@color/textColorPrimaryDark"
+            android:textSize="28sp"
+            android:gravity="center_horizontal"
+            android:text="@string/play"/>
 
         <Button
             android:id="@+id/buttonPlayLocalComputer"
             style="@style/MenuLayoutButton"
             android:text="@string/menu_option_play_local_cpu" />
+
+        <Button
+            android:text="@string/menu_option_play_local_player"
+            android:id="@+id/buttonPlayFriend"
+            style="@style/MenuLayoutButton" />
+
+
 
         <!--<Button-->
             <!--android:text="@string/menu_option_play_network"-->

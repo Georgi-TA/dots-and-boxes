@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -20,6 +22,7 @@ import com.google.android.gms.games.achievement.Achievement;
 import com.google.android.gms.games.achievement.AchievementBuffer;
 import com.google.android.gms.games.achievement.Achievements;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.utils.Constants;
@@ -134,6 +137,15 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     public void onShowAchievementsRequested() {
         if (isSignedIn()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), RC_UNUSED);
+
+            // analytics
+            // Get tracker.
+            Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+            // Set screen name.
+            t.setScreenName(getString(R.string.screen_name_achievements));
+            // Send a screen view.
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+
         } else {
             BaseGameUtils.makeSimpleDialog(this, getString(R.string.achievements_not_available)).show();
         }

@@ -10,9 +10,9 @@
 
     <!-- Main menu -->
     <string name="menu_title">Dots &amp; Boxes</string>
-    <string name="menu_option_play_local_player">VS Friend</string>
-    <string name="menu_option_play_local_cpu">VS Robot</string>
-    <string name="menu_option_play_network">VS Network</string>
+    <string name="menu_option_play_local_player">With Friend</string>
+    <string name="menu_option_play_local_cpu">With Robot</string>
+    <string name="menu_option_play_network">Network</string>
 
     <!-- Winner fragment -->
     <string name="winner">Winner</string>
@@ -66,15 +66,18 @@
     <string name="network_menu_play_local">Play</string>
 
     <!-- Choose layout fragment -->
-    <string name="choose_board_size">Board size</string>
-    <string name="three_by_three">3x3</string>
-    <string name="four_by_four">4x4</string>
-    <string name="five_by_five">5x5</string>
+    <string name="choose_board_size">Choose Board Size</string>
+    <string name="three_by_three">Small (quick)</string>
+    <string name="four_by_four">Medium (standard)</string>
+    <string name="five_by_five">Large (long)</string>
 
     <!-- Game screen -->
-    <string name="player1name">Player one</string>
-    <string name="player2name">Player two</string>
-    <string name="robot_name">Robot</string>
+    <string name="player1name">You</string>
+    <string name="player2name">Opponent</string>
+
+    <string name="player1TurnName">Your</string>
+    <string name="player2TurnName">Opponent\'s</string>
+    <string name="turn_text">%s turn</string>
 
     <!-- About screen -->
     <string name="title_about">About</string>
@@ -84,7 +87,6 @@
     <string name="leave_feedback">Leave Feedback</string>
 
     <!-- Final screen -->
-    <string name="turn_text">%s\'s turn</string>
     <string name="wins">WINS</string>
     <string name="result">Result</string>
     <string name="title_activity_tutorial">How to play</string>
@@ -97,5 +99,16 @@
     <!-- Feedback -->
     <string name="feedback_subject"><![CDATA[Feedback - Dots&Boxes Alpha]]></string>
     <string name="feedback_email">georgi@touchawesome.com</string>
+    <string name="play">Play</string>
+    <string name="win">WIN</string>
+
+    <!-- Analytics Screen Names -->
+    <string name="screen_name_choose_mode">Choose Mode</string>
+    <string name="screen_name_choose_board_size">Choose Board Size</string>
+    <string name="screen_name_game">Game</string>
+    <string name="screen_name_results">Results</string>
+    <string name="screen_name_settings">Settings</string>
+    <string name="screen_name_achievements">Achievements</string>
+    <string name="screen_name_about">About</string>
 
 </resources>

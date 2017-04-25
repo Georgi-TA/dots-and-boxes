@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
+    tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +15,16 @@
         android:showDividers="middle"
         android:layout_centerVertical="true"
         android:divider="@drawable/list_divider">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_choose_board_size"
+            android:textColor="@color/textColorPrimaryDark"
+            android:textSize="28sp"
+            android:gravity="center_horizontal"
+            android:text="@string/choose_board_size"/>
+
 
         <Button
             android:id="@+id/buttonPlayThreeByThree"

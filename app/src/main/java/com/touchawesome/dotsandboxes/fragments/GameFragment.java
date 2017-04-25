@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
@@ -32,7 +35,7 @@ import java.util.Locale;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
-public class GameLocalFragment extends Fragment implements Game.GameListener,
+public class GameFragment extends Fragment implements Game.GameListener,
                                                            View.OnTouchListener,
                                                            BoardView.OnBoardInteraction {
     public static final int FRAGMENT_ID = 6164;
@@ -76,13 +79,13 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         }
     };
 
-    public static GameLocalFragment newInstance(Bundle args) {
-        GameLocalFragment fragment = new GameLocalFragment();
+    public static GameFragment newInstance(Bundle args) {
+        GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public GameLocalFragment() {
+    public GameFragment() {
 
     }
 
@@ -102,17 +105,12 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         Spannable turnString;
         String playerName;
         if (player == Game.Player.PLAYER1) {
-            playerName = getString(R.string.player1name);
+            playerName = getString(R.string.player1TurnName);
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
             turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         else {
-            if (mode == Game.Mode.CPU) {
-                playerName = getString(R.string.robot_name);
-            }
-            else {
-                playerName = getString(R.string.player2name);
-            }
+            playerName = getString(R.string.player2TurnName);
 
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
             turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -197,6 +195,14 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         bot = new PlayerBot(game);
 
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+        // analytics
+        // Get tracker.
+        Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+        // Set screen name.
+        t.setScreenName(getString(R.string.screen_name_game));
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
@@ -316,7 +322,7 @@ public class GameLocalFragment extends Fragment implements Game.GameListener,
         args.putSerializable(ARG_GAME_MODE, mode);
 
         if (mListener != null)
-            mListener.onWinFragmentLoad(WinnerFragment.FRAGMENT_ID, args);
+            mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
     }
 
     @Override

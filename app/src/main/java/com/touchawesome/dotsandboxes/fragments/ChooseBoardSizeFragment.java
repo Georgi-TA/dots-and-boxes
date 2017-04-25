@@ -7,32 +7,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
-public class ChooseLayoutFragment extends Fragment {
+import org.w3c.dom.Text;
+
+public class ChooseBoardSizeFragment extends Fragment {
     public static final int FRAGMENT_ID = 2626;
 
     private OnFragmentInteractionListener mListener;
 
-    public static ChooseLayoutFragment newInstance(Bundle args) {
-        ChooseLayoutFragment fragment = new ChooseLayoutFragment();
+    public static ChooseBoardSizeFragment newInstance(Bundle args) {
+        ChooseBoardSizeFragment fragment = new ChooseBoardSizeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ChooseLayoutFragment() {
+    public ChooseBoardSizeFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // analytics
+        // Get tracker.
+        Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+        // Set screen name.
+        t.setScreenName(getString(R.string.screen_name_choose_board_size));
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_choose_layout, container, false);
+
+        ((TextView) root.findViewById(R.id.label_choose_board_size)).setTypeface(Globals.kgTrueColors);
 
         Button threeByThree = (Button) root.findViewById(R.id.buttonPlayThreeByThree);
         Button fourByFour = (Button) root.findViewById(R.id.buttonPlayFourByFour);
