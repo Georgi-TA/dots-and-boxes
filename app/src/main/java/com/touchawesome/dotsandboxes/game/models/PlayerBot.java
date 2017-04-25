@@ -32,7 +32,6 @@ public class PlayerBot {
             return completionMoves.get(0);
 
         ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
-        Collections.shuffle(availableMoves);
         return availableMoves.get(0);
     }
 

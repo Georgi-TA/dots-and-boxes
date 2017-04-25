@@ -1,8 +1,11 @@
 
 package com.touchawesome.dotsandboxes.game.controllers;
 
-import java.util.HashSet;
-
+import com.touchawesome.dotsandboxes.event_bus.RxBus;
+import com.touchawesome.dotsandboxes.event_bus.events.GameEndEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.TurnChangeEvent;
 import com.touchawesome.dotsandboxes.game.models.Board;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.Graph;
@@ -13,6 +16,10 @@ import com.touchawesome.dotsandboxes.game.models.Graph;
  * and indicated when a turn has changed.
  */
 public class Game {
+    /**
+     *  Reactive Bus subscription
+     */
+    private final RxBus rxBus;
     private Board board;
     private Graph gameTree;
 
@@ -65,16 +72,6 @@ public class Game {
     /**
      * Listener interface for the {@link Game} class
      */
-    public interface GameListener {
-        void onScoreChange(Player player, int score);
-
-        void onTurnChange(Player nextToMove);
-
-        void onGameEnd(Player winner);
-    }
-
-    private HashSet<GameListener> listeners; // all listeners registered to monitor the game progress
-
     private int maxScore;       // pre-calculated field for keeping track of the current MAX Score
 
     /**
@@ -87,9 +84,9 @@ public class Game {
     public Game(int rows, int columns) {
         this.maxScore = rows * columns;
         this.board = new Board(rows, columns);
-        this.listeners = new HashSet<>();
         this.gameTree = new Graph(rows, columns);
         this.gameState = State.PLAYER1_TURN;
+        this.rxBus = RxBus.getInstance();
     }
 
     /**
@@ -101,14 +98,6 @@ public class Game {
         return board;
     }
 
-    /**
-     * Add a listener to the list of listeners
-     *
-     * @param listener the listener to be added
-     */
-    public void registerListener(GameListener listener) {
-        this.listeners.add(listener);
-    }
 
     /**
      * Connects two dots on the board, which counts as a move.
@@ -123,7 +112,10 @@ public class Game {
             return -1;
 
         gameTree.addEdge(new Edge(dotStart, dotEnd));
-         switch (gameState) {
+
+        // notify the message bus for the event
+        RxBus.getInstance().send(new PlayerMoveEvent());
+        switch (gameState) {
             case PLAYER1_TURN:
                 return takeTurnPlayer1(dotStart, dotEnd);
 
@@ -168,7 +160,8 @@ public class Game {
         }
         else {
             gameState = State.PLAYER2_TURN;
-            notifyTurnChange(Player.PLAYER2);
+
+
         }
 
         return boxesCompleted;
@@ -215,9 +208,7 @@ public class Game {
      * @param nextPlayer the player who is going the take the next turn
      */
     private void notifyTurnChange(Player nextPlayer) {
-        for (GameListener listener : listeners)
-            if (listener != null)
-                listener.onTurnChange(nextPlayer);
+        rxBus.send(new TurnChangeEvent(nextPlayer));
     }
 
     /**
@@ -227,9 +218,7 @@ public class Game {
      * @param score  the player's score
      */
     private void notifyScoreChange(Player player, int score) {
-        for (GameListener listener : listeners)
-            if (listener != null)
-                listener.onScoreChange(player, score);
+        rxBus.send(new ScoreMadeEvent(player, score));
     }
 
     /**
@@ -238,8 +227,6 @@ public class Game {
      * @param winner the winner of the game
      */
     private void notifyGameEnd(Player winner) {
-        for (GameListener listener : listeners)
-            if (listener != null)
-                listener.onGameEnd(winner);
+        rxBus.send(new GameEndEvent());
     }
 }

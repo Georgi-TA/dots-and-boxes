@@ -25,6 +25,12 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.event_bus.RxBus;
+import com.touchawesome.dotsandboxes.event_bus.events.BotMoveEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.GameEndEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.OpponentMoveEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
@@ -33,11 +39,12 @@ import com.touchawesome.dotsandboxes.views.BoardView;
 
 import java.util.Locale;
 
-import static com.google.android.gms.internal.zzt.TAG;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
-public class GameFragment extends Fragment implements Game.GameListener,
-                                                           View.OnTouchListener,
-                                                           BoardView.OnBoardInteraction {
+public class GameFragment extends Fragment implements   View.OnTouchListener,
+                                                        BoardView.OnBoardInteraction {
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "com.touchawesome.args.mode";
     private static final String ARG_BOARD = "com.touchawesome.args.board";
@@ -47,6 +54,10 @@ public class GameFragment extends Fragment implements Game.GameListener,
     public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
     public static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
 
+    private final int BOT_DELAY_TIME = 400; //ms
+
+    private Subscription subscription;
+
     private Game.Mode mode;                             // Mode of play - local, network, cpu
     private OnFragmentInteractionListener mListener;
 
@@ -54,7 +65,6 @@ public class GameFragment extends Fragment implements Game.GameListener,
     private Game game;         // game state object and controller
     private PlayerBot bot;     // the bot to play in CPU mode
 
-    private TransitionDrawable tdPlayer1;
     private TransitionDrawable tdPlayer2;
 
     private TextView scorePlayer1;
@@ -67,7 +77,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
 
     private Vibrator vibrator;
 
-    private CountDownTimer progressTimer = new CountDownTimer(400, 4) {
+    private CountDownTimer progressTimer = new CountDownTimer(BOT_DELAY_TIME, 4) {
         @Override
         public void onTick(long millisUntilFinished) {
             progressBar.setProgress((int) ((float) millisUntilFinished / 4f));
@@ -86,6 +96,95 @@ public class GameFragment extends Fragment implements Game.GameListener,
     }
 
     public GameFragment() {
+
+    }
+
+    private void initBusSubscription() {
+        subscription = RxBus.getInstance().getBus().subscribeOn(Schedulers.computation()).subscribe(new Action1<Object>() {
+            public static final String TAG = "RxBusGameFragment";
+
+            @Override
+            public void call(Object event) {
+                /*
+                 * The bot made a move
+                 */
+                if (event instanceof BotMoveEvent) {
+                    BotMoveEvent botMoveEvent = (BotMoveEvent) event;
+                    int boxesCompleted = game.makeAMove(botMoveEvent.botMove.getDotStart(), botMoveEvent.botMove.getDotEnd(), Game.Player.PLAYER2);
+
+                    if (boxesCompleted > 0 && game.getState() != Game.State.END) {
+                        botMoveTask = new BotMoveAsyncTask();
+                        botMoveTask.execute();
+                    }
+                    else {
+                        boardView.invalidate();
+                        boardView.enableInteraction();
+
+                        setTurnText(Game.Player.PLAYER1);
+                    }
+                }
+                /*
+                 *  The player made a move
+                 */
+                else if (event instanceof PlayerMoveEvent) {
+                    Log.d(TAG, "call: player move event");
+
+                    if (mode == Game.Mode.CPU) {
+                        botMoveTask = new BotMoveAsyncTask();
+                        botMoveTask.execute();
+                    }
+
+                    setTurnText(Game.Player.PLAYER2);
+                }
+                /*
+                 *  The opponent made a move
+                 */
+                else if (event instanceof OpponentMoveEvent) {
+
+                    setTurnText(Game.Player.PLAYER1);
+                }
+                /*
+                 *  Register the event and reflect the score
+                 */
+
+                else if (event instanceof ScoreMadeEvent) {
+                    ScoreMadeEvent scoreEvent = (ScoreMadeEvent) event;
+                    if (scoreEvent.scoringPlayer == Game.Player.PLAYER1) {
+                        scorePlayer1.setText(String.format(Locale.getDefault(), "%d", scoreEvent.score));
+                    }
+                    else {
+                        scorePlayer2.setText(String.format(Locale.getDefault(), "%d", scoreEvent.score));
+                    }
+
+                    if (mode == Game.Mode.CPU) {
+                        botMoveTask = new BotMoveAsyncTask();
+                        botMoveTask.execute();
+                    }
+                }
+                /*
+                 * Show final credits
+                 */
+                else if (event instanceof GameEndEvent) {
+                    Bundle args = getArguments();
+
+                    if (args == null)
+                        args = new Bundle();
+
+                    int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
+                    int player2Score = game.getBoard().getScore(Game.Player.PLAYER2);
+
+                    args.putInt(ARG_PLAYER1_SCORE, player1Score);
+                    args.putInt(ARG_PLAYER2_SCORE, player2Score);
+                    args.putSerializable(ARG_GAME_MODE, mode);
+
+                    if (mListener != null)
+                        mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
+                }
+            }
+        });
+    }
+
+    private void takeTurnFromBot(Edge move) {
 
     }
 
@@ -119,6 +218,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
     }
 
     private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
+        private final String TAG = BotMoveAsyncTask.class.getCanonicalName();
 
         protected void onPreExecute () {
             boardView.disableInteraction();
@@ -127,14 +227,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
         }
 
         protected Edge doInBackground(Void... params) {
-            Edge edge = bot.getNextMove();
-            try {
-                Thread.sleep(400);
-            }
-            catch(InterruptedException e){
-                e.printStackTrace();
-            }
-            return edge;
+            return bot.getNextMove();
         }
 
         protected void onProgressUpdate(Integer... progress) {
@@ -144,7 +237,15 @@ public class GameFragment extends Fragment implements Game.GameListener,
         protected void onPostExecute(Edge result) {
             Log.d(TAG, "onPostExecute: " + result.getKey());
 
-            takeTurnFromBot(result);
+            // delay on purpose to enhance UI
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finally {
+                RxBus.getInstance().send(new BotMoveEvent(result));
+            }
         }
 
         @Override
@@ -154,18 +255,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
         }
     }
 
-    private void takeTurnFromBot(Edge move) {
-        int boxesCompleted = game.makeAMove(move.getDotStart(), move.getDotEnd(), Game.Player.PLAYER2);
 
-        if (boxesCompleted > 0 && game.getState() != Game.State.END) {
-            botMoveTask = new BotMoveAsyncTask();
-            botMoveTask.execute();
-        }
-        else {
-            boardView.invalidate();
-            boardView.enableInteraction();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -191,17 +281,15 @@ public class GameFragment extends Fragment implements Game.GameListener,
         }
 
         game = new Game(rows, columns);
-        game.registerListener(this);
         bot = new PlayerBot(game);
-
         vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
+        // RxBus
+        initBusSubscription();
+
         // analytics
-        // Get tracker.
         Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
-        // Set screen name.
         t.setScreenName(getString(R.string.screen_name_game));
-        // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
@@ -228,7 +316,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
         ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
 
         // set transition drawable to player 1 border
-        tdPlayer1 = new TransitionDrawable(new Drawable[]{
+        TransitionDrawable tdPlayer1 = new TransitionDrawable(new Drawable[]{
                 getResources().getDrawable(R.drawable.bg_player1_image_active),
                 getResources().getDrawable(R.drawable.bg_player_image_inactive)
         });
@@ -269,6 +357,7 @@ public class GameFragment extends Fragment implements Game.GameListener,
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        subscription.unsubscribe();
     }
 
     @Override
@@ -276,53 +365,6 @@ public class GameFragment extends Fragment implements Game.GameListener,
         super.onDestroy();
         if (botMoveTask != null && !botMoveTask.isCancelled())
             botMoveTask.cancel(true);
-    }
-
-    @Override
-    public void onScoreChange(Game.Player player, int score) {
-        if (player == Game.Player.PLAYER1) {
-            scorePlayer1.setText(String.format(Locale.getDefault(), "%d", score));
-        }
-        else {
-            scorePlayer2.setText(String.format(Locale.getDefault(), "%d", score));
-        }
-    }
-
-    @Override
-    public void onTurnChange(Game.Player nextToMove) {
-        if (mode == Game.Mode.CPU && nextToMove == Game.Player.PLAYER2) {
-            botMoveTask = new BotMoveAsyncTask();
-            botMoveTask.execute();
-        }
-
-        if (nextToMove == Game.Player.PLAYER2) {
-            tdPlayer1.startTransition(100);
-            tdPlayer2.startTransition(100);
-            setTurnText(Game.Player.PLAYER2);
-        } else {
-            tdPlayer1.reverseTransition(100);
-            tdPlayer2.reverseTransition(100);
-            setTurnText(Game.Player.PLAYER1);
-        }
-    }
-
-    @Override
-    public void onGameEnd(Game.Player winner) {
-        boardView.setOnTouchListener(this);
-        Bundle args = getArguments();
-
-        if (args == null)
-            args = new Bundle();
-
-        int player1Score = game.getBoard().getScore(Game.Player.PLAYER1);
-        int player2Score = game.getBoard().getScore(Game.Player.PLAYER2);
-
-        args.putInt(ARG_PLAYER1_SCORE, player1Score);
-        args.putInt(ARG_PLAYER2_SCORE, player2Score);
-        args.putSerializable(ARG_GAME_MODE, mode);
-
-        if (mListener != null)
-            mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
     }
 
     @Override

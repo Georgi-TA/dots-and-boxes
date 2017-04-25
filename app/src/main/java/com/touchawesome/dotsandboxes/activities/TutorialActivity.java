@@ -4,29 +4,32 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.event_bus.RxBus;
+import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
-import com.touchawesome.dotsandboxes.utils.Constants;
+
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class TutorialActivity extends AppCompatActivity {
 
     private BoardView hintBoardView;
-    private BoardView boardView;
     private LinearLayout section2;
-    private Button buttonCompleteTutorial;
-    private Game tutorialGame;
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +42,14 @@ public class TutorialActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        boardView = (BoardView) findViewById(R.id.tutorial_board);
+        BoardView boardView = (BoardView) findViewById(R.id.tutorial_board);
         hintBoardView = (BoardView) findViewById(R.id.tutorial_board_hint);
 
         section2 = (LinearLayout) findViewById(R.id.instructions_part_2);
         section2.setAlpha(0);
         section2.setVisibility(View.GONE);
 
-        buttonCompleteTutorial = (Button) findViewById(R.id.buttonCompleteTutorial);
+        Button buttonCompleteTutorial = (Button) findViewById(R.id.buttonCompleteTutorial);
         buttonCompleteTutorial.setTypeface(Globals.kgTrueColors);
         buttonCompleteTutorial.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +58,7 @@ public class TutorialActivity extends AppCompatActivity {
             }
         });
 
-        tutorialGame = new Game(2, 2);
+        Game tutorialGame = new Game(2, 2);
         tutorialGame.getBoard().loadBoard("31,11,47,14");
 
         // add horizontal edges
@@ -115,23 +118,22 @@ public class TutorialActivity extends AppCompatActivity {
             }
         });
 
+        initBusSubscription();
+    }
 
-        tutorialGame.registerListener(new Game.GameListener() {
+    private void initBusSubscription() {
+        subscription = RxBus.getInstance().getBus().subscribeOn(Schedulers.computation()).subscribe(new Action1<Object>() {
             @Override
-            public void onScoreChange(Game.Player player, int score) {
-                section2.setAlpha(0);
-                section2.setVisibility(View.VISIBLE);
-                section2.animate().alpha(1).setDuration(getResources().getInteger(R.integer.slide_duration));
-            }
+            public void call(Object event) {
 
-            @Override
-            public void onTurnChange(Game.Player nextToMove) {
-
-            }
-
-            @Override
-            public void onGameEnd(Game.Player winner) {
-
+                /*
+                 *  Register the event and reflect the score
+                 */
+                if (event instanceof ScoreMadeEvent) {
+                    section2.setAlpha(0);
+                    section2.setVisibility(View.VISIBLE);
+                    section2.animate().alpha(1).setDuration(getResources().getInteger(R.integer.slide_duration));
+                }
             }
         });
     }
@@ -152,5 +154,11 @@ public class TutorialActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        subscription.unsubscribe();
+        super.onDestroy();
     }
 }
