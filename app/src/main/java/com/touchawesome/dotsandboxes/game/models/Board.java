@@ -2,6 +2,8 @@ package com.touchawesome.dotsandboxes.game.models;
 
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
+import java.util.BitSet;
+
 /**
  * Class responsible for the presentation of the board in a given state.
  * This board itself is presented as numbered dots from 0 to n^2-1.
@@ -129,13 +131,8 @@ public class Board {
          int columnStart = dotStart % (columns + 1);
          int columnEnd = dotEnd % (columns + 1);
 
-        // sanity check
-        if (rowStart <= rowEnd && columnStart <= columnEnd) {
-            toggleLine(false, rowStart, rowEnd, columnStart, columnEnd, Game.Player.NONE);
-            return true;
-        }
-
-        return false;
+         toggleLine(false, rowStart, rowEnd, columnStart, columnEnd, Game.Player.NONE);
+         return true;
     }
 
     /**
@@ -188,21 +185,21 @@ public class Board {
     private void unsetLineAtBox(int row, int column, Line line) {
         switch (line){
             case TOP:
-                boxes[row][column] &= ~(1);
+                boxes[row][column] &= (1) ^ 0xFF;
                 break;
             case RIGHT:
-                boxes[row][column] &= ~(1 << 1);
+                boxes[row][column] &= (1 << 1) ^ 0xFF;
                 break;
             case BOTTOM:
-                boxes[row][column] &= ~(1 << 2);
+                boxes[row][column] &= (1 << 2) ^ 0xFF;
                 break;
             case LEFT:
-                boxes[row][column] &= ~(1 << 3);
+                boxes[row][column] &= (1 << 3) ^ 0xFF;
                 break;
         }
 
-        boxes[row][column] &= ~(1 << 4);
-        boxes[row][column] &= ~(1 << 5);
+        boxes[row][column] &= (1 << 4) ^ 0xFF;
+        boxes[row][column] &= (1 << 5) ^ 0xFF;
     }
 
     /**
@@ -226,7 +223,7 @@ public class Board {
         int column = columnStart < columnEnd ? columnStart : columnEnd;
 
         // horizontal
-        if (rowStart == rowEnd) {
+        if (rowStart == rowEnd && columnStart != columnEnd) {
             // top row
             if (row == 0) {
                 if (set)
@@ -254,7 +251,7 @@ public class Board {
             }
         }
         // vertical
-        else if (columnStart == columnEnd) {
+        else if (columnStart == columnEnd && rowStart != rowEnd) {
             // leftmost column
             if (column == 0) {
                 if (set)
@@ -331,5 +328,11 @@ public class Board {
                 countValues++;
             }
         }
+    }
+
+    public Board getCopy() {
+        Board result = new Board(getRows(), getColumns());
+        result.loadBoard(this.toString());
+        return result;
     }
 }

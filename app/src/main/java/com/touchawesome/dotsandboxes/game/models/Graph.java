@@ -1,14 +1,9 @@
 package com.touchawesome.dotsandboxes.game.models;
 
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
-import static android.content.ContentValues.TAG;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A class representing the game tree in form of a graph
@@ -18,7 +13,7 @@ import static android.content.ContentValues.TAG;
  */
 
 public class Graph {
-    public HashMap<String, Edge> getEdges() {
+    HashMap<String, Edge> getEdges() {
         return edges;
     }
     private HashMap<String, Edge> edges;
@@ -38,22 +33,22 @@ public class Graph {
     ArrayList<Edge> getAvailableEdges() {
         ArrayList<Edge> availableEdges = new ArrayList<>();
 
-        int rows_dots = rows + 1;
-        int columns_dots = columns + 1;
-        int allDotsCount = rows_dots * columns_dots;
+        int dots_rows = rows + 1;
+        int dots_columns = columns + 1;
+        int allDotsCount = dots_rows * dots_columns;
 
         for (int i = 0; i < allDotsCount; i++) {
             // horizontal
-            if (i % columns_dots != columns_dots - 1) {
+            if (i % dots_columns != (dots_columns - 1)) {
                 Edge edge = new Edge(i, i + 1);
-                if (!hasEdge(edge.getDotStart(), edge.getDotEnd()))
+                if (!hasEdge(edge.getKey()))
                     availableEdges.add(edge);
             }
 
             // vertical
-            if (i / rows_dots != rows_dots - 1) {
-                Edge edge = new Edge(i, i + columns_dots);
-                if (!hasEdge(edge.getDotStart(), edge.getDotEnd()))
+            if (i / dots_rows != (dots_rows - 1)) {
+                Edge edge = new Edge(i, i + dots_columns);
+                if (!hasEdge(edge.getKey()))
                     availableEdges.add(edge);
             }
         }
@@ -61,16 +56,6 @@ public class Graph {
         return availableEdges;
     }
 
-    /**
-     * Adds an edge to the edges' HashMap.
-     *
-     * @param dotStart the first dotOf the line
-     * @param dotEnd   the last dorOf the line
-     */
-    public void addEdge(int dotStart, int dotEnd) {
-        Edge edge = new Edge(dotStart, dotEnd);
-        this.edges.put(edge.getKey(), edge);
-    }
 
     /**
      * Add an edge to the game tree
@@ -91,7 +76,7 @@ public class Graph {
     }
 
     /**
-     * Serves as an utitlity function for the minimax algortihm
+     * Serves as an utility function for the minimax algorithm
      *
      * @param board the board which represents the current game state.
      * @return The integer value which is the maximum score that <b>Player 2</b> can make
@@ -102,6 +87,10 @@ public class Graph {
 
     public boolean hasEdge(int dotStart, int dotEnd) {
         return edges.containsKey(Edge.generateKey(dotStart, dotEnd));
+    }
+
+    public boolean hasEdge(String edgeKey) {
+        return edges.containsKey(edgeKey);
     }
 }
 

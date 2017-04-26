@@ -11,24 +11,17 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.event_bus.RxBus;
+import com.touchawesome.dotsandboxes.event_bus.events.BoardTouchedEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
+import com.touchawesome.dotsandboxes.game.models.Edge;
 
 /**
  * Class responsible for displaying and interacting with the board
  */
 public class BoardView extends View {
-
-    public interface OnBoardInteraction {
-        void onBoardTouchDown();
-        void onSquareCompleted();
-    }
-
-    private OnBoardInteraction mBoardInteractionListener;
-
-    public void setBoardInteractionListener (OnBoardInteraction listener) {
-        this.mBoardInteractionListener = listener;
-    }
 
     private Game game;              // The game which is being played
     private int horizontalOffset;   // Offset at the left and right to display the dots grid
@@ -60,7 +53,6 @@ public class BoardView extends View {
     private boolean touchable = false;
 
     private boolean shouldMakeASound;
-    private boolean shouldVibrate;
 
     public BoardView(Context context) {
         super(context);
@@ -106,7 +98,6 @@ public class BoardView extends View {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         shouldMakeASound = sharedPref.getBoolean(getContext().getString(R.string.pref_key_sound), true);
-        shouldVibrate = sharedPref.getBoolean(getContext().getString(R.string.pref_key_vibrate), true);
     }
 
     /**
@@ -248,7 +239,6 @@ public class BoardView extends View {
         int width;
         int height;
 
-
         //Measure Width
         if (widthMode == MeasureSpec.EXACTLY) {
             //Must be this size
@@ -312,7 +302,7 @@ public class BoardView extends View {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         // block user interaction
         if (!touchable)
-            return true;
+            return false;
 
         // don't proceed without a game object present
         if (game == null)
@@ -322,9 +312,9 @@ public class BoardView extends View {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-            if (shouldMakeASound && mBoardInteractionListener != null) {
-                mBoardInteractionListener.onBoardTouchDown();
-            }
+            // send an event to make a sound
+                if (shouldMakeASound)
+                    RxBus.getInstance().send(new BoardTouchedEvent());
 
                 
             case MotionEvent.ACTION_MOVE: {
@@ -407,14 +397,8 @@ public class BoardView extends View {
             case MotionEvent.ACTION_UP:
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
-                int boxesMade = game.makeAMove(numberDotStart, numberDotEnd, Game.Player.PLAYER1);
 
-                if (boxesMade > 0) {
-                    if (mBoardInteractionListener != null && shouldVibrate) {
-                        mBoardInteractionListener.onSquareCompleted();
-                    }
-                }
-
+                RxBus.getInstance().send(new PlayerMoveEvent(new Edge(numberDotStart, numberDotEnd)));
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {

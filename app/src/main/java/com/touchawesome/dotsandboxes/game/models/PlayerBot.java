@@ -32,6 +32,7 @@ public class PlayerBot {
             return completionMoves.get(0);
 
         ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
+        Collections.shuffle(availableMoves);
         return availableMoves.get(0);
     }
 
@@ -156,7 +157,7 @@ public class PlayerBot {
 
 //
 //        /**
-//         * Previous imlpementation of this method
+//         * Previous implementation of this method
 //         */
 //        Board board = game.getBoard();
 //        int dots_rows = board.getRows();
@@ -198,17 +199,12 @@ public class PlayerBot {
 
 
         ArrayList<Edge> completionMoves = new ArrayList<>();
-
-        ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
-        Board tempBoard = new Board(game.getBoard().getRows(), game.getBoard().getColumns());
-
         HashMap<String, Edge> madeMoves = game.getGameTree().getEdges();
-        for (Edge moveMade : madeMoves.values()) {
-            tempBoard.setLineForDots(moveMade.getDotStart(), moveMade.getDotEnd(), Game.Player.NONE);
-        }
+        ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
 
         for (Edge moveToMake : availableMoves) {
             if (!madeMoves.containsKey(moveToMake.getKey())) {
+                Board tempBoard = game.getBoard().getCopy();
                 int scoreBefore = tempBoard.getScore(Game.Player.PLAYER2);
                 tempBoard.setLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd(), Game.Player.PLAYER2);
                 int scoreAfter = tempBoard.getScore(Game.Player.PLAYER2);
@@ -216,8 +212,6 @@ public class PlayerBot {
                 if (scoreBefore < scoreAfter) {
                     completionMoves.add(moveToMake);
                 }
-
-                tempBoard.removeLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd());
             }
         }
 

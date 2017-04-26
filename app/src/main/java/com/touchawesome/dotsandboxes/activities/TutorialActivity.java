@@ -17,6 +17,7 @@ import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
@@ -62,19 +63,19 @@ public class TutorialActivity extends AppCompatActivity {
         tutorialGame.getBoard().loadBoard("31,11,47,14");
 
         // add horizontal edges
-        tutorialGame.getGameTree().addEdge(0, 1);
-        tutorialGame.getGameTree().addEdge(1, 2);
-        tutorialGame.getGameTree().addEdge(3, 4);
-        tutorialGame.getGameTree().addEdge(6, 7);
-        tutorialGame.getGameTree().addEdge(7, 8);
+        tutorialGame.getGameTree().addEdge(new Edge(0, 1));
+        tutorialGame.getGameTree().addEdge(new Edge(1, 2));
+        tutorialGame.getGameTree().addEdge(new Edge(3, 4));
+        tutorialGame.getGameTree().addEdge(new Edge(6, 7));
+        tutorialGame.getGameTree().addEdge(new Edge(7, 8));
 
         // add vertical edges
-        tutorialGame.getGameTree().addEdge(0, 3);
-        tutorialGame.getGameTree().addEdge(1, 4);
-        tutorialGame.getGameTree().addEdge(2, 5);
-        tutorialGame.getGameTree().addEdge(3, 6);
-        tutorialGame.getGameTree().addEdge(4, 7);
-        tutorialGame.getGameTree().addEdge(5, 8);
+        tutorialGame.getGameTree().addEdge(new Edge(0, 3));
+        tutorialGame.getGameTree().addEdge(new Edge(1, 4));
+        tutorialGame.getGameTree().addEdge(new Edge(2, 5));
+        tutorialGame.getGameTree().addEdge(new Edge(3, 6));
+        tutorialGame.getGameTree().addEdge(new Edge(4, 7));
+        tutorialGame.getGameTree().addEdge(new Edge(5, 8));
         tutorialGame.setNextPlayer(Game.Player.PLAYER1);
 
         boardView.setGame(tutorialGame);
@@ -112,7 +113,6 @@ public class TutorialActivity extends AppCompatActivity {
 
                     }
                 });
-
 
                 return true;
             }

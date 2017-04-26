@@ -20,8 +20,12 @@ public class Game {
      *  Reactive Bus subscription
      */
     private final RxBus rxBus;
+
     private Board board;
     private Graph gameTree;
+
+    // pre-calculated field for keeping track of the current MAX Score
+    private int maxScore;
 
     public void setNextPlayer(Player nextPlayer) {
         switch (nextPlayer) {
@@ -42,10 +46,6 @@ public class Game {
         return gameTree;
     }
 
-    public int getMaxScore() {
-        return board.getRows() * board.getColumns();
-    }
-
     /**
      * Enumeration for the game state. Could be any one of the described below.
      */
@@ -54,25 +54,20 @@ public class Game {
     }
 
     private State gameState = State.PLAYER1_TURN;
-
     /**
      * Enumeration of the players, who own a square. Also used for turn based decisions.
      */
     public enum Player {
         PLAYER1, NONE, PLAYER2;
-    }
 
+    }
     /**
      * Enumeration of the Mode which the user has selected to play as.
      */
     public enum Mode {
         PLAYER, CPU, NETWORK;
-    }
 
-    /**
-     * Listener interface for the {@link Game} class
-     */
-    private int maxScore;       // pre-calculated field for keeping track of the current MAX Score
+    }
 
     /**
      * Basic default constructor setting initial values to zero
@@ -113,8 +108,6 @@ public class Game {
 
         gameTree.addEdge(new Edge(dotStart, dotEnd));
 
-        // notify the message bus for the event
-        RxBus.getInstance().send(new PlayerMoveEvent());
         switch (gameState) {
             case PLAYER1_TURN:
                 return takeTurnPlayer1(dotStart, dotEnd);
@@ -160,8 +153,6 @@ public class Game {
         }
         else {
             gameState = State.PLAYER2_TURN;
-
-
         }
 
         return boxesCompleted;
