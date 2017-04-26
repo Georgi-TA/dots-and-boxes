@@ -398,7 +398,10 @@ public class BoardView extends View {
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
 
-                RxBus.getInstance().send(new PlayerMoveEvent(new Edge(numberDotStart, numberDotEnd)));
+                // send a move event only if the edge is not present in the game tree
+                if (!game.getGameTree().hasEdge(numberDotStart, numberDotEnd))
+                    RxBus.getInstance().send(new PlayerMoveEvent(new Edge(numberDotStart, numberDotEnd)));
+
                 invalidate();
 
             case MotionEvent.ACTION_CANCEL: {

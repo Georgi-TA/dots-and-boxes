@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -36,7 +35,6 @@ import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
-import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
@@ -79,8 +77,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
 
     private TextView turnText;
     private ProgressBar progressBar;
-
-    private BotMoveAsyncTask botMoveTask;
 
     private Vibrator vibrator;
 
@@ -140,6 +136,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                         RxBus.getInstance().send(new SquareCompletedEvent());
                     }
                 }
+
                 /*
                  *  The player made a move
                  */
@@ -157,6 +154,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                         RxBus.getInstance().send(new SquareCompletedEvent());
                     }
                 }
+
                 /*
                  *  The opponent made a move
                  */
@@ -164,10 +162,10 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
 
                     setTurnText(Game.Player.PLAYER1);
                 }
+
                 /*
                  *  Register the event and reflect the score
                  */
-
                 else if (event instanceof ScoreMadeEvent) {
                     ScoreMadeEvent scoreEvent = (ScoreMadeEvent) event;
                     if (scoreEvent.scoringPlayer == Game.Player.PLAYER1) {
@@ -211,6 +209,10 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
     }
 
     private void takeTurnFromBot() {
+        boardView.disableInteraction();
+        progressBar.setProgress(100);
+        progressTimer.start();
+
         Observable.fromCallable(() -> bot.getNextMove())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -237,37 +239,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         }
         turnText.setText(turnString);
     }
-
-    private class BotMoveAsyncTask extends AsyncTask<Void, Integer, Edge> {
-        private final String TAG = BotMoveAsyncTask.class.getCanonicalName();
-
-        protected void onPreExecute () {
-            boardView.disableInteraction();
-            progressBar.setProgress(100);
-            progressTimer.start();
-        }
-
-        protected Edge doInBackground(Void... params) {
-            return bot.getNextMove();
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-
-        }
-
-        protected void onPostExecute(Edge result) {
-            Log.d(TAG, "onPostExecute: " + result.getKey());
-            RxBus.getInstance().send(new BotComputeEvent(result));
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            progressTimer.cancel();
-        }
-    }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -373,13 +344,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         super.onDetach();
         mListener = null;
         subscription.unsubscribe();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (botMoveTask != null && !botMoveTask.isCancelled())
-            botMoveTask.cancel(true);
     }
 
     @Override

@@ -66,13 +66,11 @@ public class Graph {
         edges.put(edge.getKey(), edge);
     }
 
-
-
     public boolean hasEdge(int dotStart, int dotEnd) {
         return edges.containsKey(Edge.generateKey(dotStart, dotEnd));
     }
 
-    private boolean hasEdge(String edgeKey) {
+    public boolean hasEdge(String edgeKey) {
         return edges.containsKey(edgeKey);
     }
 }

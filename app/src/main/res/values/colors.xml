@@ -3,16 +3,16 @@
     <!-- Game colors -->
     <color name="line">#FF222222</color>
     <color name="line_temp">#30000000</color>
-    <color name="boxPlayer1">#21C3E0</color>
-    <color name="boxPlayer2">#FC6470</color>
+    <color name="boxPlayer1">#26c6da</color>
+    <color name="boxPlayer2">#e57373</color>
 
-    <color name="scorePlayer1">#21C3E0</color>
-    <color name="scorePlayer2">#FC6470</color>
+    <color name="scorePlayer1">#26c6da</color>
+    <color name="scorePlayer2">#e57373</color>
     <color name="progress_bar">#FEFEFE</color>
     <color name="progress_bar_secondary">#CDCDCD</color>
 
     <!-- Material colors -->
-    <color name="colorAccent">#a31720</color>
+    <color name="colorAccent">#b71c1c</color>
     <color name="primaryDark">#232323</color>
     <color name="primaryLight">#9ca9c1</color>
     <color name="primary">#414040</color>
@@ -25,7 +25,7 @@
     <!-- Settings -->
     <color name="settings_icons">#757575</color>
     <color name="background_settings">#FFFFFF</color>
-    <color name="settings_controls">#80CBC4</color>
+    <color name="settings_controls">#80cbc4</color>
 
     <!-- Main menu -->
     <color name="menu_icons">#FF000000</color>

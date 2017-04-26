@@ -2,8 +2,6 @@ package com.touchawesome.dotsandboxes.game.models;
 
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 
-import java.util.BitSet;
-
 /**
  * Class responsible for the presentation of the board in a given state.
  * This board itself is presented as numbered dots from 0 to n^2-1.
