@@ -15,15 +15,13 @@ import com.touchawesome.dotsandboxes.fragments.ChooseBoardSizeFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
 import com.touchawesome.dotsandboxes.fragments.GameFragment;
 import com.touchawesome.dotsandboxes.fragments.ChooseModeFragment;
-import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
 import com.touchawesome.dotsandboxes.fragments.ResultsFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
 public class MainActivity extends GoogleGamesActivity implements ChooseModeFragment.OnFragmentInteractionListener,
                                                                  FragmentManager.OnBackStackChangedListener,
-                                                                 ChooseBoardSizeFragment.OnFragmentInteractionListener,
-                                                                 NetworkMenuFragment.Listener {
+                                                                 ChooseBoardSizeFragment.OnFragmentInteractionListener{
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -119,10 +117,6 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
                 fragment = ChooseBoardSizeFragment.newInstance(args);
                 break;
             }
-            case NetworkMenuFragment.FRAGMENT_ID: {
-                fragment = NetworkMenuFragment.newInstance(args);
-                break;
-            }
             case ComingSoonFragment.FRAGMENT_ID: {
                 fragment = ComingSoonFragment.newInstance(args);
                 break;
@@ -178,7 +172,7 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
 
     @Override
     public void onNetworkPlaySelected() {
-        loadFragment(NetworkMenuFragment.FRAGMENT_ID, new Bundle());
+        loadFragment(ComingSoonFragment.FRAGMENT_ID, new Bundle());
     }
 
     @Override
@@ -187,22 +181,4 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);
         startActivity(intent);
     }
-
-    @Override
-    public void onStartGameRequested() {
-
-    }
-
-    @Override
-    public void onSignInButtonClicked() {
-        mSignInClicked = true;
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onSignOutButtonClicked() {
-
-    }
-
-
 }

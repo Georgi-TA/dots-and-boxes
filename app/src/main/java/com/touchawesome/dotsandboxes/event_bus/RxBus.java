@@ -36,7 +36,7 @@ public class RxBus {
         return bus;
     }
 
-    public Subscription subscribe(final Class filter, Subscriber<? super Object> subscriber) {
+    public Subscription subscribe(Class filter, Subscriber<? super Object> subscriber) {
         return bus.filter(new Func1<Object, Boolean>() {
             @Override
             public Boolean call(Object o) {

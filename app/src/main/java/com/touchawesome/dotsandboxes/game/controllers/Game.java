@@ -3,7 +3,6 @@ package com.touchawesome.dotsandboxes.game.controllers;
 
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
 import com.touchawesome.dotsandboxes.event_bus.events.GameEndEvent;
-import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.TurnChangeEvent;
 import com.touchawesome.dotsandboxes.game.models.Board;
@@ -35,6 +34,9 @@ public class Game {
             case PLAYER2:
                 gameState = State.PLAYER2_TURN;
                 break;
+            case NONE:
+                gameState = State.PLAYER1_TURN;
+                break;
         }
     }
 
@@ -58,14 +60,14 @@ public class Game {
      * Enumeration of the players, who own a square. Also used for turn based decisions.
      */
     public enum Player {
-        PLAYER1, NONE, PLAYER2;
+        PLAYER1, PLAYER2, NONE
 
     }
     /**
      * Enumeration of the Mode which the user has selected to play as.
      */
     public enum Mode {
-        PLAYER, CPU, NETWORK;
+        PLAYER, CPU
 
     }
 
@@ -102,7 +104,7 @@ public class Game {
      * @param dotEnd   ending point
      * @return how many boxes were completed. -1 if the move is invalid.
      */
-    public int makeAMove(int dotStart, int dotEnd, Player player) {
+    public int makeAMove(int dotStart, int dotEnd) {
         if (gameTree.hasEdge(dotStart, dotEnd))
             return -1;
 
@@ -218,6 +220,6 @@ public class Game {
      * @param winner the winner of the game
      */
     private void notifyGameEnd(Player winner) {
-        rxBus.send(new GameEndEvent());
+        rxBus.send(new GameEndEvent(winner));
     }
 }

@@ -66,30 +66,13 @@ public class Graph {
         edges.put(edge.getKey(), edge);
     }
 
-    /**
-     * Remove an edge from the game tree
-     *
-     * @param edge the edge to be removed
-     */
-    void removeEdge(Edge edge) {
-        edges.remove(edge.getKey());
-    }
 
-    /**
-     * Serves as an utility function for the minimax algorithm
-     *
-     * @param board the board which represents the current game state.
-     * @return The integer value which is the maximum score that <b>Player 2</b> can make
-     */
-    private int getValue(Board board) {
-        return board.getScore(Game.Player.PLAYER2) - board.getScore(Game.Player.PLAYER1);
-    }
 
     public boolean hasEdge(int dotStart, int dotEnd) {
         return edges.containsKey(Edge.generateKey(dotStart, dotEnd));
     }
 
-    public boolean hasEdge(String edgeKey) {
+    private boolean hasEdge(String edgeKey) {
         return edges.containsKey(edgeKey);
     }
 }

@@ -42,13 +42,17 @@ import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class GameFragment extends Fragment implements View.OnTouchListener {
+    private final String TAG = GameFragment.class.getCanonicalName();
+
     public static final int FRAGMENT_ID = 6164;
     public static final String ARG_MODE = "com.touchawesome.args.mode";
     private static final String ARG_BOARD = "com.touchawesome.args.board";
@@ -119,12 +123,11 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                  */
                 if (event instanceof BotComputeEvent) {
                     BotComputeEvent botMoveEvent = (BotComputeEvent) event;
-                    int boxesCompleted = game.makeAMove(botMoveEvent.botMove.getDotStart(), botMoveEvent.botMove.getDotEnd(), Game.Player.PLAYER2);
+                    int boxesCompleted = game.makeAMove(botMoveEvent.botMove.getDotStart(), botMoveEvent.botMove.getDotEnd());
                     boardView.invalidate();
 
                     if (boxesCompleted > 0 && game.getState() != Game.State.END) {
-                        botMoveTask = new BotMoveAsyncTask();
-                        botMoveTask.execute();
+                        takeTurnFromBot();
                     }
                     else {
                         boardView.invalidate();
@@ -142,12 +145,11 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                  */
                 else if (event instanceof PlayerMoveEvent) {
                     PlayerMoveEvent playermoveEvent = (PlayerMoveEvent) event;
-                    int boxesCompleted = game.makeAMove(playermoveEvent.playerMove.getDotStart(), playermoveEvent.playerMove.getDotEnd(), Game.Player.PLAYER1);
+                    int boxesCompleted = game.makeAMove(playermoveEvent.playerMove.getDotStart(), playermoveEvent.playerMove.getDotEnd());
                     boardView.invalidate();
 
                     if (boxesCompleted == 0 && mode == Game.Mode.CPU) {
-                        botMoveTask = new BotMoveAsyncTask();
-                        botMoveTask.execute();
+                        takeTurnFromBot();
                     }
                     setTurnText(Game.Player.PLAYER2);
 
@@ -206,6 +208,17 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                 }
             }
         });
+    }
+
+    private void takeTurnFromBot() {
+        Observable.fromCallable(() -> bot.getNextMove())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .delay(500, TimeUnit.MILLISECONDS)
+                .subscribe(edge -> {
+                    Log.d(TAG, "onPostExecute: " + edge.getKey());
+                    RxBus.getInstance().send(new BotComputeEvent(edge));
+                });
     }
 
     public void setTurnText(Game.Player player) {

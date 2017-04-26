@@ -10,10 +10,7 @@ import java.util.HashMap;
  * Created by scelus on 15.03.17
  */
 public class PlayerBot {
-
-    private Game.Player ID = Game.Player.PLAYER2;
     private Game game;
-    private int maxResult;
 
     public PlayerBot(Game game) {
         this.game = game;
@@ -22,7 +19,6 @@ public class PlayerBot {
     public Edge getNextMove() {
         // get a copy of the game board
         Board board = game.getBoard();
-        maxResult = board.getColumns() * board.getRows();
         Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
         miniMaxBoard.loadBoard(board.toString());
 
@@ -154,49 +150,6 @@ public class PlayerBot {
      * @return first found Edge that will complete a box
      */
     private ArrayList<Edge> getCompletionMoves() {
-
-//
-//        /**
-//         * Previous implementation of this method
-//         */
-//        Board board = game.getBoard();
-//        int dots_rows = board.getRows();
-//
-//        for (int i = 0; i < board.getRows(); i++) {
-//            for (int j = 0; j < board.getColumns(); j++) {
-//                Board.Box box = board.getBoxAt(i, j);
-//
-//                if (box.player != Game.Player.NONE)
-//                    continue;
-//
-//                // left missing
-//                if (box.bottom & box.top & box.right) {
-//                    completionEdges.add(new Edge(i * dots_rows + j, (i + 1) * dots_rows + j + 1));
-//                }
-//
-//                // top missing
-//                if (box.bottom & box.left & box.right) {
-//                    completionEdges.add(new Edge(i * dots_rows + j, i * dots_rows + j + 1));
-//                }
-//
-//                if (i == board.getRows() - 1) {
-//                    // right missing
-//                    if (box.bottom & box.top & box.left) {
-//                        completionEdges.add(new Edge(i * dots_rows + j + 1, (i + 1) * dots_rows + j + 1));
-//                    }
-//                }
-//
-//                if (j == board.getColumns() - 1) {
-//                    // bottom missing
-//                    if (box.top & box.left & box.right) {
-//                        int bottomStart = (i + 1) * dots_rows + j;
-//                        int bottomEnd =  (i + 1) * dots_rows + j + 1;
-//                        Edge bottomEdge = new Edge(bottomStart, bottomEnd);
-//                        completionEdges.add(bottomEdge);
-//                    }
-//                }
-//            }
-
 
         ArrayList<Edge> completionMoves = new ArrayList<>();
         HashMap<String, Edge> madeMoves = game.getGameTree().getEdges();
