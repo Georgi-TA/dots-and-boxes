@@ -191,6 +191,8 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                     args.putInt(ARG_PLAYER2_SCORE, player2Score);
                     args.putSerializable(ARG_GAME_MODE, mode);
 
+                    // TODO: 26.04.17 Add analytics with User Timings, score, mode, and board size
+                    
                     if (mListener != null)
                         mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
                 }
