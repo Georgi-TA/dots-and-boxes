@@ -6,18 +6,22 @@
         android:top="1dp"
         android:left="1dp"
         android:right="1dp"
-        android:bottom="1dp"/>
+        android:bottom="1dp" />
 
-    <item android:drawable="@drawable/dot"
-        android:gravity="bottom|left"/>
+    <item android:gravity="bottom|left">
+        <inset android:drawable="@drawable/dot"/>
+    </item>
 
-    <item android:drawable="@drawable/dot"
-        android:gravity="bottom|right"/>
+    <item android:gravity="bottom|right">
+        <inset android:drawable="@drawable/dot"/>
+    </item>
 
-    <item android:drawable="@drawable/dot"
-        android:gravity="top|left"/>
+    <item android:gravity="top|left">
+        <inset android:drawable="@drawable/dot"/>
+    </item>
 
-    <item android:drawable="@drawable/dot"
-        android:gravity="top|right"/>
+    <item android:gravity="top|right">
+        <inset android:drawable="@drawable/dot"/>
+    </item>
 
 </layer-list>

@@ -8,6 +8,8 @@ public class Constants {
     private final static String PACKAGE_NAME = "com.touchawesome.dotsandboxes";
     public final static String INTENT_GAME_EXTRA_BUNDLE = PACKAGE_NAME + ".INTENT_EXTRA_BUNDLE";
 
+
+    // Achievements
     public static final String PREFS_NAME_ACHIEVEMENTS = PACKAGE_NAME + "achievements.name";
 
     public static final String PREFS_ACHIEVEMENT_STARTED_UP = PACKAGE_NAME + "achievements.started_up";
@@ -19,7 +21,12 @@ public class Constants {
     public static final String PREFS_ACHIEVEMENT_FLAWLESS = PACKAGE_NAME + "achievement.flawless";
     public static final String PREFS_ACHIEVEMENT_START_TIME = PACKAGE_NAME + "achievement.start.time";
 
+    // General preferences
     public static final String PREFS_NAME_GENERAL = PACKAGE_NAME + "general.name";
 
     public static final String TUTORIAL_COMPLETE = PACKAGE_NAME + "tutorial.complete";
+
+    // Analytics
+    public static final String PREFS_NAME_ANALYTICS = PACKAGE_NAME + "analytics.name";
+    public static final String GAME_DURATION_START = PACKAGE_NAME + "analytics.game_duration.start";
 }

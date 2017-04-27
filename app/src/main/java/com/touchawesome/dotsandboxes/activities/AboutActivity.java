@@ -35,12 +35,9 @@ public class AboutActivity extends MusicEnabledActivity {
             }
         });
 
-        // analytics
-        // Get tracker.
+        // Analytics
         Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
-        // Set screen name.
         t.setScreenName(getString(R.string.screen_name_about));
-        // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

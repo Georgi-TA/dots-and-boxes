@@ -32,12 +32,6 @@ public class MusicService extends Service implements MediaPlayer.OnErrorListener
             createSoundPlayer();
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // return Service.START_NOT_STICKY;
-        return super.onStartCommand(intent,flags,startId);
-    }
-
     public void sendCommand(@Nullable Intent intent) {
         if (intent != null) {
             String action = intent.getAction();

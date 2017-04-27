@@ -35,11 +35,14 @@ import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
+import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -191,8 +194,44 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                     args.putInt(ARG_PLAYER2_SCORE, player2Score);
                     args.putSerializable(ARG_GAME_MODE, mode);
 
-                    // TODO: 26.04.17 Add analytics with User Timings, score, mode, and board size
-                    
+                    // Analytics Game duration
+                    long gameDurationMillis = getContext().getSharedPreferences(Constants.PREFS_NAME_ANALYTICS, Context.MODE_PRIVATE)
+                                                          .getLong(Constants.GAME_DURATION_START, System.currentTimeMillis()) - System.currentTimeMillis();
+
+                    Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+                    t.send(new HitBuilders.TimingBuilder()
+                                           .setCategory(getString(R.string.game_stats_category))
+                                           .setLabel(getString(R.string.game_duration_label))
+                                           .setVariable(getString(R.string.game_duration_label))
+                                           .setValue(gameDurationMillis)
+                                           .build());
+
+                    // clear the timestamp for game start
+                    getContext().getSharedPreferences(Constants.PREFS_NAME_ANALYTICS, Context.MODE_PRIVATE).edit().remove(Constants.GAME_DURATION_START).apply();
+
+                    // Analytics Play stats
+                    String difficulty = getString(R.string.three_by_three);
+                    switch (game.getBoard().getRows()) {
+                        case 3:
+                            difficulty = getString(R.string.three_by_three);
+                            break;
+
+                        case 4:
+                            difficulty = getString(R.string.four_by_four);
+                            break;
+
+                        case 5:
+                            difficulty = getString(R.string.five_by_five);
+                            break;
+                    }
+
+                    t.send(new HitBuilders.EventBuilder()
+                            .setCategory(getString(R.string.game_stats_category))
+                            .setLabel(getString(R.string.game_mode_label))
+                            .setAction(String.format(Locale.ENGLISH, getString(R.string.game_mode_template), difficulty, mode.toString(), player1Score, player2Score))
+                            .build());
+
+
                     if (mListener != null)
                         mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
                 }
@@ -215,13 +254,21 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         progressBar.setProgress(100);
         progressTimer.start();
 
-        Observable.fromCallable(() -> bot.getNextMove())
+        Observable.fromCallable(new Callable<Edge>() {
+                                    @Override
+                                    public Edge call() throws Exception {
+                                        return bot.getNextMove();
+                                    }
+                                })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(500, TimeUnit.MILLISECONDS)
-                .subscribe(edge -> {
-                    Log.d(TAG, "onPostExecute: " + edge.getKey());
-                    RxBus.getInstance().send(new BotComputeEvent(edge));
+                .subscribe(new Action1<Edge>() {
+                    @Override
+                    public void call(Edge edge) {
+                        Log.d(TAG, "onPostExecute: " + edge.getKey());
+                        RxBus.getInstance().send(new BotComputeEvent(edge));
+                    }
                 });
     }
 
@@ -275,10 +322,15 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         // RxBus
         initBusSubscription();
 
-        // analytics
+        // Analytics
         Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
         t.setScreenName(getString(R.string.screen_name_game));
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        getContext().getSharedPreferences(Constants.PREFS_NAME_ANALYTICS, Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong(Constants.GAME_DURATION_START, System.currentTimeMillis())
+                    .apply();
     }
 
     @SuppressWarnings("deprecation")
