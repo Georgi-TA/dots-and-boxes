@@ -20,8 +20,7 @@ public class BaseGameUtils {
      * @param message the message to display in the Dialog.
      */
     public static void showAlert(Activity activity, String message) {
-        (new AlertDialog.Builder(activity)).setMessage(message)
-                .setNeutralButton(android.R.string.ok, null).create().show();
+        (new AlertDialog.Builder(activity)).setMessage(message).setNeutralButton(android.R.string.ok, null).create().show();
     }
 
     /**

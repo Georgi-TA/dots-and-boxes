@@ -63,7 +63,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
     public static final String ARG_PLAYER2_SCORE = "com.touchawesome.args.score.player2";
     public static final String ARG_GAME_MODE = "com.touchawesome.args.game.mode";
 
-    private final int BOT_DELAY_TIME = 400; //ms
+    private final int BOT_DELAY_TIME = 750; //ms
     private boolean shouldVibrate;
 
     private Subscription subscription;
@@ -148,10 +148,14 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                     int boxesCompleted = game.makeAMove(playermoveEvent.playerMove.getDotStart(), playermoveEvent.playerMove.getDotEnd());
                     boardView.invalidate();
 
-                    if (boxesCompleted == 0 && mode == Game.Mode.CPU) {
-                        takeTurnFromBot();
+                    if (boxesCompleted == 0) {
+                        setTurnText(Game.Player.PLAYER2);
+
+                        if (mode == Game.Mode.CPU) {
+                            takeTurnFromBot();
+                        }
                     }
-                    setTurnText(Game.Player.PLAYER2);
+
 
                     if (boxesCompleted > 0) {
                         RxBus.getInstance().send(new SquareCompletedEvent());
@@ -262,7 +266,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .delay(500, TimeUnit.MILLISECONDS)
+                .delay(BOT_DELAY_TIME, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Edge>() {
                     @Override
                     public void call(Edge edge) {
