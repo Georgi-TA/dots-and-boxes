@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
-import com.touchawesome.dotsandboxes.event_bus.events.BoardTouchedEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.EmitSoundEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Board;
@@ -313,10 +313,7 @@ public class BoardView extends View {
             case MotionEvent.ACTION_DOWN:
 
             // send an event to make a sound
-                if (shouldMakeASound)
-                    RxBus.getInstance().send(new BoardTouchedEvent());
 
-                
             case MotionEvent.ACTION_MOVE: {
                 // calculate where on the view did the motion event occur
                 float touchX = motionEvent.getX() - horizontalOffset;
@@ -326,8 +323,9 @@ public class BoardView extends View {
                 if (touchX < -snapLength ||
                     touchX > touchWidth ||
                     touchY < -snapLength ||
-                    touchY > touchHeight)
+                    touchY > touchHeight) {
                     return false;
+                }
 
                 // calculate on which box did the touch happen
                 float rowY = Math.abs(touchY) / boxSide;
@@ -398,9 +396,14 @@ public class BoardView extends View {
                 int numberDotStart = ((int) y1temp) * (board.getColumns() + 1) + (int) x1temp;
                 int numberDotEnd = ((int) y2temp) * (board.getColumns() + 1) + (int) x2temp;
 
+
                 // send a move event only if the edge is not present in the game tree
-                if (!game.getGameTree().hasEdge(numberDotStart, numberDotEnd))
+                if (!game.getGameTree().hasEdge(numberDotStart, numberDotEnd)) {
                     RxBus.getInstance().send(new PlayerMoveEvent(new Edge(numberDotStart, numberDotEnd)));
+
+                    // produce a sound if a line is about to be drawn
+                    RxBus.getInstance().send(new EmitSoundEvent());
+                }
 
                 invalidate();
 

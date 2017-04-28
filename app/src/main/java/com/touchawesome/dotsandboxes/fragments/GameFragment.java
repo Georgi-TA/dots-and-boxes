@@ -27,7 +27,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
-import com.touchawesome.dotsandboxes.event_bus.events.BoardTouchedEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.EmitSoundEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.BotComputeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.GameEndEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.OpponentMoveEvent;
@@ -235,7 +235,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                     if (mListener != null)
                         mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
                 }
-                else if (event instanceof BoardTouchedEvent) {
+                else if (event instanceof EmitSoundEvent) {
                     if (mListener != null) {
                         mListener.onSoundRequested();
                     }
