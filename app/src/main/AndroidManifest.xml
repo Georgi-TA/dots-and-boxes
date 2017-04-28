@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.MainActivity"
             android:launchMode="singleInstance" />
@@ -42,10 +43,6 @@
                 android:value="com.touchawesome.dotsandboxes.activities.MainActivity" />
         </activity>
 
-        <service
-            android:name=".services.MusicService"
-            android:enabled="true"
-            android:exported="false" />
 
         <activity
             android:name=".activities.GameActivity"
@@ -62,6 +59,12 @@
             android:name=".activities.TutorialActivity"
             android:label="@string/title_activity_tutorial"
             android:theme="@style/SettingsTheme"/>
+
+        <service
+            android:name=".services.MusicService"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>

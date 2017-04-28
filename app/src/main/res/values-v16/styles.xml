@@ -10,9 +10,10 @@
         <item name="android:colorBackground">@color/background</item>
         <item name="colorControlNormal">@color/primary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
-    <!-- Base application theme. -->
+    <!-- Game screen application theme. -->
     <style name="GameTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
@@ -20,6 +21,7 @@
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryDark</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <!-- Settings application theme. -->
@@ -38,6 +40,12 @@
         <item name="colorPrimary">@color/background_settings</item>
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="android:listDivider">@null</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
+        <item name="android:background">@color/background</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">

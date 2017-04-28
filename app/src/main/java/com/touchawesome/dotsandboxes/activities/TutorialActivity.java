@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +16,9 @@ import android.widget.LinearLayout;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
+import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.utils.Constants;
@@ -28,6 +31,8 @@ import rx.schedulers.Schedulers;
 
 public class TutorialActivity extends AppCompatActivity {
 
+    private BoardView boardView;
+    private Game tutorialGame;
     private BoardView hintBoardView;
     private LinearLayout section2;
     private Subscription subscription;
@@ -43,9 +48,6 @@ public class TutorialActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        BoardView boardView = (BoardView) findViewById(R.id.tutorial_board);
-        hintBoardView = (BoardView) findViewById(R.id.tutorial_board_hint);
-
         section2 = (LinearLayout) findViewById(R.id.instructions_part_2);
         section2.setAlpha(0);
         section2.setVisibility(View.GONE);
@@ -59,7 +61,9 @@ public class TutorialActivity extends AppCompatActivity {
             }
         });
 
-        Game tutorialGame = new Game(2, 2);
+        // The board enabled for touch events
+        boardView = (BoardView) findViewById(R.id.tutorial_board);
+        tutorialGame = new Game(2, 2);
         tutorialGame.getBoard().loadBoard("31,11,47,14");
 
         // add horizontal edges
@@ -81,11 +85,14 @@ public class TutorialActivity extends AppCompatActivity {
         boardView.setGame(tutorialGame);
         boardView.enableInteraction();
 
+        // Hint board and game initialization
+        hintBoardView = (BoardView) findViewById(R.id.tutorial_board_hint);
         Game tutorialHintGame = new Game(2, 2);
         tutorialHintGame.getBoard().loadBoard("0,4,0,1");
         hintBoardView.setGame(tutorialHintGame);
         hintBoardView.disableInteraction();
         hintBoardView.setAlpha(0);
+
         findViewById(R.id.tutorial_screen_layout).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -122,10 +129,13 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     private void initBusSubscription() {
-        subscription = RxBus.getInstance().getBus().subscribeOn(Schedulers.computation()).subscribe(new Action1<Object>() {
+        subscription = RxBus.getInstance().getBus().subscribe(new Action1<Object>() {
+            static final String TAG = "Tutorial Subscription";
+
             @Override
             public void call(Object event) {
 
+                Log.i(TAG, "call: " + event.getClass().toString());
                 /*
                  *  Register the event and reflect the score
                  */
@@ -133,6 +143,11 @@ public class TutorialActivity extends AppCompatActivity {
                     section2.setAlpha(0);
                     section2.setVisibility(View.VISIBLE);
                     section2.animate().alpha(1).setDuration(getResources().getInteger(R.integer.slide_duration));
+                }
+                else if (event instanceof PlayerMoveEvent) {
+                    PlayerMoveEvent playermoveEvent = (PlayerMoveEvent) event;
+                    tutorialGame.makeAMove(playermoveEvent.playerMove.getDotStart(), playermoveEvent.playerMove.getDotEnd());
+                    boardView.invalidate();
                 }
             }
         });

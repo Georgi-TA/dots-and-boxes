@@ -117,7 +117,7 @@ public class BoardView extends View {
 
         Board board = game.getBoard();
 
-        boolean reinvalidate = false;
+        boolean revalidate = false;
         int x1, y1, x2, y2;
         for (int i = 0; i < board.getRows(); i++)
             for (int j = 0; j < board.getColumns(); j++) {
@@ -133,7 +133,7 @@ public class BoardView extends View {
 
                     // update the box alpha
                     if (boxesAlpha[i][j] < 255) {
-                        reinvalidate = true;
+                        revalidate = true;
                         boxesAlpha[i][j]+=5;
                     }
 
@@ -204,7 +204,7 @@ public class BoardView extends View {
                 canvas.drawCircle(x1, y1, dotRadius, dotPaint);
             }
 
-        if (reinvalidate)
+        if (revalidate)
             this.postInvalidate();
     }
 
@@ -239,7 +239,7 @@ public class BoardView extends View {
         int width;
         int height;
 
-        //Measure Width
+        // Measure Width
         if (widthMode == MeasureSpec.EXACTLY) {
             //Must be this size
             width = widthSize;
@@ -251,7 +251,7 @@ public class BoardView extends View {
             width = desiredWidth;
         }
 
-        //Measure Height
+        // Measure Height
         if (heightMode == MeasureSpec.EXACTLY) {
             //Must be this size
             height = heightSize;
@@ -263,7 +263,7 @@ public class BoardView extends View {
             height = desiredHeight;
         }
 
-        //MUST CALL THIS
+        // MUST CALL THIS!
         setMeasuredDimension(width, height);
 
         int size;
@@ -402,7 +402,9 @@ public class BoardView extends View {
                     RxBus.getInstance().send(new PlayerMoveEvent(new Edge(numberDotStart, numberDotEnd)));
 
                     // produce a sound if a line is about to be drawn
-                    RxBus.getInstance().send(new EmitSoundEvent());
+                    if (shouldMakeASound) {
+                        RxBus.getInstance().send(new EmitSoundEvent());
+                    }
                 }
 
                 invalidate();

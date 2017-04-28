@@ -10,6 +10,7 @@
         <item name="android:colorBackground">@color/background</item>
         <item name="android:colorControlNormal">@color/primary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <!-- Base application theme. -->
@@ -21,6 +22,7 @@
         <item name="android:colorBackground">@color/background</item>
         <item name="android:colorControlNormal">@color/textColorPrimary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <!-- Settings application theme. -->
@@ -39,6 +41,12 @@
         <item name="android:colorPrimary">@color/background_settings</item>
         <item name="android:colorPrimaryDark">@android:color/black</item>
         <item name="android:listDivider">@null</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimaryDark</item>
+        <item name="android:background">@color/background</item>
     </style>
 
     <style name="ScoreView" parent="TextAppearance.AppCompat">
