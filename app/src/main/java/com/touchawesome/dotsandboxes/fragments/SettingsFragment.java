@@ -85,7 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
     /**
-     * Class for interacting with the main interface of the service.
+     * Class for interacting with the game interface of the service.
      */
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {

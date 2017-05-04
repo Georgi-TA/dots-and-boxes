@@ -60,6 +60,12 @@
             android:src="@drawable/ic_button_settings"
             style="@style/BottomBarButton" />
 
+        <ImageButton
+            android:id="@+id/button_music"
+            android:src="@drawable/icon_sound"
+            android:padding="8dp"
+            style="@style/BottomBarButton" />
+
     </LinearLayout>
 
 </RelativeLayout>

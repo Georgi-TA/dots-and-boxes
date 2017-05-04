@@ -27,12 +27,12 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Display the fragment as the main content.
+        // Display the fragment as the game content.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, new SettingsFragment())
                 .commit();
 
-        // analytics
+        // Analytics
         // Get tracker.
         Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
         // Set screen name.

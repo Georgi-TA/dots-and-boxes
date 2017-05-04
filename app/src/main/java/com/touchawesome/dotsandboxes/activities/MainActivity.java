@@ -84,14 +84,13 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
         }
 
         return super.onSupportNavigateUp();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        // return the user to the begin
+        // return the user to the beginning
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         }
@@ -129,7 +128,7 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                R.anim.enter_from_left, R.anim.exit_to_right);
+                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();
