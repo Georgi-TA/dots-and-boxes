@@ -5,7 +5,11 @@ import android.graphics.Typeface;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.db.DaoMaster;
+import com.touchawesome.dotsandboxes.db.DaoSession;
 import com.touchawesome.dotsandboxes.utils.Globals;
+
+import org.greenrobot.greendao.database.Database;
 
 import java.util.HashMap;
 
@@ -15,15 +19,21 @@ import java.util.HashMap;
 public class App extends Application {
 
     private static final String PROPERTY_ID = "UA-97658506-1";
+    private DaoSession daoSession;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         Globals.kgTrueColors = Typeface.createFromAsset(getAssets(), "fonts/KGTrueColors.ttf");
+
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
     }
 
     public enum TrackerName {
-        APP_TRACKER, // Tracker used only in this app.
+        APP_TRACKER
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
@@ -36,5 +46,9 @@ public class App extends Application {
         }
 
         return mTrackers.get(trackerId);
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 }

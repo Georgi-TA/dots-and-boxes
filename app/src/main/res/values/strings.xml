@@ -90,6 +90,7 @@
     <string name="wins">WINS</string>
     <string name="result">Result</string>
     <string name="title_activity_tutorial">How to play</string>
+    <string name="win">WIN</string>
 
     <!-- Tutorial screen -->
     <string name="tutorial_part_1">Touch the board to place a line</string>
@@ -100,7 +101,6 @@
     <string name="feedback_subject"><![CDATA[Feedback - Dots&Boxes Alpha]]></string>
     <string name="feedback_email">georgi@touchawesome.com</string>
     <string name="play">Play</string>
-    <string name="win">WIN</string>
 
     <!-- Analytics Screen Names -->
     <string name="screen_name_choose_mode">Choose Mode</string>
@@ -116,5 +116,11 @@
     <string name="game_duration_label">Game Duration</string>
     <string name="game_mode_label">Play Mode</string>
     <string name="game_mode_template" formatted="false">Difficulty: %s, Mode: %s, Score: %d - %d</string>
+
+    <!-- History screen -->
+    <string name="title_history">History</string>
+    <string name="lost">Lost</string>
+    <string name="tie">TIE</string>
+    <string name="versus">VS</string>
 
 </resources>

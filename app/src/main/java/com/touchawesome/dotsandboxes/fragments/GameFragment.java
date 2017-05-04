@@ -26,6 +26,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.db.GameScore;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
 import com.touchawesome.dotsandboxes.event_bus.events.EmitSoundEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.BotComputeEvent;
@@ -41,6 +42,7 @@ import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -234,6 +236,19 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                             .setLabel(getString(R.string.game_mode_label))
                             .setAction(String.format(Locale.ENGLISH, getString(R.string.game_mode_template), difficulty, mode.toString(), player1Score, player2Score))
                             .build());
+
+                    // Insert record in database
+                    GameScore gameScore = new GameScore();
+                    gameScore.setDate(new Date(System.currentTimeMillis()));
+                    gameScore.setMode(difficulty);
+                    gameScore.setOpponent(getString(R.string.versus) + " " + mode.toString());
+                    String scoreString = (player1Score > player2Score ? getString(R.string.win) : player1Score == player2Score ? getString(R.string.tie) : getString(R.string.lost)) +
+                            " " +
+                            player1Score +
+                            ":" +
+                            player2Score;
+                    gameScore.setScore(scoreString);
+                    ((App) getActivity().getApplication()).getDaoSession().getGameScoreDao().insert(gameScore);
 
 
                     if (mListener != null)

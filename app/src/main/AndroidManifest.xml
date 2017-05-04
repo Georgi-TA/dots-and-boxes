@@ -51,6 +51,11 @@
             android:theme="@style/GameTheme" />
 
         <activity
+            android:name=".activities.HistoryActivity"
+            android:label="@string/title_history"
+            android:theme="@style/SettingsTheme" />
+
+        <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_about"
             android:theme="@style/SettingsTheme" />
