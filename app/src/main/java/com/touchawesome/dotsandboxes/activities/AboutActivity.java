@@ -1,7 +1,6 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -36,12 +35,9 @@ public class AboutActivity extends MusicEnabledActivity {
             }
         });
 
-        // analytics
-        // Get tracker.
+        // Analytics
         Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
-        // Set screen name.
         t.setScreenName(getString(R.string.screen_name_about));
-        // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 

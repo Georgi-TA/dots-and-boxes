@@ -138,12 +138,9 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
         if (isSignedIn()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), RC_UNUSED);
 
-            // analytics
-            // Get tracker.
+            // Analytics
             Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
-            // Set screen name.
             t.setScreenName(getString(R.string.screen_name_achievements));
-            // Send a screen view.
             t.send(new HitBuilders.ScreenViewBuilder().build());
 
         } else {

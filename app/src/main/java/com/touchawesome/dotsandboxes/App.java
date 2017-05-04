@@ -30,11 +30,9 @@ public class App extends Application {
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
-
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             Tracker t = analytics.newTracker(PROPERTY_ID);
             mTrackers.put(trackerId, t);
-
         }
 
         return mTrackers.get(trackerId);

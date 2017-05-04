@@ -111,4 +111,10 @@
     <string name="screen_name_achievements">Achievements</string>
     <string name="screen_name_about">About</string>
 
+    <!-- Analytics Game Stats -->
+    <string name="game_stats_category">Game Statistics</string>
+    <string name="game_duration_label">Game Duration</string>
+    <string name="game_mode_label">Play Mode</string>
+    <string name="game_mode_template" formatted="false">Difficulty: %s, Mode: %s, Score: %d - %d</string>
+
 </resources>

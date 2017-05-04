@@ -15,8 +15,6 @@ import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
-import org.w3c.dom.Text;
-
 public class ChooseBoardSizeFragment extends Fragment {
     public static final int FRAGMENT_ID = 2626;
 

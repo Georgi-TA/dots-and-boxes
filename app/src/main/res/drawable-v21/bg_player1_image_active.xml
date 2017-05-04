@@ -8,16 +8,20 @@
         android:right="4dp"
         android:bottom="4dp"/>
 
-    <item android:drawable="@drawable/dot_player1_active"
-        android:gravity="bottom|left"/>
+    <item android:gravity="bottom|left">
+        <inset android:drawable="@drawable/dot_player1_active"/>
+    </item>
 
-    <item android:drawable="@drawable/dot_player1_active"
-        android:gravity="bottom|right"/>
+    <item android:gravity="bottom|right">
+        <inset android:drawable="@drawable/dot_player1_active"/>
+    </item>
 
-    <item android:drawable="@drawable/dot_player1_active"
-        android:gravity="top|left"/>
+    <item android:gravity="top|left">
+        <inset android:drawable="@drawable/dot_player1_active"/>
+    </item>
 
-    <item android:drawable="@drawable/dot_player1_active"
-        android:gravity="top|right"/>
+    <item android:gravity="top|right">
+        <inset android:drawable="@drawable/dot_player1_active"/>
+    </item>
 
 </layer-list>
