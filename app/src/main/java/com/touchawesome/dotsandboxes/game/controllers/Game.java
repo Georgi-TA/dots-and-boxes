@@ -155,6 +155,7 @@ public class Game {
         }
         else {
             gameState = State.PLAYER2_TURN;
+            notifyTurnChange(Player.PLAYER2);
         }
 
         return boxesCompleted;

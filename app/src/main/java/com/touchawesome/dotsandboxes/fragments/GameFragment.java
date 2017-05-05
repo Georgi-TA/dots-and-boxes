@@ -35,6 +35,7 @@ import com.touchawesome.dotsandboxes.event_bus.events.OpponentMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.TurnChangeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
 import com.touchawesome.dotsandboxes.game.models.PlayerBot;
@@ -167,10 +168,11 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                  *  The opponent made a move
                  */
                 else if (event instanceof OpponentMoveEvent) {
-
                     setTurnText(Game.Player.PLAYER1);
                 }
-
+                else if (event instanceof TurnChangeEvent) {
+                    setTurnText(((TurnChangeEvent) event).nextPlayer);
+                }
                 /*
                  *  Register the event and reflect the score
                  */
@@ -272,6 +274,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         progressBar.setProgress(100);
         progressTimer.start();
 
+        // Offload to an async calculation on a separate Rx Thread
         Observable.fromCallable(new Callable<Edge>() {
                                     @Override
                                     public Edge call() throws Exception {
@@ -296,13 +299,13 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         if (player == Game.Player.PLAYER1) {
             playerName = getString(R.string.player1TurnName);
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
-            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, turnString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         else {
             playerName = getString(R.string.player2TurnName);
 
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
-            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, turnString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         turnText.setText(turnString);
     }

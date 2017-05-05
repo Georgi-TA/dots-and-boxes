@@ -73,11 +73,11 @@
     <string name="five_by_five">Large (long)</string>
 
     <!-- Game screen -->
-    <string name="player1name">You</string>
-    <string name="player2name">Opponent</string>
+    <string name="player1name">Blue Player</string>
+    <string name="player2name">Red Player</string>
 
-    <string name="player1TurnName">Your</string>
-    <string name="player2TurnName">Opponent\'s</string>
+    <string name="player1TurnName">Blue Player\'s</string>
+    <string name="player2TurnName">Red Player\'s</string>
     <string name="turn_text">%s turn</string>
 
     <!-- About screen -->

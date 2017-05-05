@@ -7,7 +7,7 @@ import com.touchawesome.dotsandboxes.game.controllers.Game;
  */
 
 public class TurnChangeEvent {
-    private final Game.Player nextPlayer;
+    public final Game.Player nextPlayer;
 
     public TurnChangeEvent(Game.Player nextPlayer) {
         this.nextPlayer = nextPlayer;
