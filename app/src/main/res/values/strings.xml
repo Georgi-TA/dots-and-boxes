@@ -13,6 +13,7 @@
     <string name="menu_option_play_local_player">With Friend</string>
     <string name="menu_option_play_local_cpu">With Robot</string>
     <string name="menu_option_play_network">Network</string>
+    <string name="menu_option_history">History</string>
 
     <!-- Winner fragment -->
     <string name="winner">Winner</string>
@@ -119,7 +120,7 @@
 
     <!-- History screen -->
     <string name="title_history">History</string>
-    <string name="lost">Lost</string>
+    <string name="lost">LOST</string>
     <string name="tie">TIE</string>
     <string name="versus">VS</string>
 

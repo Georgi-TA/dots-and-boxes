@@ -158,7 +158,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                         }
                     }
 
-
                     if (boxesCompleted > 0) {
                         RxBus.getInstance().send(new SquareCompletedEvent());
                     }

@@ -6,6 +6,8 @@
     tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/play_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -23,29 +25,29 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
-
-
 
             <Button
                 android:id="@+id/buttonPlayLocalComputer"
                 style="@style/MenuLayoutButton"
                 android:text="@string/menu_option_play_local_cpu" />
 
-
             <Button
                 android:id="@+id/buttonPlayFriend"
                 style="@style/MenuLayoutButton"
                 android:text="@string/menu_option_play_local_player" />
 
-            <!--<Button-->
-            <!--android:text="@string/menu_option_play_network"-->
-            <!--android:id="@+id/buttonPlayNetwork"-->
-            <!--style="@style/MenuButton"/>-->
-
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonHistory"
+        style="@style/MenuLayoutButton"
+        android:layout_marginTop="20dp"
+        android:text="@string/menu_option_history"
+        android:layout_below="@+id/play_menu"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

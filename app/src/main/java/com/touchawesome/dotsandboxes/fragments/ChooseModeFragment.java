@@ -33,11 +33,8 @@ public class ChooseModeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // analytics
-        // Get tracker.
         Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
-        // Set screen name.
         t.setScreenName(getString(R.string.screen_name_choose_mode));
-        // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
@@ -48,8 +45,7 @@ public class ChooseModeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
         Button friendPlayButton = (Button) root.findViewById(R.id.buttonPlayFriend);
         Button computerPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
-//        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
-
+        Button historyButton = (Button) root.findViewById(R.id.buttonHistory);
 
         ((TextView) root.findViewById(R.id.label_play)).setTypeface(Globals.kgTrueColors);
 
@@ -73,14 +69,15 @@ public class ChooseModeFragment extends Fragment {
         });
         computerPlayButton.setTypeface(Globals.kgTrueColors);
 
-//        networkPlayButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (mListener != null) {
-//                    mListener.onNetworkPlaySelected();
-//                }
-//            }
-//        });
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onHistorySelected();
+                }
+            }
+        });
+        historyButton.setTypeface(Globals.kgTrueColors);
 
         return root;
     }
@@ -104,6 +101,7 @@ public class ChooseModeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onComputerPlaySelected();
         void onFriendPlaySelected();
-        void onNetworkPlaySelected();
+
+        void onHistorySelected();
     }
 }

@@ -8,6 +8,7 @@
     tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
+        android:id="@+id/play_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -36,12 +37,18 @@
             android:id="@+id/buttonPlayFriend"
             style="@style/MenuLayoutButton" />
 
-
-
         <!--<Button-->
             <!--android:text="@string/menu_option_play_network"-->
             <!--android:id="@+id/buttonPlayNetwork"-->
             <!--style="@style/MenuButton"/>-->
     </LinearLayout>
+
+    <Button
+        android:layout_below="@+id/play_menu"
+        android:text="@string/menu_option_history"
+        android:id="@+id/buttonHistory"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        style="@style/MenuLayoutButton" />
 
 </RelativeLayout>

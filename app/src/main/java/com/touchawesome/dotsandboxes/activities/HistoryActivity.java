@@ -1,11 +1,17 @@
 package com.touchawesome.dotsandboxes.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,11 +33,17 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         RecyclerView list = (RecyclerView) findViewById(R.id.recycler_view);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         list.setAdapter(new HistoryAdapter());
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.recycler_list_divider));
+        list.addItemDecoration(dividerItemDecoration);
     }
 
     private class HistoryAdapter extends RecyclerView.Adapter<GameScoreViewHolder> {
@@ -50,7 +62,7 @@ public class HistoryActivity extends AppCompatActivity {
         public void onBindViewHolder(GameScoreViewHolder holder, int position) {
             GameScore entry = gameScoreEntries.get(position);
 
-            holder.data.setText(entry.getDate().toString());
+            holder.data.setText(DateUtils.getRelativeTimeSpanString(entry.getDate().getTime()));
             holder.opponent.setText(entry.getOpponent());
             holder.mode.setText(entry.getMode());
             holder.score.setText(entry.getScore());
@@ -60,6 +72,17 @@ public class HistoryActivity extends AppCompatActivity {
         public int getItemCount() {
             return gameScoreEntries.size();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class GameScoreViewHolder extends RecyclerView.ViewHolder {

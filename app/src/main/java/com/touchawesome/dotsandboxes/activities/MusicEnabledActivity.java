@@ -30,6 +30,9 @@ public class MusicEnabledActivity extends AppCompatActivity {
             if (playMusic) {
                 mService.sendCommand(new Intent(MusicService.ACTION_START_MUSIC));
             }
+            else {
+                mService.sendCommand(new Intent(MusicService.ACTION_STOP_MUSIC));
+            }
         }
 
         public void onServiceDisconnected(ComponentName className) {

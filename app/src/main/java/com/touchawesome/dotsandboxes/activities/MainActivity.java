@@ -12,7 +12,6 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.ChooseBoardSizeFragment;
@@ -62,23 +61,14 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
             }
         });
 
-
         // music button
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         final boolean hasMusic = preferences.getBoolean(MainActivity.this.getString(R.string.pref_key_music), false);
         final ImageButton musicButton = (ImageButton) findViewById(R.id.button_music);
         if (hasMusic) {
-            Intent intent = new Intent(MainActivity.this, MusicService.class);
-            intent.setAction(MusicService.ACTION_START_MUSIC);
-            mService.sendCommand(intent);
-
             musicButton.setImageResource(R.drawable.icon_sound);
         }
         else {
-            Intent intent = new Intent(MainActivity.this, MusicService.class);
-            intent.setAction(MusicService.ACTION_STOP_MUSIC);
-            mService.sendCommand(intent);
-
             musicButton.setImageResource(R.drawable.icon_mute);
         }
 
@@ -221,8 +211,9 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
     }
 
     @Override
-    public void onNetworkPlaySelected() {
-        loadFragment(ComingSoonFragment.FRAGMENT_ID, new Bundle());
+    public void onHistorySelected() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 
     @Override
