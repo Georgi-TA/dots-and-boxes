@@ -11,7 +11,7 @@ import java.util.Date;
  * Entity mapped to table "GameScore".
  */
 @Entity(indexes = {
-        @Index(value = "date DESC", unique = true)
+        @Index(value = "date ASC", unique = true)
 })
 public class GameScore {
 

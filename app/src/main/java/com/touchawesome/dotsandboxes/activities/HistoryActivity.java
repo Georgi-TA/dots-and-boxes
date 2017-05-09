@@ -1,6 +1,5 @@
 package com.touchawesome.dotsandboxes.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.db.GameScore;
+import com.touchawesome.dotsandboxes.db.GameScoreDao;
 
 import java.util.List;
 
@@ -50,7 +50,8 @@ public class HistoryActivity extends AppCompatActivity {
         List<GameScore> gameScoreEntries;
 
         HistoryAdapter() {
-            gameScoreEntries = ((App) getApplication()).getDaoSession().getGameScoreDao().loadAll();
+            GameScoreDao gameScoreDao = ((App) getApplication()).getDaoSession().getGameScoreDao();
+            gameScoreEntries = gameScoreDao.queryBuilder().orderDesc(GameScoreDao.Properties.Date).list();
         }
 
         @Override
