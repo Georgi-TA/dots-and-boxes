@@ -16,7 +16,8 @@
         android:layout_height="86dp"
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="8
+        dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -33,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="8dp">
 
         <ImageButton
             android:id="@+id/button_about"
