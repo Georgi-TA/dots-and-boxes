@@ -21,54 +21,62 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.SplashActivity">
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".activities.MainActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/SettingsTheme">
+            android:theme="@style/SettingsTheme"
+            android:screenOrientation="portrait">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.touchawesome.dotsandboxes.activities.MainActivity" />
-        </activity>
 
+        </activity>
 
         <activity
             android:name=".activities.GameActivity"
             android:exported="true"
             android:label=""
-            android:theme="@style/GameTheme" />
+            android:theme="@style/GameTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.HistoryActivity"
             android:label="@string/title_history"
-            android:theme="@style/SettingsTheme" />
+            android:theme="@style/SettingsTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_about"
-            android:theme="@style/SettingsTheme" />
+            android:theme="@style/SettingsTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.TutorialActivity"
             android:label="@string/title_activity_tutorial"
-            android:theme="@style/SettingsTheme"/>
+            android:theme="@style/SettingsTheme"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".services.MusicService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
     </application>
 
