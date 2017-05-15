@@ -1,6 +1,8 @@
-package com.touchawesome.dotsandboxes.game.models;
+package com.touchawesome.dotsandboxes.game.controllers;
 
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Board;
+import com.touchawesome.dotsandboxes.game.models.Edge;
 
 import java.util.ArrayList;
 import java.util.Collections;

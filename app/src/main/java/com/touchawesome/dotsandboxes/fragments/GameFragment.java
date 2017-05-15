@@ -38,7 +38,7 @@ import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.TurnChangeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
-import com.touchawesome.dotsandboxes.game.models.PlayerBot;
+import com.touchawesome.dotsandboxes.game.controllers.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.views.BoardView;

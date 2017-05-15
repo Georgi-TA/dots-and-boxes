@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 
 public class Graph {
-    HashMap<String, Edge> getEdges() {
+    public HashMap<String, Edge> getEdges() {
         return edges;
     }
     private HashMap<String, Edge> edges;
@@ -30,7 +30,7 @@ public class Graph {
         this.edges = new HashMap<>();
     }
 
-    ArrayList<Edge> getAvailableEdges() {
+    public ArrayList<Edge> getAvailableEdges() {
         ArrayList<Edge> availableEdges = new ArrayList<>();
 
         int dots_rows = rows + 1;
