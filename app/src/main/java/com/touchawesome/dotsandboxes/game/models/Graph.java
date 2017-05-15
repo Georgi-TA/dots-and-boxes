@@ -30,6 +30,14 @@ public class Graph {
         this.edges = new HashMap<>();
     }
 
+    public Graph getCopy() {
+        Graph graph = new Graph(rows, columns);
+        for (Edge edge : edges.values())
+            graph.addEdge(edge);
+
+        return graph;
+    }
+
     public ArrayList<Edge> getAvailableEdges() {
         ArrayList<Edge> availableEdges = new ArrayList<>();
 

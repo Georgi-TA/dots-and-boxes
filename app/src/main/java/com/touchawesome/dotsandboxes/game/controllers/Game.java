@@ -95,7 +95,6 @@ public class Game {
         return board;
     }
 
-
     /**
      * Connects two dots on the board, which counts as a move.
      * This method keeps track of the current state of the game.
