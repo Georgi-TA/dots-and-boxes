@@ -34,4 +34,9 @@
     <color name="grey_result">#999999</color>
     <color name="button_selected_darker">#AFAFAF</color>
 
+
+    <!-- History screen -->
+    <color name="light_gray_text">#BDBDBD</color>
+    <color name="dark_gray_text">#616161</color>
+    <color name="accent_red_text">#FD6C77</color>
 </resources>

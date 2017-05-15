@@ -16,7 +16,7 @@
         android:layout_height="100dp"
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp">
+        android:layout_marginTop="32dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -58,6 +58,12 @@
         <ImageButton
             android:id="@+id/button_settings"
             android:src="@drawable/ic_button_settings"
+            style="@style/BottomBarButton" />
+
+        <ImageButton
+            android:id="@+id/button_music"
+            android:src="@drawable/icon_sound"
+            android:padding="8dp"
             style="@style/BottomBarButton" />
 
     </LinearLayout>

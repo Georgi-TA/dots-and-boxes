@@ -1,14 +1,17 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.ChooseBoardSizeFragment;
@@ -17,6 +20,7 @@ import com.touchawesome.dotsandboxes.fragments.GameFragment;
 import com.touchawesome.dotsandboxes.fragments.ChooseModeFragment;
 import com.touchawesome.dotsandboxes.fragments.ResultsFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.services.MusicService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
 public class MainActivity extends GoogleGamesActivity implements ChooseModeFragment.OnFragmentInteractionListener,
@@ -57,6 +61,43 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
             }
         });
 
+        // music button
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        final boolean hasMusic = preferences.getBoolean(MainActivity.this.getString(R.string.pref_key_music), false);
+        final ImageButton musicButton = (ImageButton) findViewById(R.id.button_music);
+        if (hasMusic) {
+            musicButton.setImageResource(R.drawable.icon_sound);
+        }
+        else {
+            musicButton.setImageResource(R.drawable.icon_mute);
+        }
+
+        musicButton.setOnClickListener(new View.OnClickListener() {
+            private boolean selected = hasMusic;
+
+            @Override
+            public void onClick(View v) {
+                if (selected) {
+                    Intent intent = new Intent(MainActivity.this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_START_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), true).apply();
+                    musicButton.setImageResource(R.drawable.icon_mute);
+                    selected = false;
+                }
+                else {
+                    Intent intent = new Intent(MainActivity.this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_STOP_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), false).apply();
+                    musicButton.setImageResource(R.drawable.icon_sound);
+                    selected = true;
+                }
+            }
+        });
+
         if (!achievementsChecked)
             new CheckForUnlockedAchievementsTask().execute();
 
@@ -84,14 +125,13 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
         }
 
         return super.onSupportNavigateUp();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        // return the user to the begin
+        // return the user to the beginning
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         }
@@ -129,7 +169,7 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                R.anim.enter_from_left, R.anim.exit_to_right);
+                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();
@@ -171,8 +211,9 @@ public class MainActivity extends GoogleGamesActivity implements ChooseModeFragm
     }
 
     @Override
-    public void onNetworkPlaySelected() {
-        loadFragment(ComingSoonFragment.FRAGMENT_ID, new Bundle());
+    public void onHistorySelected() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 
     @Override

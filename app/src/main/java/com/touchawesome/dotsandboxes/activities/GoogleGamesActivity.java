@@ -96,7 +96,7 @@ public class GoogleGamesActivity extends MusicEnabledActivity implements GoogleA
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected(): connected to Google APIs");
 
-//      Set the greeting appropriately on main menu
+//      Set the greeting appropriately on game menu
         Player p = Games.Players.getCurrentPlayer(mGoogleApiClient);
 //        mMainMenuFragment.setPlayer(p);
 //        if we have accomplishments to push, push them

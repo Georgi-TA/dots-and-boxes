@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
@@ -121,10 +124,52 @@ public class GameActivity extends GoogleGamesActivity implements GameFragment.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.game, menu);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean hasMusic = preferences.getBoolean(getString(R.string.pref_key_music), false);
+
+        MenuItem musicButton = menu.findItem(R.id.action_music);
+        if (hasMusic) {
+            musicButton.setIcon(R.drawable.ic_mute_white);
         }
+        else {
+            musicButton.setIcon(R.drawable.ic_sound_white);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.action_music:
+                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                final boolean hasMusic = preferences.getBoolean(getString(R.string.pref_key_music), false);
+                if (!hasMusic) {
+                    Intent intent = new Intent(this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_START_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), true).apply();
+                    item.setIcon(R.drawable.ic_mute_white);
+                }
+                else {
+                    Intent intent = new Intent(this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_STOP_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), false).apply();
+                    item.setIcon(R.drawable.ic_sound_white);
+                }
+                break;
+        }
+
+
 
         return super.onOptionsItemSelected(item);
     }

@@ -2,12 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clipChildren="false"
     android:background="@color/background"
     tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
+        android:id="@+id/play_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,21 +28,29 @@
             android:text="@string/play"/>
 
         <Button
+            android:text="@string/menu_option_play_local_cpu"
             android:id="@+id/buttonPlayLocalComputer"
             style="@style/MenuLayoutButton"
-            android:text="@string/menu_option_play_local_cpu" />
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
 
         <Button
             android:text="@string/menu_option_play_local_player"
             android:id="@+id/buttonPlayFriend"
-            style="@style/MenuLayoutButton" />
+            style="@style/MenuLayoutButton"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
 
+        <Button
+            android:text="@string/menu_option_history"
+            android:id="@+id/buttonHistory"
+            style="@style/MenuLayoutButton"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content" />
 
-
-        <!--<Button-->
-            <!--android:text="@string/menu_option_play_network"-->
-            <!--android:id="@+id/buttonPlayNetwork"-->
-            <!--style="@style/MenuButton"/>-->
     </LinearLayout>
 
 </RelativeLayout>

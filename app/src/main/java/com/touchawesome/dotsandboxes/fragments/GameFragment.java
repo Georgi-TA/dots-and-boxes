@@ -26,6 +26,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
+import com.touchawesome.dotsandboxes.db.GameScore;
 import com.touchawesome.dotsandboxes.event_bus.RxBus;
 import com.touchawesome.dotsandboxes.event_bus.events.EmitSoundEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.BotComputeEvent;
@@ -34,13 +35,15 @@ import com.touchawesome.dotsandboxes.event_bus.events.OpponentMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.PlayerMoveEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.ScoreMadeEvent;
 import com.touchawesome.dotsandboxes.event_bus.events.SquareCompletedEvent;
+import com.touchawesome.dotsandboxes.event_bus.events.TurnChangeEvent;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.game.models.Edge;
-import com.touchawesome.dotsandboxes.game.models.PlayerBot;
+import com.touchawesome.dotsandboxes.game.controllers.PlayerBot;
 import com.touchawesome.dotsandboxes.utils.Globals;
 import com.touchawesome.dotsandboxes.utils.Constants;
 import com.touchawesome.dotsandboxes.views.BoardView;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -156,7 +159,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                         }
                     }
 
-
                     if (boxesCompleted > 0) {
                         RxBus.getInstance().send(new SquareCompletedEvent());
                     }
@@ -166,10 +168,11 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                  *  The opponent made a move
                  */
                 else if (event instanceof OpponentMoveEvent) {
-
                     setTurnText(Game.Player.PLAYER1);
                 }
-
+                else if (event instanceof TurnChangeEvent) {
+                    setTurnText(((TurnChangeEvent) event).nextPlayer);
+                }
                 /*
                  *  Register the event and reflect the score
                  */
@@ -235,6 +238,19 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                             .setAction(String.format(Locale.ENGLISH, getString(R.string.game_mode_template), difficulty, mode.toString(), player1Score, player2Score))
                             .build());
 
+                    // Insert record in database
+                    GameScore gameScore = new GameScore();
+                    gameScore.setDate(new Date(System.currentTimeMillis()));
+                    gameScore.setMode(difficulty);
+                    gameScore.setOpponent(getString(R.string.versus) + " " + mode.toString());
+                    String scoreString = (player1Score > player2Score ? getString(R.string.win) : player1Score == player2Score ? getString(R.string.tie) : getString(R.string.lost)) +
+                            " " +
+                            player1Score +
+                            ":" +
+                            player2Score;
+                    gameScore.setScore(scoreString);
+                    ((App) getActivity().getApplication()).getDaoSession().getGameScoreDao().insert(gameScore);
+
 
                     if (mListener != null)
                         mListener.onWinFragmentLoad(ResultsFragment.FRAGMENT_ID, args);
@@ -258,6 +274,7 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         progressBar.setProgress(100);
         progressTimer.start();
 
+        // Offload to an async calculation on a separate Rx Thread
         Observable.fromCallable(new Callable<Edge>() {
                                     @Override
                                     public Edge call() throws Exception {
@@ -282,13 +299,13 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         if (player == Game.Player.PLAYER1) {
             playerName = getString(R.string.player1TurnName);
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
-            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer1)), 0, turnString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         else {
             playerName = getString(R.string.player2TurnName);
 
             turnString = new SpannableString(String.format(Locale.getDefault(), getString(R.string.turn_text), playerName));
-            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, playerName.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            turnString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.boxPlayer2)), 0, turnString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         turnText.setText(turnString);
     }
