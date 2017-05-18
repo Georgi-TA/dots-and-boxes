@@ -6,23 +6,26 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
-import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
+import com.touchawesome.dotsandboxes.fragments.GameFragment;
+import com.touchawesome.dotsandboxes.fragments.ResultsFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.services.MusicService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class GameActivity extends GoogleGamesActivity implements GameLocalFragment.OnFragmentInteractionListener,
-                                                                    WinnerFragment.OnFragmentInteractionListener,
+public class GameActivity extends GoogleGamesActivity implements GameFragment.OnFragmentInteractionListener,
+                                                                    ResultsFragment.OnFragmentInteractionListener,
                                                                     FragmentManager.OnBackStackChangedListener {
 
-    private GameLocalFragment gameFragment;
+    private GameFragment gameFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +41,11 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState != null) {
-            gameFragment = (GameLocalFragment) getSupportFragmentManager().getFragment(savedInstanceState, GameLocalFragment.class.getName());
+            gameFragment = (GameFragment) getSupportFragmentManager().getFragment(savedInstanceState, GameFragment.class.getName());
         }
         else {
             Bundle args = getIntent().getBundleExtra(Constants.INTENT_GAME_EXTRA_BUNDLE);
-            gameFragment = new GameLocalFragment();
+            gameFragment = new GameFragment();
             gameFragment.setArguments(args);
         }
 
@@ -63,10 +66,10 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
     @Override
     public void onWinFragmentLoad(int fragmentId, Bundle args) {
-        if (fragmentId == WinnerFragment.FRAGMENT_ID) {
-            int scorePlayer1 = args.getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
-            int scorePlayer2 = args.getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
-            Game.Mode mode = (Game.Mode) args.getSerializable(GameLocalFragment.ARG_MODE);
+        if (fragmentId == ResultsFragment.FRAGMENT_ID) {
+            int scorePlayer1 = args.getInt(GameFragment.ARG_PLAYER1_SCORE);
+            int scorePlayer2 = args.getInt(GameFragment.ARG_PLAYER2_SCORE);
+            Game.Mode mode = (Game.Mode) args.getSerializable(GameFragment.ARG_MODE);
 
             // check for achievements
             if (isSignedIn()) {
@@ -76,7 +79,7 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
                 checkForAchievements(scorePlayer1, scorePlayer2, time, mode);
             }
 
-            WinnerFragment dialog = WinnerFragment.newInstance(args);
+            ResultsFragment dialog = ResultsFragment.newInstance(args);
             dialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
             dialog.setArguments(args);
             dialog.show(getSupportFragmentManager(), "dialog_fragment");
@@ -100,7 +103,7 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
 
     @Override
     public void onReplayRequested(Bundle arguments) {
-        gameFragment = new GameLocalFragment();
+        gameFragment = new GameFragment();
         gameFragment.setArguments(arguments);
 
         loadGameFragment();
@@ -121,10 +124,52 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.game, menu);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean hasMusic = preferences.getBoolean(getString(R.string.pref_key_music), false);
+
+        MenuItem musicButton = menu.findItem(R.id.action_music);
+        if (hasMusic) {
+            musicButton.setIcon(R.drawable.ic_mute_white);
         }
+        else {
+            musicButton.setIcon(R.drawable.ic_sound_white);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.action_music:
+                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                final boolean hasMusic = preferences.getBoolean(getString(R.string.pref_key_music), false);
+                if (!hasMusic) {
+                    Intent intent = new Intent(this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_START_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), true).apply();
+                    item.setIcon(R.drawable.ic_mute_white);
+                }
+                else {
+                    Intent intent = new Intent(this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_STOP_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), false).apply();
+                    item.setIcon(R.drawable.ic_sound_white);
+                }
+                break;
+        }
+
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -134,6 +179,6 @@ public class GameActivity extends GoogleGamesActivity implements GameLocalFragme
         super.onSaveInstanceState(outState);
 
         //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, GameLocalFragment.class.getName(), gameFragment);
+        getSupportFragmentManager().putFragment(outState, GameFragment.class.getName(), gameFragment);
     }
 }

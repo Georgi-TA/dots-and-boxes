@@ -1,29 +1,31 @@
 package com.touchawesome.dotsandboxes.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.touchawesome.dotsandboxes.R;
-import com.touchawesome.dotsandboxes.fragments.ChooseLayoutFragment;
+import com.touchawesome.dotsandboxes.fragments.ChooseBoardSizeFragment;
 import com.touchawesome.dotsandboxes.fragments.ComingSoonFragment;
-import com.touchawesome.dotsandboxes.fragments.GameLocalFragment;
-import com.touchawesome.dotsandboxes.fragments.MainMenuFragment;
-import com.touchawesome.dotsandboxes.fragments.NetworkMenuFragment;
-import com.touchawesome.dotsandboxes.fragments.WinnerFragment;
+import com.touchawesome.dotsandboxes.fragments.GameFragment;
+import com.touchawesome.dotsandboxes.fragments.ChooseModeFragment;
+import com.touchawesome.dotsandboxes.fragments.ResultsFragment;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.services.MusicService;
 import com.touchawesome.dotsandboxes.utils.Constants;
 
-public class MainActivity extends GoogleGamesActivity implements MainMenuFragment.OnFragmentInteractionListener,
+public class MainActivity extends GoogleGamesActivity implements ChooseModeFragment.OnFragmentInteractionListener,
                                                                  FragmentManager.OnBackStackChangedListener,
-                                                                 ChooseLayoutFragment.OnFragmentInteractionListener,
-                                                                 NetworkMenuFragment.Listener {
+                                                                 ChooseBoardSizeFragment.OnFragmentInteractionListener{
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -55,14 +57,51 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         findViewById(R.id.button_about).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), InfoActivity.class));
+                startActivity(new Intent(v.getContext(), AboutActivity.class));
+            }
+        });
+
+        // music button
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        final boolean hasMusic = preferences.getBoolean(MainActivity.this.getString(R.string.pref_key_music), false);
+        final ImageButton musicButton = (ImageButton) findViewById(R.id.button_music);
+        if (hasMusic) {
+            musicButton.setImageResource(R.drawable.icon_sound);
+        }
+        else {
+            musicButton.setImageResource(R.drawable.icon_mute);
+        }
+
+        musicButton.setOnClickListener(new View.OnClickListener() {
+            private boolean selected = hasMusic;
+
+            @Override
+            public void onClick(View v) {
+                if (selected) {
+                    Intent intent = new Intent(MainActivity.this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_START_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), true).apply();
+                    musicButton.setImageResource(R.drawable.icon_mute);
+                    selected = false;
+                }
+                else {
+                    Intent intent = new Intent(MainActivity.this, MusicService.class);
+                    intent.setAction(MusicService.ACTION_STOP_MUSIC);
+                    mService.sendCommand(intent);
+
+                    preferences.edit().putBoolean(getString(R.string.pref_key_music), false).apply();
+                    musicButton.setImageResource(R.drawable.icon_sound);
+                    selected = true;
+                }
             }
         });
 
         if (!achievementsChecked)
             new CheckForUnlockedAchievementsTask().execute();
 
-        loadFragment(MainMenuFragment.FRAGMENT_ID, new Bundle());
+        loadFragment(ChooseModeFragment.FRAGMENT_ID, new Bundle());
     }
 
     private void showAchievementsPage() {
@@ -86,14 +125,13 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         }
 
         return super.onSupportNavigateUp();
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        // return the user to the begin
+        // return the user to the beginning
         while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         }
@@ -102,25 +140,21 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     private void loadFragment(int fragmentId, Bundle args) {
         Fragment fragment;
         switch (fragmentId) {
-            case MainMenuFragment.FRAGMENT_ID: {
-                fragment = MainMenuFragment.newInstance(args);
+            case ChooseModeFragment.FRAGMENT_ID: {
+                fragment = ChooseModeFragment.newInstance(args);
                 break;
             }
-            case GameLocalFragment.FRAGMENT_ID: {
-                fragment = GameLocalFragment.newInstance(args);
+            case GameFragment.FRAGMENT_ID: {
+                fragment = GameFragment.newInstance(args);
                 break;
             }
-            case WinnerFragment.FRAGMENT_ID: {
-                fragment = WinnerFragment.newInstance(args);
+            case ResultsFragment.FRAGMENT_ID: {
+                fragment = ResultsFragment.newInstance(args);
 
                 break;
             }
-            case ChooseLayoutFragment.FRAGMENT_ID: {
-                fragment = ChooseLayoutFragment.newInstance(args);
-                break;
-            }
-            case NetworkMenuFragment.FRAGMENT_ID: {
-                fragment = NetworkMenuFragment.newInstance(args);
+            case ChooseBoardSizeFragment.FRAGMENT_ID: {
+                fragment = ChooseBoardSizeFragment.newInstance(args);
                 break;
             }
             case ComingSoonFragment.FRAGMENT_ID: {
@@ -135,7 +169,7 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left,
-                R.anim.enter_from_left, R.anim.exit_to_right);
+                                        R.anim.enter_from_left, R.anim.exit_to_right);
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack(fragment.getClass().toString());
         transaction.commit();
@@ -165,20 +199,21 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
     @Override
     public void onComputerPlaySelected() {
         Bundle args = new Bundle();
-        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.CPU);
-        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+        args.putSerializable(GameFragment.ARG_MODE, Game.Mode.CPU);
+        loadFragment(ChooseBoardSizeFragment.FRAGMENT_ID, args);
     }
 
     @Override
     public void onFriendPlaySelected() {
         Bundle args = new Bundle();
-        args.putSerializable(GameLocalFragment.ARG_MODE, Game.Mode.PLAYER);
-        loadFragment(ChooseLayoutFragment.FRAGMENT_ID, args);
+        args.putSerializable(GameFragment.ARG_MODE, Game.Mode.PLAYER);
+        loadFragment(ChooseBoardSizeFragment.FRAGMENT_ID, args);
     }
 
     @Override
-    public void onNetworkPlaySelected() {
-        loadFragment(NetworkMenuFragment.FRAGMENT_ID, new Bundle());
+    public void onHistorySelected() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -187,22 +222,4 @@ public class MainActivity extends GoogleGamesActivity implements MainMenuFragmen
         intent.putExtra(Constants.INTENT_GAME_EXTRA_BUNDLE, args);
         startActivity(intent);
     }
-
-    @Override
-    public void onStartGameRequested() {
-
-    }
-
-    @Override
-    public void onSignInButtonClicked() {
-        mSignInClicked = true;
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onSignOutButtonClicked() {
-
-    }
-
-
 }

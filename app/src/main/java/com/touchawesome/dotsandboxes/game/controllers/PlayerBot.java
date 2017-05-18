@@ -1,8 +1,11 @@
-package com.touchawesome.dotsandboxes.game.models;
+package com.touchawesome.dotsandboxes.game.controllers;
 
-import com.touchawesome.dotsandboxes.game.controllers.Game;
+import com.touchawesome.dotsandboxes.game.models.Board;
+import com.touchawesome.dotsandboxes.game.models.Edge;
+import com.touchawesome.dotsandboxes.game.models.Graph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -10,30 +13,74 @@ import java.util.HashMap;
  * Created by scelus on 15.03.17
  */
 public class PlayerBot {
-
-    private Game.Player ID = Game.Player.PLAYER2;
     private Game game;
-    private int maxResult;
 
     public PlayerBot(Game game) {
         this.game = game;
     }
 
     public Edge getNextMove() {
-        // get a copy of the game board
-        Board board = game.getBoard();
-        maxResult = board.getColumns() * board.getRows();
-        Board miniMaxBoard = new Board(board.getRows(), board.getColumns());
-        miniMaxBoard.loadBoard(board.toString());
 
-        ArrayList<Edge> completionMoves = getCompletionMoves();
-        Collections.shuffle(completionMoves);
-        if (completionMoves.size() > 0)
+        // get a box completion move
+        ArrayList<Edge> completionMoves = getCompletionMoves(game.getGameTree(), game.getBoard());
+
+        // return the completion move that will be most profitable if such exists
+        if (completionMoves.size() > 0) {
+            Collections.shuffle(completionMoves);
             return completionMoves.get(0);
+        }
+        // otherwise get a random available move
+        else {
+            int minOpponentScoreAfterMove = Integer.MAX_VALUE;
+            int opponentScore;
+            Edge nextMove = null;
 
-        ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
-        Collections.shuffle(availableMoves);
-        return availableMoves.get(0);
+            ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
+            // try every move and see how many points can the opponent make afterwards
+            for (Edge moveToMake : availableMoves) {
+                // work with  a copy of the board so that it will not affect the real game board
+                Board boardCopy = game.getBoard().getCopy();
+                Graph gameTreeCopy = game.getGameTree().getCopy();
+                ArrayList<Edge> opponentCompletionMoves;
+
+                // place the bot future move
+                boardCopy.setLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd(), Game.Player.PLAYER2);
+
+                // record the move in the game tree copy
+                gameTreeCopy.addEdge(moveToMake);
+
+                // start making all moves in favour of the opponent (human player) and see which move will lead to him making the least points
+                opponentScore = 0;
+                opponentCompletionMoves = getCompletionMoves(gameTreeCopy, boardCopy);
+
+                Graph gameTreeOpponent = gameTreeCopy.getCopy();
+                Board boardOpponent = boardCopy.getCopy();
+
+                while (opponentCompletionMoves.size() > 0) {
+                    opponentScore += opponentCompletionMoves.size();
+
+                    for (Edge opponentMoveToMake : opponentCompletionMoves) {
+                        boardOpponent.setLineForDots(opponentMoveToMake.getDotStart(), opponentMoveToMake.getDotEnd(), Game.Player.PLAYER1);
+                        gameTreeOpponent.addEdge(opponentMoveToMake);
+                    }
+
+                    opponentCompletionMoves = getCompletionMoves(gameTreeOpponent, boardOpponent);
+                }
+
+                if (opponentScore < minOpponentScoreAfterMove) {
+                    minOpponentScoreAfterMove = opponentScore;
+                    nextMove = moveToMake;
+                }
+            }
+
+            if (nextMove != null) {
+                return nextMove;
+            }
+            else {
+                Collections.shuffle(availableMoves);
+                return availableMoves.get(0);
+            }
+        }
     }
 
 //    /**
@@ -149,67 +196,17 @@ public class PlayerBot {
 
     /**
      * The method searches by a greedy algorithm for a box with a fourth wall missing.
-     * It will be right before completion.
-     *
-     * @return first found Edge that will complete a box
+     * @return all edges that will complete a box
      */
-    private ArrayList<Edge> getCompletionMoves() {
-
-//
-//        /**
-//         * Previous imlpementation of this method
-//         */
-//        Board board = game.getBoard();
-//        int dots_rows = board.getRows();
-//
-//        for (int i = 0; i < board.getRows(); i++) {
-//            for (int j = 0; j < board.getColumns(); j++) {
-//                Board.Box box = board.getBoxAt(i, j);
-//
-//                if (box.player != Game.Player.NONE)
-//                    continue;
-//
-//                // left missing
-//                if (box.bottom & box.top & box.right) {
-//                    completionEdges.add(new Edge(i * dots_rows + j, (i + 1) * dots_rows + j + 1));
-//                }
-//
-//                // top missing
-//                if (box.bottom & box.left & box.right) {
-//                    completionEdges.add(new Edge(i * dots_rows + j, i * dots_rows + j + 1));
-//                }
-//
-//                if (i == board.getRows() - 1) {
-//                    // right missing
-//                    if (box.bottom & box.top & box.left) {
-//                        completionEdges.add(new Edge(i * dots_rows + j + 1, (i + 1) * dots_rows + j + 1));
-//                    }
-//                }
-//
-//                if (j == board.getColumns() - 1) {
-//                    // bottom missing
-//                    if (box.top & box.left & box.right) {
-//                        int bottomStart = (i + 1) * dots_rows + j;
-//                        int bottomEnd =  (i + 1) * dots_rows + j + 1;
-//                        Edge bottomEdge = new Edge(bottomStart, bottomEnd);
-//                        completionEdges.add(bottomEdge);
-//                    }
-//                }
-//            }
-
+    private ArrayList<Edge> getCompletionMoves(Graph gameTree, Board board) {
 
         ArrayList<Edge> completionMoves = new ArrayList<>();
-
-        ArrayList<Edge> availableMoves = game.getGameTree().getAvailableEdges();
-        Board tempBoard = new Board(game.getBoard().getRows(), game.getBoard().getColumns());
-
-        HashMap<String, Edge> madeMoves = game.getGameTree().getEdges();
-        for (Edge moveMade : madeMoves.values()) {
-            tempBoard.setLineForDots(moveMade.getDotStart(), moveMade.getDotEnd(), Game.Player.NONE);
-        }
+        HashMap<String, Edge> madeMoves = gameTree.getEdges();
+        ArrayList<Edge> availableMoves = gameTree.getAvailableEdges();
 
         for (Edge moveToMake : availableMoves) {
             if (!madeMoves.containsKey(moveToMake.getKey())) {
+                Board tempBoard = board.getCopy();
                 int scoreBefore = tempBoard.getScore(Game.Player.PLAYER2);
                 tempBoard.setLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd(), Game.Player.PLAYER2);
                 int scoreAfter = tempBoard.getScore(Game.Player.PLAYER2);
@@ -217,8 +214,6 @@ public class PlayerBot {
                 if (scoreBefore < scoreAfter) {
                     completionMoves.add(moveToMake);
                 }
-
-                tempBoard.removeLineForDots(moveToMake.getDotStart(), moveToMake.getDotEnd());
             }
         }
 

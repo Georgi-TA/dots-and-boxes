@@ -1,9 +1,9 @@
 package com.google.example.games.basegameutils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.IntentSender;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,8 +20,7 @@ public class BaseGameUtils {
      * @param message the message to display in the Dialog.
      */
     public static void showAlert(Activity activity, String message) {
-        (new AlertDialog.Builder(activity)).setMessage(message)
-                .setNeutralButton(android.R.string.ok, null).create().show();
+        (new AlertDialog.Builder(activity)).setMessage(message).setNeutralButton(android.R.string.ok, null).create().show();
     }
 
     /**

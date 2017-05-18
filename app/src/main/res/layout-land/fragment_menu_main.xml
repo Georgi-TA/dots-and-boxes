@@ -3,29 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.touchawesome.dotsandboxes.fragments.MainMenuFragment">
+    tools:context="com.touchawesome.dotsandboxes.fragments.ChooseModeFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/play_menu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonPlayFriend"
-            style="@style/MenuLayoutButton"
-            android:text="@string/menu_option_play_local_player" />
+        <TextView
+            android:id="@+id/label_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/play"
+            android:textColor="@color/textColorPrimaryDark"
+            android:textSize="28sp" />
 
-        <Button
-            android:id="@+id/buttonPlayLocalComputer"
-            style="@style/MenuLayoutButton"
-            android:text="@string/menu_option_play_local_cpu" />
 
-        <!--<Button-->
-        <!--android:text="@string/menu_option_play_network"-->
-        <!--android:id="@+id/buttonPlayNetwork"-->
-        <!--style="@style/MenuButton"/>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/buttonPlayLocalComputer"
+                style="@style/MenuLayoutButton"
+                android:text="@string/menu_option_play_local_cpu" />
+
+            <Button
+                android:id="@+id/buttonPlayFriend"
+                style="@style/MenuLayoutButton"
+                android:text="@string/menu_option_play_local_player" />
+
+        </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonHistory"
+        style="@style/MenuLayoutButton"
+        android:layout_marginTop="20dp"
+        android:text="@string/menu_option_history"
+        android:layout_below="@+id/play_menu"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

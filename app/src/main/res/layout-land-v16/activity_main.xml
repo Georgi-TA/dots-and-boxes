@@ -52,6 +52,12 @@
             android:padding="8dp"
             android:src="@drawable/ic_settings"
             style="@style/BottomBarButton" />
+
+        <ImageButton
+            android:id="@+id/button_music"
+            android:src="@drawable/icon_sound"
+            android:padding="8dp"
+            style="@style/BottomBarButton" />
     </LinearLayout>
 
     <FrameLayout

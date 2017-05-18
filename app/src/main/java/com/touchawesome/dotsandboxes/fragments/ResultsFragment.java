@@ -8,10 +8,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.game.controllers.Game;
 import com.touchawesome.dotsandboxes.utils.Globals;
@@ -21,12 +23,12 @@ import java.util.Locale;
 /**
  * Created by scelus on 16.03.17
  */
-public class WinnerFragment extends DialogFragment {
+public class ResultsFragment extends DialogFragment {
     public static final int FRAGMENT_ID = 31783;
     String winnerName;
     Game.Player winner;
 
-    private WinnerFragment.OnFragmentInteractionListener mListener;
+    private ResultsFragment.OnFragmentInteractionListener mListener;
     private int player1Score;
     private int player2Score;
 
@@ -36,8 +38,8 @@ public class WinnerFragment extends DialogFragment {
         void onMenuRequested();
     }
 
-    public static WinnerFragment newInstance(Bundle args) {
-        WinnerFragment f = new WinnerFragment();
+    public static ResultsFragment newInstance(Bundle args) {
+        ResultsFragment f = new ResultsFragment();
 
         if (args != null)
             f.setArguments(args);
@@ -50,9 +52,9 @@ public class WinnerFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
 
-        player1Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER1_SCORE);
-        player2Score = getArguments().getInt(GameLocalFragment.ARG_PLAYER2_SCORE);
-        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameLocalFragment.ARG_GAME_MODE);
+        player1Score = getArguments().getInt(GameFragment.ARG_PLAYER1_SCORE);
+        player2Score = getArguments().getInt(GameFragment.ARG_PLAYER2_SCORE);
+        Game.Mode mode = (Game.Mode) getArguments().getSerializable(GameFragment.ARG_GAME_MODE);
 
         if (player1Score > player2Score) {
             winner = Game.Player.PLAYER1;
@@ -61,7 +63,7 @@ public class WinnerFragment extends DialogFragment {
         else if (player1Score < player2Score) {
             winner = Game.Player.PLAYER2;
             if (mode == Game.Mode.CPU) {
-                winnerName = getString(R.string.robot_name);
+                winnerName = getString(R.string.player2name);
             }
             else {
                 winnerName = getString(R.string.player2name);
@@ -70,6 +72,14 @@ public class WinnerFragment extends DialogFragment {
         else {
             winner = Game.Player.NONE;
         }
+
+        // analytics
+        // Get tracker.
+        Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+        // Set screen name.
+        t.setScreenName(getString(R.string.screen_name_results));
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
@@ -91,7 +101,7 @@ public class WinnerFragment extends DialogFragment {
         switch (winner) {
             case PLAYER1:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.boxPlayer1));
-                title.setText(R.string.wins);
+                title.setText(R.string.win);
                 break;
             case NONE:
                 name.setTextColor(ContextCompat.getColor(getContext(), R.color.textColorPrimaryDark));
@@ -143,7 +153,7 @@ public class WinnerFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (WinnerFragment.OnFragmentInteractionListener) context;
+            mListener = (ResultsFragment.OnFragmentInteractionListener) context;
         }
         catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnFragmentInteractionListener");

@@ -7,26 +7,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.utils.Globals;
 
-public class MainMenuFragment extends Fragment {
+public class ChooseModeFragment extends Fragment {
     public static final int FRAGMENT_ID = 4367;
     private OnFragmentInteractionListener mListener;
 
-    public static MainMenuFragment newInstance(Bundle args) {
-        MainMenuFragment fragment = new MainMenuFragment();
+    public static ChooseModeFragment newInstance(Bundle args) {
+        ChooseModeFragment fragment = new ChooseModeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MainMenuFragment() {
+    public ChooseModeFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // analytics
+        Tracker t = ((App) getActivity().getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+        t.setScreenName(getString(R.string.screen_name_choose_mode));
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 
@@ -36,7 +45,9 @@ public class MainMenuFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_menu_main, container, false);
         Button friendPlayButton = (Button) root.findViewById(R.id.buttonPlayFriend);
         Button computerPlayButton = (Button) root.findViewById(R.id.buttonPlayLocalComputer);
-//        Button networkPlayButton = (Button) root.findViewById(R.id.buttonPlayNetwork);
+        Button historyButton = (Button) root.findViewById(R.id.buttonHistory);
+
+        ((TextView) root.findViewById(R.id.label_play)).setTypeface(Globals.kgTrueColors);
 
         friendPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,14 +69,15 @@ public class MainMenuFragment extends Fragment {
         });
         computerPlayButton.setTypeface(Globals.kgTrueColors);
 
-//        networkPlayButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (mListener != null) {
-//                    mListener.onNetworkPlaySelected();
-//                }
-//            }
-//        });
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onHistorySelected();
+                }
+            }
+        });
+        historyButton.setTypeface(Globals.kgTrueColors);
 
         return root;
     }
@@ -89,6 +101,7 @@ public class MainMenuFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onComputerPlaySelected();
         void onFriendPlaySelected();
-        void onNetworkPlaySelected();
+
+        void onHistorySelected();
     }
 }

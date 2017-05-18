@@ -4,12 +4,12 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="menu_button_width">224dp</dimen>
-    <dimen name="menu_button_height">56dp</dimen>
+    <dimen name="menu_button_height">48dp</dimen>
 
     <dimen name="menu_box_width">222dp</dimen>
-    <dimen name="menu_box_height">54dp</dimen>
+    <dimen name="menu_box_height">48dp</dimen>
 
-    <dimen name="dot_size">3dp</dimen>
+    <dimen name="dot_size">2dp</dimen>
     <dimen name="line_size">4dp</dimen>
 
     <dimen name="player_image_size">72dp</dimen>
@@ -23,10 +23,11 @@
     <dimen name="default_box_size">80dp</dimen>
     <dimen name="default_snap_length">16dp</dimen>
 
-    <dimen name="bottom_bar_button_size">72dp</dimen>
+    <dimen name="bottom_bar_button_size">64dp</dimen>
     <dimen name="title_text_size">46sp</dimen>
     <dimen name="subtitle_text_size">30sp</dimen>
 
     <dimen name="winner_image_size">90dp</dimen>
     <dimen name="main_content_margin_top">32dp</dimen>
+    <dimen name="menu_dot_size">4dp</dimen>
 </resources>

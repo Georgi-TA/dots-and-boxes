@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.touchawesome.dotsandboxes.App;
 import com.touchawesome.dotsandboxes.R;
 import com.touchawesome.dotsandboxes.fragments.SettingsFragment;
 
@@ -24,10 +27,18 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Display the fragment as the main content.
+        // Display the fragment as the game content.
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, new SettingsFragment())
                 .commit();
+
+        // Analytics
+        // Get tracker.
+        Tracker t = ((App) getApplication()).getTracker(App.TrackerName.APP_TRACKER);
+        // Set screen name.
+        t.setScreenName(getString(R.string.screen_name_settings));
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
