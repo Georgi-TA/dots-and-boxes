@@ -98,6 +98,9 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         }
     };
 
+    private TransitionDrawable transitionDrawablePlayer1;
+    private TransitionDrawable transitionDrawablePlayer2;
+
     public static GameFragment newInstance(Bundle args) {
         GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
@@ -136,6 +139,10 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                         boardView.enableInteraction();
 
                         setTurnText(Game.Player.PLAYER1);
+
+                        // change the avatar borders
+                        transitionDrawablePlayer1.reverseTransition(100);
+                        transitionDrawablePlayer2.reverseTransition(100);
                     }
 
                     if (boxesCompleted > 0) {
@@ -154,6 +161,10 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                     if (boxesCompleted == 0) {
                         setTurnText(Game.Player.PLAYER2);
 
+                        // change the avatar borders
+                        transitionDrawablePlayer1.startTransition(100);
+                        transitionDrawablePlayer2.startTransition(100);
+
                         if (mode == Game.Mode.CPU) {
                             takeTurnFromBot();
                         }
@@ -169,6 +180,10 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
                  */
                 else if (event instanceof OpponentMoveEvent) {
                     setTurnText(Game.Player.PLAYER1);
+
+                    // change the avatar borders
+                    transitionDrawablePlayer1.reverseTransition(100);
+                    transitionDrawablePlayer2.reverseTransition(100);
                 }
                 else if (event instanceof TurnChangeEvent) {
                     setTurnText(((TurnChangeEvent) event).nextPlayer);
@@ -364,10 +379,6 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
 
         progressBar = (ProgressBar) root.findViewById(R.id.progress_bar);
 
-        turnText = (TextView) root.findViewById(R.id.turnText);
-        turnText.setTypeface(Globals.kgTrueColors);
-        setTurnText(Game.Player.PLAYER1);
-
         scorePlayer1 = (TextView) root.findViewById(R.id.player1_score);
         scorePlayer1.setTypeface(Globals.kgTrueColors);
         scorePlayer2 = (TextView) root.findViewById(R.id.player2_score);
@@ -377,18 +388,22 @@ public class GameFragment extends Fragment implements View.OnTouchListener {
         ImageView imagePlayer2Border = (ImageView) root.findViewById(R.id.player2_border);
 
         // set transition drawable to player 1 border
-        TransitionDrawable tdPlayer1 = new TransitionDrawable(new Drawable[]{
+        transitionDrawablePlayer1 = new TransitionDrawable(new Drawable[]{
                 getResources().getDrawable(R.drawable.bg_player1_image_active),
                 getResources().getDrawable(R.drawable.bg_player_image_inactive)
         });
-        imagePlayer1Border.setImageDrawable(tdPlayer1);
+        imagePlayer1Border.setImageDrawable(transitionDrawablePlayer1);
 
         // set transition drawable to player 2 border
-        TransitionDrawable tdPlayer2 = new TransitionDrawable(new Drawable[]{
+        transitionDrawablePlayer2 = new TransitionDrawable(new Drawable[]{
                 getResources().getDrawable(R.drawable.bg_player_image_inactive),
                 getResources().getDrawable(R.drawable.bg_player2_image_active)
         });
-        imagePlayer2Border.setImageDrawable(tdPlayer2);
+        imagePlayer2Border.setImageDrawable(transitionDrawablePlayer2);
+
+        turnText = (TextView) root.findViewById(R.id.turnText);
+        turnText.setTypeface(Globals.kgTrueColors);
+        setTurnText(Game.Player.PLAYER1);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARG_BOARD))
